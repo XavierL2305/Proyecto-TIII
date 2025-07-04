@@ -1,0 +1,119 @@
+{% extends "template_base.html" %}
+{% load static %}
+
+{% block title %}
+Proveedores
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/styles_proveedores.css' %}">
+<link rel="stylesheet" href="{% static 'css/styles_buttons.css' %}">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/proveedores.js' %}" defer></script>
+{% endblock %}
+
+{% block li1 %}
+    <a href="{% url 'home:home' %}" class="ancla">Home</a>
+{% endblock %}
+{% block li2 %}
+    Clientes
+{% endblock %}
+{% block li3 %}
+    Reportes
+{% endblock %}
+
+{% block content %}
+<!-- Tu contenido aquí -->
+<section class="proveedores">
+    <center><h1 class="titulo">Proveedores</h1><button class="button" id="add" name="button_agregar">Agregar</button></center>
+    <div class="tabla">
+        <div class="thead">
+            <b>ID</b>
+            <b>Nombre</b>
+            <b>Direccion</b>
+            <b>Telefono</b>
+            <b>Correo</b>
+            <b>Acciones</b>
+        </div>
+        <div class="tbody">
+            {% for proveedor in proveedores %}
+            <p>{{ proveedor.id_proveedor_PK }}</p>
+            <p>{{ proveedor.nombre }}</p>
+            <p>{{ proveedor.direccion }}</p>
+            <p>{{ proveedor.telefono }}</p>
+            <p>{{ proveedor.email }}</p>
+            <div class="acciones">
+                <button class="button edit-btn" id="edit" name="button_editar" value="{{ proveedor.id_proveedor_PK}}">Editar</button>
+                <button class="button delete-btn" id="delete" name="button_eliminar" value="{{ proveedor.id_proveedor_PK}}">Eliminar</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% if messages %}
+        <div id="alertas">
+        {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+        </div>
+    {% endif %}  
+    <div class="formulario" id="formulario_agregar">
+        <form enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <h2>Agregar Proveedor</h2>
+            {% for campo in formulario %}
+            <div>
+                <input 
+                type= "{{ campo.field.widget.input_type }} "
+                id= "{{ campo.name }}"
+                name= "{{ campo.name }}"
+                placeholder="" 
+                required>
+                <label for= "{{ campo.name }}" >{{ campo.label }}</label>
+            </div>
+            {% endfor %}
+
+            <div class="actions">
+                <button type="submit" class="button" id="add">Guardar</button>
+                <button type="button" class="button" id="delete" name="cancelar">Cancelar</button>
+            </div>
+        </form>
+    </div>
+    <div class="formulario" id="formulario_editar">
+        <form enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <h2>Editar Proveedor</h2>
+
+            {% for campo in formulario %}
+            <div>
+                <input 
+                type= "{{ campo.field.widget.input_type }} "
+                id= "{{ campo.name }}"
+                name= "{{ campo.name }}"
+                placeholder="" 
+                required>
+                <label for= "{{ campo.name }}" >{{ campo.label }}</label>
+            </div>
+            {% endfor %}
+
+            <div class="actions">
+                <button type="submit" class="button" id="add">Actualizar</button>
+                <button type="button" class="button" id="delete" name="cancelar">Cancelar</button>
+            </div>
+        </form>
+    </div>
+    <div class="formulario" id="formulario_eliminar">
+        <form method="post">
+            {% csrf_token %}
+            <h2>Eliminar Proveedor</h2>
+            <p>¿Estás seguro de que deseas eliminar este proveedor?</p>
+            <div class="actions">
+                <button type="submit" class="button" id="delete">Eliminar</button>
+                <button type="button" class="button" id="edit" name="cancelar">Cancelar</button>
+            </div>
+        </form>
+    </div>
+    <div class="backgraund" id="backgraund_form"></div>
+</section>
+{% endblock %}

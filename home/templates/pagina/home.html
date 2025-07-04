@@ -1,0 +1,53 @@
+{% extends "template_base.html" %}
+{% load static %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/styles_home.css' %}">
+{% endblock %}
+
+{% block li1 %}
+    <a href="{% url 'proveedores:proveedores' %}" class="ancla">Proveedores</a>
+{% endblock %}
+
+{% block li2 %}
+    Clientes
+{% endblock %}
+
+{% block li3 %}
+    Reportes
+{% endblock %}
+
+{% block content %}
+<section class="home">
+    <div class="barra_nav">
+        <nav class="nav-bar">
+            <ul>
+                <li class="redes">
+                    <a href="https://www.facebook.com/" class="redes-link">
+                        <img src="{% static 'img/redes/facebook_color.png' %}" class="redes-img" alt="Facebook">
+                    </a>
+                    <a href="https://www.instagram.com/" class="redes-link">
+                        <img src="{% static 'img/redes/instagram_color.png' %}" class="redes-img" alt="Instagram">
+                    </a>
+                    <a href="https://www.twitter.com/" class="redes-link">
+                        <img src="{% static 'img/redes/twitter_black.png' %}" class="redes-img" alt="Twitter">
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="drop">Productos</a>
+                    <div class="dropdown-content">
+                        <a href="#">Arandelas</a>
+                        <a href="#">Carbones</a>
+                        <a href="#">Tornilleria</a>
+                        <a href="#">Herramientas</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section>
+{% endblock %}

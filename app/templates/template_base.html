@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/styles_base.css' %}">
+        <link rel="stylesheet" href="{% static 'css/styles_buttons.css' %}">
+        {% block css %} {% endblock %}
+        {% block js %} {% endblock %}
+        <script src="{% static 'js/menu.js'%}" defer></script>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <header class="header">
+        <ul class="abrir_menu">
+            <li class="barras"></li>
+            <li class="barras"></li>
+            <li class="barras"></li>
+        </ul>
+        <nav class="nav">
+            <ul class="lista">
+                <li class="elementos_lista"><a href="#" class="ancla">{% block li1 %} {% endblock %}</a></li>
+                <li class="elementos_lista"><a href="#" class="ancla">{% block li2 %} {% endblock %}</a></li>
+                <li class="elementos_lista"><a href="#" class="ancla">{% block li3 %} {% endblock %}</a></li>
+
+            </ul>
+            <div class="engranaje_cuenta">
+                <a class="engranaje" href="#"> 
+                    <img src="{% static 'img/config.png'%}" alt="">
+                </a>
+                <a href="" class="cuenta">
+                    <img src="{% static 'img/perfil.png'%}" alt="">
+                </a>
+            </div>
+        </nav>
+    </header>
+    
+    <div class="backgraund" id="backgraund_menu"></div>
+    <main class="main">
+        <a href="{% url 'home:home' %}" class="logo">
+            <img src="{% static 'img/logo_text1.png' %}" alt="Logo">
+        </a>    
+        {% block content %}
+        <!-- Contenido principal -->
+        {% endblock %}
+    </main>
+</body>
+</html>

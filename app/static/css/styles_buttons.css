@@ -1,0 +1,43 @@
+:root {
+    --fondos: #1c2833;
+    --secciones: #273746;
+    --elementos_primarios: #34495e;
+    --elementos_secundarios: #5d6d7e;
+    --texto_principal: #ecf0f1;
+    --detalles_hover: #2980b9;
+}
+
+.button {
+    padding: 5px 10px;
+    width: auto;
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: var(--texto_principal);
+    transition: all ease .3s;
+}
+ #add {
+    background-color: var(--elementos_primarios);
+}
+#edit {
+    background-color: var(--elementos_primarios);
+} 
+#delete {
+    background-color: #e74c3c;
+    transition: all ease .3s;
+}
+#delete:hover {
+    background-color: #c0392b;
+    opacity: 0.8;
+    scale: 1.05;
+}
+.button:hover {
+    opacity: 0.8;
+    scale: 1.05;
+    background-color: var(--detalles_hover);
+}
+.button:active {
+    /* opacity: 0.9; */
+    scale: 1;
+}
