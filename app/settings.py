@@ -29,6 +29,11 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+LOGIN_REDIRECT_URL = '/'         # Aquí puedes poner la página principal de tu proyecto
+LOGOUT_REDIRECT_URL = '/accounts/login/'  # Redirige al login después de cerrar sesión
+LOGIN_URL = '/accounts/login/'
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'proveedores',
     'home',
+    'login_register',
+
 ]
 
 MIDDLEWARE = [
