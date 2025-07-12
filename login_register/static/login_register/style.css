@@ -14,13 +14,13 @@
 }
 
 .logggo {
-  height: 6rem;              /* Altura fija */
+  height: 7rem;              /* Altura fija */
   width: auto;               /* Mantener proporción original */
   display: block;            /* Para evitar espacios extra debajo */
-  margin: 0 auto 1.5rem auto;  /* Centrar horizontalmente y separar abajo */
+  margin: 0 auto 0 auto;  /* Centrar horizontalmente y separar abajo */
   object-fit: contain;       /* Ajusta la imagen dentro del contenedor sin deformar */
   max-width: 100%;           /* Que no exceda el ancho del contenedor padre */
-  filter: drop-shadow(3px 3px 4px rgba(0,0,0,0.9)); /* Sombra sutil para destacar */
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.458)); /* Sombra sutil para destacar */
 }
 
 

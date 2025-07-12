@@ -13,8 +13,7 @@
         <div class="form-container sign-up-container">
             <form method="post" action="{% url 'login_register:register' %}">
                 {% csrf_token %}
-                <img class="logggo" src="{% static 'img/logos/logo_text1.png' %}">
-                <h1>Crear Cuenta</h1>
+                <img class="logggo" src="{% static 'img/logos/9.png' %}">
                 <input type="text" name="username" placeholder="Nombre de usuario" required />
                 <input type="email" name="email" placeholder="Correo electrónico" required />
                 <input type="password" name="password1" placeholder="Contraseña" required />
