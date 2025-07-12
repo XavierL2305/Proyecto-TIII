@@ -8,7 +8,7 @@ from .forms import ProveedorForm
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-#@login_required #validacionn requerida para ingresar a proveedores
+@login_required #validacionn requerida para ingresar a proveedores
 def proveedores(request):
     formulario = ProveedorForm(request.POST or None) # Crear una instancia del formulario
     proveedores = Proveedores.objects.all()  # Obtener todos los proveedores

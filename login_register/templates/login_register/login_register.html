@@ -3,34 +3,38 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
-    <title>Login</title>
+    <title>Login y Registro</title>
     <link rel="stylesheet" href="{% static 'login_register/style.css' %}" />
-    <link rel="shortcut icon" href="{% static 'img/logos/logo_text1.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body>
     <div class="container" id="container">
+
         <!-- Formulario de registro -->
         <div class="form-container sign-up-container">
-            <form method="post" action="{% url 'login_register:register' %}">
+            <form method="post" action="">
                 {% csrf_token %}
                 <img class="logggo" src="{% static 'img/logos/9.png' %}">
-                <input type="text" name="username" placeholder="Nombre de usuario" required />
-                <input type="email" name="email" placeholder="Correo electrónico" required />
-                <input type="password" name="password1" placeholder="Contraseña" required />
+                <!-- Eliminamos aquí la lista de errores -->
+                <input type="text" name="username" placeholder="Nombre de usuario" value="{{ form.username.value|default:'' }}" required />
+                <input type="email" name="email" placeholder="Correo electrónico" value="{{ form.email.value|default:'' }}" required />
+                <input type="password" name="password1" placeholder="Contraseña (minimo 8 caracteres)" required />
                 <input type="password" name="password2" placeholder="Confirmar contraseña" required />
-                <button>Registrarse</button>
+                <span class="ayudaContraseña">La contraseña debe tener al menos 8 caracteres, no ser común ni similar a tus datos personales</span>
+                <button type="submit" name="register">Registrarse</button>
             </form>
         </div>
 
         <!-- Formulario de login -->
         <div class="form-container sign-in-container">
-            <form method="post" action="{% url 'login_register:login' %}">
+            <form method="post" action="">
                 {% csrf_token %}
                 <img class="loggo" src="{% static 'img/logos/logo_text1.png' %}">
                 <h1>Iniciar Sesión</h1>
-                <input type="text" name="username" placeholder="Usuario" required />
+                <!-- Eliminamos aquí la lista de errores -->
+                <input type="text" name="username" placeholder="Usuario" value="{{ login_form.username.value|default:'' }}" required />
                 <input type="password" name="password" placeholder="Contraseña" required />
-                <button>Entrar</button>
+                <button type="submit" name="login">Entrar</button>
             </form>
         </div>
 
@@ -49,8 +53,24 @@
                 </div>
             </div>
         </div>
+
     </div>
 
+    <!-- Contenedor de Mensajes (Toast) -->
+    {% if messages %}
+        <div id="message-container" style="position: fixed; top: 10px; right: 10px; z-index: 9999;">
+            {% for message in messages %}
+                <div class="message-box {{ message.tags }}" style="background-color: #4BB543; color: white; padding: 15px 25px; margin-bottom: 10px; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.3); font-weight: bold;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Scripts -->
     <script src="{% static 'login_register/script.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    
+    
 </body>
 </html>

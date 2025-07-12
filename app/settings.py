@@ -29,10 +29,9 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-LOGIN_REDIRECT_URL = '/'         # Aquí puedes poner la página principal de tu proyecto
-LOGOUT_REDIRECT_URL = '/accounts/login/'  # Redirige al login después de cerrar sesión
-LOGIN_URL = '/accounts/login/'
-
+LOGIN_REDIRECT_URL = '/'  # Cambia a la página principal o dashboard
+LOGOUT_REDIRECT_URL = '/accounts/'  # Redirige al login/registro después de logout
+LOGIN_URL = '/accounts/'  # URL de la vista combinada login/registro
 
 # Application definition
 
@@ -57,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -131,7 +131,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'  # cambié de'en-us' a 'es' osea de inglés a español
+USE_I18N = True
+USE_L10N = True
 
 TIME_ZONE = 'UTC'
 
