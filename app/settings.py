@@ -29,6 +29,10 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+LOGIN_REDIRECT_URL = '/'  # Cambia a la página principal o dashboard
+LOGOUT_REDIRECT_URL = '/accounts/'  # Redirige al login/registro después de logout
+LOGIN_URL = '/accounts/'  # URL de la vista combinada login/registro
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'proveedores',
     'home',
+    'login_register',
+
 ]
 
 MIDDLEWARE = [
@@ -50,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -91,14 +98,15 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'contactos_jlara',
-        'USER': 'root',
-        'PASSWORD': '',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ferreteria',
+        'USER': 'postgres',
+        'PASSWORD': 'asvg',
         'HOST': 'localhost',
-        'PORT': '3306',
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
@@ -123,7 +131,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'  # cambié de'en-us' a 'es' osea de inglés a español
+USE_I18N = True
+USE_L10N = True
 
 TIME_ZONE = 'UTC'
 

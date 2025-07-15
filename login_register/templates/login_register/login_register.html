@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Login y Registro</title>
+    <link rel="stylesheet" href="{% static 'login_register/style.css' %}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body>
+    <div class="container" id="container">
+
+        <!-- Formulario de registro -->
+        <div class="form-container sign-up-container">
+            <form method="post" action="">
+                {% csrf_token %}
+                <img class="logggo" src="{% static 'img/logos/9.png' %}">
+                <!-- Eliminamos aquí la lista de errores -->
+                <input type="text" name="username" placeholder="Nombre de usuario" value="{{ form.username.value|default:'' }}" required />
+                <input type="email" name="email" placeholder="Correo electrónico" value="{{ form.email.value|default:'' }}" required />
+                <input type="password" name="password1" placeholder="Contraseña (minimo 8 caracteres)" required />
+                <input type="password" name="password2" placeholder="Confirmar contraseña" required />
+                <span class="ayudaContraseña">La contraseña debe tener al menos 8 caracteres, no ser común ni similar a tus datos personales</span>
+                <button type="submit" name="register">Registrarse</button>
+            </form>
+        </div>
+
+        <!-- Formulario de login -->
+        <div class="form-container sign-in-container">
+            <form method="post" action="">
+                {% csrf_token %}
+                <img class="loggo" src="{% static 'img/logos/logo_text1.png' %}">
+                <h1>Iniciar Sesión</h1>
+                <!-- Eliminamos aquí la lista de errores -->
+                <input type="text" name="username" placeholder="Usuario" value="{{ login_form.username.value|default:'' }}" required />
+                <input type="password" name="password" placeholder="Contraseña" required />
+                <button type="submit" name="login">Entrar</button>
+            </form>
+        </div>
+
+        <!-- Paneles para cambiar entre login y registro -->
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Bienvenido de nuevo!</h1>
+                    <p>Para mantenerse conectado con nosotros, por favor inicia sesión con tus datos personales</p>
+                    <button class="ghost" id="signIn">Iniciar Sesión</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hola, amigo!</h1>
+                    <p>Ingresa tus datos personales y comienza tu aventura con nosotros</p>
+                    <button class="ghost" id="signUp">Registrarse</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Contenedor de Mensajes (Toast) -->
+    {% if messages %}
+        <div id="message-container" style="position: fixed; top: 10px; right: 10px; z-index: 9999;">
+            {% for message in messages %}
+                <div class="message-box {{ message.tags }}" style="background-color: #4BB543; color: white; padding: 15px 25px; margin-bottom: 10px; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.3); font-weight: bold;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Scripts -->
+    <script src="{% static 'login_register/script.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    
+    
+</body>
+</html>

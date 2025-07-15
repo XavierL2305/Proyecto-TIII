@@ -1,0 +1,96 @@
+---------------------Manual para instalar y ejecutar el proyecto Django en VSCode--------------
+
+Requisitos previos
+
+-----Tener instalado Python 3 (preferentemente versión 3.8 o superior).
+
+-----Tener instalado Git para clonar el repositorio.
+
+-----Tener instalado Visual Studio Code (VSCode).
+
+#IMPORTANTE
+#puedes descargar el proyecto directamente desde git o clonarlo (el paso 1 se repite por comodidad y preferencias)
+#El paso 1 especifica los 2 casos por lo cual se repite pero solo se hace una sola vez, ya sea descargando o clonarlo
+
+-----Paso 1: Descargar el proyecto desde GitHub
+
+Abre el navegador y ve a la página del repositorio:
+https://github.com/XavierL2305/Proyecto-TIII
+
+Haz clic en el botón verde que dice Code.
+
+Selecciona Download ZIP para descargar el proyecto como archivo comprimido.
+
+Una vez descargado, descomprime el archivo ZIP en la carpeta donde quieras trabajar (por ejemplo, en el Escritorio).
+
+-----Paso 1: Clonar el repositorio del proyecto
+
+Abre VSCode.
+
+Abre la terminal integrada (Terminal > Nueva Terminal).
+
+Navega a la carpeta donde quieres guardar el proyecto, por ejemplo:
+cd Desktop
+
+Clona el repositorio con:
+git clone https://github.com/XavierL2305/Proyecto-TIII.git
+
+Entra en la carpeta del proyecto:
+cd Proyecto-TIII
+
+-----Paso 2: Crear y activar un entorno virtual
+
+Crea el entorno virtual:
+python -m venv venv
+
+Activa el entorno virtual:
+
+En Windows PowerShell:
+.\venv\Scripts\Activate.ps1
+
+En Windows CMD:
+.\venv\Scripts\activate.bat
+
+En macOS/Linux:
+source venv/bin/activate
+
+Verifica que el entorno está activo (debe aparecer (venv) en el prompt).
+
+-----Paso 3: Instalar las dependencias
+
+Si existe el archivo requirements.txt, ejecuta:
+pip install -r requirements.txt
+
+Si no existe, instala manualmente Django y pymysql:
+pip install django pymysql
+
+-----Paso 4: Configurar la base de datos
+
+Asegúrate que la base de datos configurada en settings.py esté disponible y funcionando.
+
+Si usas SQLite, no necesitas hacer nada adicional.
+
+-----Paso 5: Ejecutar migraciones
+
+Ejecuta:
+python manage.py migrate
+
+-----Paso 6: Ejecutar el servidor de desarrollo
+
+Ejecuta:
+python manage.py runserver
+
+Luego abre en el navegador:
+http://127.0.0.1:8000
+
+-----Paso 7: Uso básico de Git en VSCode
+
+Usa la pestaña de control de código fuente para hacer commits y push.
+
+Paso extra: Crear archivo requirements.txt
+
+Si instalas nuevas librerías, crea el archivo con:
+pip freeze > requirements.txt
+
+Para que otros puedan instalar las mismas dependencias con:
+pip install -r requirements.txt
