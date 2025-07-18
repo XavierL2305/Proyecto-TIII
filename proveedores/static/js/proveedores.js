@@ -40,8 +40,15 @@ document.addEventListener("DOMContentLoaded", function(){
         btn.addEventListener('click', () => {
             editar.classList.add('activate')
             backgraund_formulario.classList.add('activate')
-            // Puedes capturar el id así:
-            console.log('Editar proveedor:', btn.value)
+
+            let informacion = { ...btn.dataset }
+            Object.entries(informacion).forEach(([key, value]) => {
+                if (key === 'id') {
+                    document.getElementById('proveedor_id_editar').value = informacion.id // Asigna el id al campo ocultonecesario
+                }else{
+                    let input = document.querySelector(`#formulario_editar input[name="${key}"]`).value = value
+                }
+            })
         });
     });
 
@@ -77,4 +84,6 @@ document.addEventListener("DOMContentLoaded", function(){
             alertas.style.display = 'none'
         }
     }, 3000)
+
+    // Fin de los eventos para los formularios
 })

@@ -104,22 +104,20 @@ form label{
     position: absolute;
     left: 5%;
     top: 10px;
-    border-radius: 1rem;
+    border-radius: .3rem;
     transition: all ease .2s;
 }
 form input:focus + label{
     background-color: var(--elementos_secundarios);
     font-size: 13px;
-    top: -9px;
+    top: -11px;
     padding: 2px;
-    border-radius: 5px, 0;
 }
 form input:not(:placeholder-shown) + label{
     background-color: var(--elementos_secundarios);
     font-size: 13px;
-    top: -9px;
+    top: -11px;
     padding: 2px;
-    border-radius: 5px, 0;
 }
 
 #formulario_agregar,
@@ -152,10 +150,14 @@ form input:not(:placeholder-shown) + label{
     position: fixed;
     top: 2.3rem;
     right: 2rem;
-    background-color: #4CAF50; /* Green */
     padding: 1rem;
     border-radius: 5px;
     color: #fff;
     z-index: 4;
+    cursor: pointer;
     transition: opacity 0.3s ease-in-out;
 }
+.alert-success { background: #4caf50; }
+.alert-error, .alert-danger { background: #f44336; }
+.alert-warning { background: #ff9800; }
+.alert-info { background: #2196f3; }
