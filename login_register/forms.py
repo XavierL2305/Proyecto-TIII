@@ -29,5 +29,4 @@ class RegistroForm(UserCreationForm):
         if password1:
             if len(password1) < 8:
                 raise ValidationError("La contraseña es demasiado corta. Debe tener al menos 8 caracteres.")
-            # Aquí puedes agregar más validaciones si quieres
         return password1
