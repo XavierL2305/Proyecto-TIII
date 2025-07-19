@@ -45,8 +45,27 @@ Proveedores
             <p>{{ proveedor.telefono }}</p>
             <p>{{ proveedor.email }}</p>
             <div class="acciones">
-                <button class="button edit-btn" id="edit" name="button_editar" value="{{ proveedor.id_proveedor_PK}}">Editar</button>
-                <button class="button delete-btn" id="delete" name="button_eliminar" value="{{ proveedor.id_proveedor_PK}}">Eliminar</button>
+                <button 
+                    class="button edit-btn" 
+                    id="edit" 
+                    name="button_editar" 
+                    value="{{ proveedor.id_proveedor_PK}}"
+
+                    data-id="{{ proveedor.id_proveedor_PK }}"
+                    data-nombre="{{ proveedor.nombre }}"
+                    data-direccion="{{ proveedor.direccion }}"
+                    data-telefono="{{ proveedor.telefono }}"
+                    data-email="{{ proveedor.email }}">
+                    Editar
+                </button>
+
+                <button 
+                    class="button delete-btn" 
+                    id="delete" 
+                    name="button_eliminar" 
+                    value="{{ proveedor.id_proveedor_PK}}">
+                    Eliminar
+                </button>
             </div>
             {% endfor %}
         </div>
@@ -54,10 +73,10 @@ Proveedores
     {% if messages %}
         <div id="alertas">
         {% for message in messages %}
-            <div class="alert alert-success">{{ message }}</div>
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-success{% endif %}">{{ message }}</div>
         {% endfor %}
         </div>
-    {% endif %}  
+    {% endif %}
     <div class="formulario" id="formulario_agregar">
         <form enctype="multipart/form-data" method="post">
             {% csrf_token %}
@@ -85,14 +104,17 @@ Proveedores
             {% csrf_token %}
             <h2>Editar Proveedor</h2>
 
+            <input type="hidden" name="proveedor_id" id="proveedor_id_editar">
             {% for campo in formulario %}
             <div>
+
                 <input 
                 type= "{{ campo.field.widget.input_type }}"
                 id= "{{ campo.name }}"
                 name= "{{ campo.name }}"
                 placeholder="" 
                 required>
+
                 <label for= "{{ campo.name }}" >{{ campo.label }}</label>
             </div>
             {% endfor %}
