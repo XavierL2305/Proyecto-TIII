@@ -1,7 +1,8 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
+from .models import CustomUser
 
 User = get_user_model()
 
@@ -26,7 +27,16 @@ class RegistroForm(UserCreationForm):
 
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
-        if password1:
-            if len(password1) < 8:
-                raise ValidationError("La contraseña es demasiado corta. Debe tener al menos 8 caracteres.")
+        if password1 and len(password1) < 8:
+            raise ValidationError("La contraseña es demasiado corta. Debe tener al menos 8 caracteres.")
         return password1
+
+class CustomUserCreationForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'password1', 'password2', 'rol', 'is_cliente']
+
+class CustomUserChangeForm(UserChangeForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'rol', 'is_cliente']

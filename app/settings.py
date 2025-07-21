@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'home',
     'login_register',
     'productos',
+    'empleados',
 ]
 
 MIDDLEWARE = [
@@ -127,6 +128,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTH_USER_MODEL = 'login_register.CustomUser' # Cambia el modelo de usuario para roles  
+
 
 
 # Internationalization

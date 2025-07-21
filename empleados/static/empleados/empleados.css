@@ -1,0 +1,226 @@
+:root {
+  /* Paleta principal */
+  --fondos: #1c2833;
+  --secciones: #273746;
+  --elementos_primarios: #34495e;
+  --elementos_secundarios: #5d6d7e;
+  --texto_principal: #ecf0f1;
+  --detalles_hover: #2980b9;
+  --main-bg: #436499;
+  --main-accent: #fbbf24;
+  --main-hover: #334155;
+  --main-text: #fff;
+  --transparent: rgba(255, 255, 255, 0.5);
+}
+
+/* ==============================
+    Estilos generales y layout
+   ============================== */
+
+body {
+  background-color: var(--fondos);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--texto_principal);
+}
+
+.empleados {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  max-width: 1000px;
+  margin: auto;
+}
+
+/* Título */
+.empleados > center h1.titulo {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+/* Botón agregar */
+.button {
+  background: var(--elementos_primarios);
+  color: var(--texto_principal);
+  padding: 10px 24px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+  user-select: none;
+}
+.button:hover {
+  background: var(--detalles_hover);
+}
+
+/* Tabla estilo grid */
+.tabla {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background-color: var(--secciones);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--elementos_primarios);
+  font-size: 0.95rem;
+}
+
+.tabla .thead, .tabla .tbody {
+  display: contents;
+}
+
+.tabla .thead b {
+  padding: 12px 10px;
+  background-color: var(--elementos_primarios);
+  color: var(--main-text);
+  text-align: center;
+  border-bottom: 1.5px solid var(--main-bg);
+  font-weight: 600;
+}
+
+.tabla .tbody p {
+  padding: 5px 10px;
+  color: var(--texto_principal);
+  border-bottom: 1px solid var(--elementos_primarios);
+  text-align: center;
+}
+
+.tbody .acciones {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 5px;
+}
+
+.tbody .acciones .button {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+/* Formularios modales */
+.formulario {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--secciones);
+  opacity: 0;
+  visibility: hidden;
+  z-index: 105;
+  transition: all ease 0.3s;
+  width: 250px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  padding: 10px 30px;
+}
+
+.formulario form {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.formulario.activate {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Campos formulario */
+form label {
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+  color: var(--texto_principal);
+  font-weight: 600;
+}
+
+form input[type="text"],
+form input[type="email"],
+form select {
+  padding: 4px 12px;
+  border-radius: 5px;
+  border: 1px solid var(--elementos_primarios);
+  background-color: var(--elementos_secundarios);
+  color: var(--texto_principal);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form select:focus {
+  border-color: var(--detalles_hover);
+}
+
+/* Checkbox */
+form input[type="checkbox"] {
+  transform: scale(1.2);
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+/* Botones en formularios */
+form .actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+form .actions .button {
+  width: 48%;
+  padding: 5px 0;
+  font-size: 1rem;
+}
+
+/* Fondo modal */
+.backgraund {
+  position: fixed;
+  left: 0; top: 0; right: 0; bottom: 0;
+  width: 100vw; height: 100vh;
+  z-index: 4;
+  background: #000000bb;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+.backgraund.activate {
+  opacity: 0.65;
+  visibility: visible;
+}
+
+/* Alertas */
+#alertas {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 110;
+  min-width: 250px;
+}
+.alert {
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  margin-bottom: 0.7rem;
+  cursor: pointer;
+  text-align: center;
+  color: var(--main-text);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.alert-success {
+  background-color: #4caf50;
+}
+.alert-error, .alert-danger {
+  background-color: #f44336;
+}
+.alert-warning {
+  background-color: #ff9800;
+}
+.alert-info {
+  background-color: #2196f3;
+}

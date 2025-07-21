@@ -25,4 +25,5 @@ urlpatterns = [
     path('proveedores/', include(('proveedores.urls', 'proveedores'), namespace='proveedores')),
     path('accounts/', include('login_register.urls')),
     path('productos/', include('productos.urls', namespace='productos')),
+    path('empleados/', include('empleados.urls', namespace='empleados')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
