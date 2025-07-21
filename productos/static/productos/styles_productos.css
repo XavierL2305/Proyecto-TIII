@@ -1,0 +1,314 @@
+:root {
+  /* Paleta principal */
+  --fondos: #1c2833;
+  --secciones: #273746;
+  --elementos_primarios: #34495e;
+  --elementos_secundarios: #5d6d7e;
+  --texto_principal: #ecf0f1;
+  --detalles_hover: #2980b9;
+  --main-bg: #436499;
+  --main-accent: #fbbf24;
+  --main-hover: #334155;
+  --main-text: #fff;
+  --transparent: rgba(255, 255, 255, 0.5);
+}
+
+/* ==============================
+   Filtro tipo dropdown productos
+   ============================== */
+
+.dropdown-filtro {
+  /* Para que no se expanda y quede alineado */
+  display: inline-block;
+  position: relative;
+}
+
+/* Botón principal del dropdown */
+#form_filtro .drop {
+  background: var(--elementos_primarios, #1e293b);
+  color: var(--main-text, #fff);
+  padding: 8px 18px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 4px;
+  transition: background 0.3s;
+  width: max-content;
+  display: inline-block;
+}
+
+#form_filtro .drop:hover {
+  background: var(--detalles_hover, #2980b9);
+  color: var(--texto_principal, #ecf0f1);
+}
+
+/* Contenedor de las opciones (dropdown) */
+#form_filtro .dropdown-content {
+  display: none;
+  position: absolute;
+  background: var(--main-bg, #1e293b);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  border-radius: 4px;
+  margin-top: 4px;
+  z-index: 100;
+}
+
+/* Opciones del dropdown */
+#form_filtro .dropdown-content .dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  color: var(--main-text, #fff);
+  text-align: left;
+  cursor: pointer;
+  border-bottom: 1px solid var(--main-hover, #334155);
+  font-size: 15px;
+  transition: background 0.2s;
+}
+#form_filtro .dropdown-content .dropdown-item:last-child {
+  border-bottom: none;
+}
+#form_filtro .dropdown-content .dropdown-item:hover {
+  background: var(--detalles_hover, #2980b9);
+  color: var(--texto_principal, #ecf0f1);
+}
+/* Mostrar opciones al pasar el mouse */
+#form_filtro .dropdown:hover .dropdown-content,
+#form_filtro:focus-within .dropdown-content {
+  display: block;
+}
+
+/* ======================
+   Estilos Generales
+   ====================== */
+
+body {
+  background-color: var(--fondos);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.productos{
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+  background-color: var(--secciones);
+}
+
+h1,h2{
+  color: var(--main-text);
+}
+
+/* ======================
+   Tabla de productos
+   ====================== */
+
+.tabla {
+  display: grid;
+  width: auto;
+  margin-top: 20px;
+  border-collapse: collapse;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: auto;
+  gap: 1em;
+  margin: 2rem;
+  background-color: var(--fondos);
+  border-radius: .5rem;
+  border: solid 1px #ddd;
+  overflow-x: auto;
+  font-size: 15px;
+  overflow: hidden;
+}
+.tabla .thead {
+  display: contents;
+  font-weight: bold;
+}
+.tabla .thead b {
+  padding: 5px 10px;
+  text-align: center;
+  color: var(--texto_principal);
+  border-bottom: 1.5px solid var(--elementos_primarios);
+}
+.tabla .tbody {
+  display: contents;
+}
+.tabla .tbody p {
+  padding: 5px 10px;
+  text-align: center;
+  margin: .25rem 0;
+  color: var(--texto_principal);
+}
+.tbody .acciones {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* ======================
+   Botones generales
+   ====================== */
+.button {
+  background: var(--elementos_primarios);
+  color: var(--texto_principal);
+  padding: 5px 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: .18s;
+}
+.button:hover {
+  background: var(--detalles_hover);
+}
+
+/* ======================
+   Formularios modales (agregar/editar/eliminar)
+   ====================== */
+
+.formulario {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-39%, -50%);
+  background-color: var(--secciones);
+  opacity: 0;
+  visibility: hidden;
+  z-index: 4;
+  transition: all ease .3s;
+}
+.formulario form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+form h2{
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+form div{
+  position: relative;
+}
+form input, form textarea{
+  border: 1px solid #b1b1b1;
+  background-color: var(--elementos_secundarios);
+  width: 90%;
+  padding: 9px;
+  border-radius: 5px;
+  color: var(--texto_principal);
+  resize: none;
+}
+
+.form_img{
+    margin-bottom: 20px;
+}
+
+.form_img_editar{
+    margin-bottom: 50px;
+}
+
+form label{
+  color: var(--texto_principal);
+  cursor:auto;
+  font-size: 15px;
+  position: absolute;
+  left: 5%;
+  top: 10px;
+  border-radius: .3rem;
+  transition: all ease .2s;
+}
+form input:focus + label, form textarea:focus + label{
+  background-color: var(--elementos_secundarios);
+  font-size: 13px;
+  top: -11px;
+  padding: 2px;
+}
+form input:not(:placeholder-shown) + label,
+form textarea:not(:placeholder-shown) + label{
+  background-color: var(--elementos_secundarios);
+  font-size: 13px;
+  top: -11px;
+  padding: 2px;
+}
+
+form textarea {
+  min-height: 80px;
+}
+
+.img-thumb{
+  max-width: 80px;
+  max-height: 90px;
+  border-radius: 5px;
+  background: #eee;
+  display: inline-block;
+  object-fit: contain;
+  border: 1px solid #888;
+  margin: -15px .1rem .20rem .1rem;
+}
+
+/* Formularios con mayor ancho para más info */
+#formulario_agregar,
+#formulario_editar{
+  width: 320px;
+  padding: 30px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+#formulario_eliminar{
+  width: 260px;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+  h2, p{
+    text-align: center;
+  }
+}
+
+/* Mostrar formularios activos */
+#formulario_agregar.activate,
+#formulario_editar.activate,
+#formulario_eliminar.activate {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ======================
+   Alertas para mensajes
+   ====================== */
+.alert{
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  padding: 1rem;
+  border-radius: 5px;
+  color: #fff;
+  z-index: 999;
+  cursor: pointer;
+  transition: opacity 0.3s ease-in-out;
+}
+.alert-success { background: #4caf50; }
+.alert-error, .alert-danger { background: #f44336; }
+.alert-warning { background: #ff9800; }
+.alert-info { background: #2196f3; }
+
+/* ======================
+   Fondo modal
+   ====================== */
+.backgraund {
+  position: fixed;
+  left: 0; top: 0; right:0; bottom:0;
+  width: 100vw; height: 100vh;
+  z-index: 3;
+  opacity: 0.60;
+  background: #000;
+  opacity: 0;
+  visibility: hidden;
+  transition: .3s;
+}
+.backgraund.activate {
+  opacity: 0.65;
+  visibility: visible;
+}

@@ -1,0 +1,179 @@
+{% extends "template_base.html" %}
+{% load static %}
+
+{% block title %}Productos{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'productos/styles_productos.css' %}">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'productos/productos.js' %}" defer></script>
+{% endblock %}
+
+{# Enlaces de navegación según tus bloques base #}
+{% block li1 %}
+<a href="{% url 'home:home' %}" class="ancla">Inicio</a>
+{% endblock %}
+{% block li2 %}
+<a href="{% url 'productos:productos' %}" class="ancla">Productos</a>
+{% endblock %}
+{% block li3 %}
+<a href="{% url 'proveedores:proveedores' %}" class="ancla">Proveedores</a>
+{% endblock %}
+
+{% block content %}
+<section class="productos">
+  <center>
+    <h1 class="titulo">Productos</h1>
+
+    <!-- Filtro tipo dropdown al estilo moderno -->
+    <form method="get" id="form_filtro" class="dropdown-filtro" style="margin-bottom: 1.5rem;">
+      <div class="dropdown">
+        <button type="button" class="drop" aria-haspopup="listbox" aria-expanded="false" aria-label="Seleccionar filtro productos">
+          {% if filtro == 'eliminados' %}Eliminados lógicamente{% else %}Solo activos{% endif %}
+        </button>
+        <div class="dropdown-content">
+          <button type="submit" name="filtro" value="activos" class="dropdown-item"
+            {% if filtro == 'activos' %}style="font-weight:bold;"{% endif %}>
+            Solo activos
+          </button>
+          <button type="submit" name="filtro" value="eliminados" class="dropdown-item"
+            {% if filtro == 'eliminados' %}style="font-weight:bold;"{% endif %}>
+            Eliminados lógicamente
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Botón agregar, tal y como estaba antes -->
+    <button class="button" id="add" name="button_agregar">Agregar</button>
+  </center>
+
+  <div class="tabla">
+    <div class="thead">
+      <b>ID</b>
+      <b>Imagen</b>
+      <b>Nombre</b>
+      <b>Descripción</b>
+      <b>Precio</b>
+      <b>Acciones</b>
+    </div>
+    <div class="tbody">
+      {% for producto in productos %}
+        <p>{{ producto.id_producto_PK }}</p>
+        <p>
+          {% if producto.imagen %}
+            <img src="{{ producto.imagen.url }}" alt="Imagen" class="img-thumb">
+          {% else %}
+            <span style="color:#888;">Sin imagen</span>
+          {% endif %}
+        </p>
+        <p>{{ producto.nombre }}</p>
+        <p>{{ producto.descripcion }}</p>
+        <p>${{ producto.precio }}</p>
+        <div class="acciones">
+          {% if filtro == 'eliminados' %}
+            <form method="post" style="display:inline;">
+              {% csrf_token %}
+              <input type="hidden" name="activar_id" value="{{ producto.id_producto_PK }}">
+              <button type="submit" class="button" title="Reactivar producto">Reactivar</button>
+            </form>
+          {% else %}
+            <button 
+              class="button edit-btn" 
+              data-id="{{ producto.id_producto_PK }}"
+              data-nombre="{{ producto.nombre|escapejs }}"
+              data-descripcion="{{ producto.descripcion|escapejs }}"
+              data-precio="{{ producto.precio }}"
+              data-imagen="{% if producto.imagen %}{{ producto.imagen.url }}{% endif %}">
+              Editar
+            </button>
+            <button 
+              class="button delete-btn"
+              value="{{ producto.id_producto_PK }}">
+              Eliminar
+            </button>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p colspan="6" style="text-align:center;color:#ccc">No hay productos registrados.</p>
+      {% endfor %}
+    </div>
+  </div>
+  {% if messages %}
+    <div id="alertas">
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-success{% endif %}">{{ message }}</div>
+    {% endfor %}
+    </div>
+  {% endif %}
+  <div class="formulario" id="formulario_agregar">
+    <form enctype="multipart/form-data" method="post">
+      {% csrf_token %}
+      <h2>Agregar Producto</h2>
+      <div>
+        <input type="text" name="nombre" id="nombre_agregar" placeholder=" " required>
+        <label for="nombre_agregar">Nombre</label>
+      </div>
+      <div>
+        <textarea name="descripcion" id="descripcion_agregar" rows="2" placeholder=" " required></textarea>
+        <label for="descripcion_agregar">Descripción</label>
+      </div>
+      <div>
+        <input type="number" step="0.01" min="0" name="precio" id="precio_agregar" placeholder=" " required>
+        <label for="precio_agregar">Precio</label>
+      </div>
+      <div>
+        <input type="file" name="imagen" id="imagen_agregar" accept="image/*" class="form_img">
+        <label for="imagen_agregar" style="left: 0; top: 44px;">Imagen (opcional)</label>
+      </div>
+      <div class="actions">
+        <button type="submit" class="button">Guardar</button>
+        <button type="button" class="button" name="cancelar">Cancelar</button>
+      </div>
+    </form>
+  </div>
+  <div class="formulario" id="formulario_editar">
+    <form enctype="multipart/form-data" method="post">
+      {% csrf_token %}
+      <h2>Editar Producto</h2>
+      <input type="hidden" name="producto_id" id="producto_id_editar">
+      <div>
+        <input type="text" name="nombre" id="nombre_editar" placeholder=" " required>
+        <label for="nombre_editar">Nombre</label>
+      </div>
+      <div>
+        <textarea name="descripcion" id="descripcion_editar" rows="2" placeholder=" " required></textarea>
+        <label for="descripcion_editar">Descripción</label>
+      </div>
+      <div>
+        <input type="number" step="0.01" min="0" name="precio" id="precio_editar" placeholder=" " required>
+        <label for="precio_editar">Precio</label>
+      </div>
+      <div>
+        <input type="file" name="imagen" id="imagen_editar" accept="image/*" class="form_img_editar">
+        <label for="imagen_editar" style="left: 0; top: 44px;">Imagen (si desea cambiar)</label><br>
+        <img id="img_preview_editar" class="img-thumb" style="max-height:50px;display:none;">
+      </div>
+      <div class="actions">
+        <button type="submit" class="button">Actualizar</button>
+        <button type="button" class="button" name="cancelar">Cancelar</button>
+      </div>
+    </form>
+  </div>
+  <div class="formulario" id="formulario_eliminar">
+    <form method="post" id="eliminar_id_form">
+      {% csrf_token %}
+      <input type="hidden" name="eliminar_id" id="eliminar_id_input">
+      <h2>Eliminar Producto</h2>
+      <p>¿Estás seguro de que deseas eliminar este producto?</p>
+      <div class="actions">
+        <button type="submit" class="button">Eliminar</button>
+        <button type="button" class="button" name="cancelar">Cancelar</button>
+      </div>
+    </form>
+  </div>
+  <div class="backgraund" id="backgraund_form"></div>
+</section>
+{% endblock %}
