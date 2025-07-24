@@ -8,6 +8,7 @@ class Proveedores(models.Model):
     direccion = models.CharField(max_length=200, verbose_name="Dirección")
     telefono = models.CharField(max_length=15, verbose_name="Teléfono")
     email = models.EmailField(verbose_name="Correo Electrónico", null=True)
+    estatus = models.BooleanField(default=True, verbose_name="Estado")
 
     def __str__(self):
         return f"{self.id_proveedor_PK}-{self.nombre}"
