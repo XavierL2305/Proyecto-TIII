@@ -15,7 +15,6 @@
             <form method="post" action="">
                 {% csrf_token %}
                 <img class="logggo" src="{% static 'img/logos/9.png' %}">
-                <!-- Eliminamos aquí la lista de errores -->
                 <input type="text" name="username" placeholder="Nombre de usuario" value="{{ form.username.value|default:'' }}" required />
                 <input type="email" name="email" placeholder="Correo electrónico" value="{{ form.email.value|default:'' }}" required />
                 <input type="password" name="password1" placeholder="Contraseña (minimo 8 caracteres)" required />
@@ -31,7 +30,6 @@
                 {% csrf_token %}
                 <img class="loggo" src="{% static 'img/logos/logo_text1.png' %}">
                 <h1>Iniciar Sesión</h1>
-                <!-- Eliminamos aquí la lista de errores -->
                 <input type="text" name="username" placeholder="Usuario" value="{{ login_form.username.value|default:'' }}" required />
                 <input type="password" name="password" placeholder="Contraseña" required />
                 <button type="submit" name="login">Entrar</button>
@@ -56,7 +54,7 @@
 
     </div>
 
-    <!-- Contenedor de Mensajes (Toast) -->
+    <!-- Contenedor de Mensajes -->
     {% if messages %}
         <div id="message-container" style="position: fixed; top: 10px; right: 10px; z-index: 9999;">
             {% for message in messages %}

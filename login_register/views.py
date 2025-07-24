@@ -15,7 +15,6 @@ def login_register(request):
                 messages.success(request, 'Cuenta creada con éxito. Ahora puedes iniciar sesión.')
                 return redirect('login_register:login_register')
             else:
-                # Agregar errores de formulario a mensajes
                 for field, errors in form.errors.items():
                     for error in errors:
                         messages.error(request, f"{error}")
@@ -25,7 +24,7 @@ def login_register(request):
             if login_form.is_valid():
                 user = login_form.get_user()
                 auth_login(request, user)
-                return redirect('/')  # Cambia la URL según tu proyecto
+                return redirect('/')  
             else:
                 for field, errors in login_form.errors.items():
                     for error in errors:
@@ -45,4 +44,4 @@ def login_register(request):
 
 
 class CustomLogoutView(LogoutView):
-    next_page = '/proveedores'  # Cambia según tu necesidad
+    next_page = '/proveedores'  # redirige a la página de proveedores después de cerrar sesión

@@ -1,0 +1,128 @@
+{% extends "template_base.html" %}
+{% load static %}
+
+{% block title %}Empleados{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'empleados/empleados.css' %}">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'empleados/empleados.js' %}" defer></script>
+{% endblock %}
+
+{# Bloques para cada enlace del nav #}
+{% block li1 %}
+<a href="{% url 'home:home' %}" class="ancla {% if request.resolver_match.namespace == 'home' %}activo{% endif %}">Inicio</a>
+{% endblock %}
+{% block li2 %}
+<a href="{% url 'productos:productos' %}" class="ancla {% if request.resolver_match.namespace == 'productos' %}activo{% endif %}">Productos</a>
+{% endblock %}
+{% block li3 %}
+<a href="{% url 'proveedores:proveedores' %}" class="ancla {% if request.resolver_match.namespace == 'proveedores' %}activo{% endif %}">Proveedores</a>
+{% endblock %}
+{% block li4 %}
+<a href="{% url 'empleados:gestion_empleados' %}" class="ancla {% if request.resolver_match.namespace == 'empleados' %}activo{% endif %}">Empleados</a>
+{% endblock %}
+
+{% block content %}
+<section class="empleados">
+  <center>
+    <h1 class="titulo">Empleados</h1>
+    <button class="button" id="add" name="button_agregar">Agregar Empleado</button>
+  </center>
+
+  <div class="tabla">
+    <div class="thead">
+      <b>Username</b>
+      <b>Email</b>
+      <b>Rol</b>
+      <b>Es Cliente</b>
+      <b>Acciones</b>
+    </div>
+    <div class="tbody">
+      {% for empleado in empleados %}
+        <p>{{ empleado.username }}</p>
+        <p>{{ empleado.email }}</p>
+        <p>{{ empleado.rol }}</p>
+        <p>{{ empleado.is_cliente }}</p>
+        <div class="acciones">
+          <button 
+            class="button edit-btn"
+            data-id="{{ empleado.id }}"
+            data-username="{{ empleado.username|escapejs }}"
+            data-email="{{ empleado.email|escapejs }}"
+            data-rol="{{ empleado.rol|escapejs }}">
+            Editar
+          </button>
+          <button class="button delete-btn" value="{{ empleado.id }}">
+            Eliminar
+          </button>
+        </div>
+      {% empty %}
+        <p colspan="5" style="text-align:center;color:#ccc">No hay empleados registrados.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if messages %}
+  <div id="alertas">
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-success{% endif %}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Modal Agregar Empleado -->
+  <div class="formulario" id="formulario_agregar">
+    <form method="post">
+      {% csrf_token %}
+      <h2>Agregar Empleado</h2>
+      {{ form_crear.username.label_tag }} {{ form_crear.username }}
+      {{ form_crear.email.label_tag }} {{ form_crear.email }}
+      {{ form_crear.rol.label_tag }} {{ form_crear.rol }}
+      {{ form_crear.password1.label_tag }} {{ form_crear.password1 }}
+      {{ form_crear.password2.label_tag }} {{ form_crear.password2 }}
+      <input type="hidden" name="crear" value="1" />
+      <div class="actions">
+        <button type="submit" class="button">Guardar</button>
+        <button type="button" class="button" name="cancelar">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Modal Editar Empleado -->
+  <div class="formulario" id="formulario_editar">
+    <form method="post">
+      {% csrf_token %}
+      <h2>Editar Empleado</h2>
+      <input type="hidden" name="empleado_id" id="empleado_id_editar" />
+      {{ form_editar.username.label_tag }} {{ form_editar.username }}
+      {{ form_editar.email.label_tag }} {{ form_editar.email }}
+      {{ form_editar.rol.label_tag }} {{ form_editar.rol }}
+      <input type="hidden" name="editar" value="1" />
+      <div class="actions">
+        <button type="submit" class="button">Actualizar</button>
+        <button type="button" class="button" name="cancelar">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Modal Eliminar Empleado -->
+  <div class="formulario" id="formulario_eliminar">
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="eliminar_id" id="eliminar_id" />
+      <input type="hidden" name="eliminar" value="1" />
+      <h2>Eliminar Empleado</h2>
+      <p>¿Estás seguro que quieres eliminar este empleado?</p>
+      <div class="actions">
+        <button type="submit" class="button">Eliminar</button>
+        <button type="button" class="button" name="cancelar">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="backgraund" id="backgraund_form"></div>
+</section>
+{% endblock %}

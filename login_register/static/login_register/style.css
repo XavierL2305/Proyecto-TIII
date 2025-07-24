@@ -238,7 +238,7 @@ input {
 
 .errorlist {
     color: #e74c3c; /* rojo suave */
-    font-size: 0.5rem; /* un poco más pequeño */
+    font-size: 0.5rem; 
     margin: 5px 0 10px 0;
     padding-left: 20px;
     list-style-type: disc;
@@ -253,7 +253,7 @@ input {
 }
 
 .errorlist li {
-    font-size: 0.3rem; /* Tamaño de fuente más pequeño */
-    margin: 0; /* Sin margen para evitar espacios extra */
+    font-size: 0.3rem; 
+    margin: 0; 
 }
 

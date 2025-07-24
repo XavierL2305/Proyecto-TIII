@@ -1,9 +1,20 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-class UsuarioRegistrado(models.Model):
-    username = models.CharField(max_length=150, unique=True)
-    email = models.EmailField(unique=True)
-    fecha_registro = models.DateTimeField(auto_now_add=True)
+class CustomUser(AbstractUser):
+    ADMINISTRADOR = 'admin'
+    EMPLEADO = 'empleado'
+    VENDEDOR = 'vendedor'
+    DISTRIBUIDOR = 'distribuidor'
+    CLIENTE = 'cliente'
 
-    def __str__(self):
-        return self.username
+    ROL_CHOICES = [
+        (ADMINISTRADOR, 'Administrador'),
+        (EMPLEADO, 'Empleado'),
+        (VENDEDOR, 'Vendedor'),
+        (DISTRIBUIDOR, 'Distribuidor'),
+        (CLIENTE, 'Cliente'),
+    ]
+
+    rol = models.CharField(max_length=20, choices=ROL_CHOICES, default=CLIENTE)
+    is_cliente = models.BooleanField(default=False)

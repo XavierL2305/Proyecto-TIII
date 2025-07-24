@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'proveedores',
     'home',
     'login_register',
-
+    'productos',
+    'empleados',
 ]
 
 MIDDLEWARE = [
@@ -87,8 +88,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'home/static'),
 ]
 
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/img/'
+
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
@@ -126,6 +128,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTH_USER_MODEL = 'login_register.CustomUser' # Cambia el modelo de usuario para roles  
+
 
 
 # Internationalization
