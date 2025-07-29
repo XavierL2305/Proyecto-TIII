@@ -12,11 +12,47 @@ document.addEventListener("DOMContentLoaded", function(){
     let eliminar = document.getElementById("formulario_eliminar")
     let button_eliminar = document.querySelectorAll('.delete-btn')
 
-    let button_cancelar_1 = document.getElementsByName("cancelar")[0];
-    let button_cancelar_2 = document.getElementsByName("cancelar")[1];
-    let button_cancelar_3 = document.getElementsByName("cancelar")[2];
+    let button_cancelar = document.getElementsByName("cancelar");
 
     // EVENTOS PARA LOS FORMULARIOS
+
+    // Formulario Filtro
+    let filtro = document.querySelector('.filtro')
+    let contenedor_filtro = document.querySelector('.container-filtro')
+
+    filtro.addEventListener('click', () => {
+        if (contenedor_filtro.classList.contains('activate')) {
+            contenedor_filtro.classList.remove('activate')
+            backgraund_formulario.classList.remove('activate')
+        } else {
+            contenedor_filtro.classList.add('activate')
+            backgraund_formulario.classList.add('activate')
+        }
+    })
+
+    document.getElementById('buscador_proveedores').addEventListener('input', filtrarProveedores);
+    document.getElementById('filtro_campos').addEventListener('change', filtrarProveedores);
+
+    function filtrarProveedores() {
+        let campo = document.getElementById('filtro_campos').value;
+        let filtro = document.getElementById('buscador_proveedores').value.toLowerCase();
+        let filas = document.querySelectorAll('.fila-proveedor');
+
+        filas.forEach(function(fila) {
+            if (!campo) {
+                fila.style.display = '';
+                return;
+            }
+            let celda = fila.querySelector('.' + campo);
+            let texto = celda ? celda.textContent.toLowerCase() : '';
+            if (texto.includes(filtro)) {
+                fila.style.display = '';
+            } else {
+                fila.style.display = 'none';
+            }
+        });
+    }
+
     // Formulario agregar
     backgraund_formulario.addEventListener('click', () => {
         if (agregar.classList.contains('activate')) {
@@ -28,6 +64,9 @@ document.addEventListener("DOMContentLoaded", function(){
         }if (eliminar.classList.contains('activate')) {
             eliminar.classList.remove('activate')
             backgraund_formulario.classList.remove('activate')
+        }if (contenedor_filtro.classList.contains('activate')) {
+            contenedor_filtro.classList.remove('activate')
+            backgraund_formulario.classList.remove('activate')
         }
     })
     button_agregar.addEventListener('click', () => {
@@ -36,6 +75,7 @@ document.addEventListener("DOMContentLoaded", function(){
         console.log(button_agregar.value)
     })
 
+    // Llenar los inputs del formulario de editar
     button_editar.forEach(function(btn) {
         btn.addEventListener('click', () => {
             editar.classList.add('activate')
@@ -56,25 +96,21 @@ document.addEventListener("DOMContentLoaded", function(){
         btn.addEventListener('click', () => {
             eliminar.classList.add('activate')
             backgraund_formulario.classList.add('activate')
-            // Puedes capturar el id así:
-            console.log('Eliminar proveedor:', btn.value)
+            document.getElementById('proveedor_id_eliminar').value = btn.value;
         });
     });
 
-    button_cancelar_1.addEventListener('click', () => {
-        cancelarFormulario()
-    })
-    button_cancelar_2.addEventListener('click', () => {
-        cancelarFormulario()
-    })
-    button_cancelar_3.addEventListener('click', () => {
-        cancelarFormulario()
-    })
+    button_cancelar.forEach(function(btn) {
+        btn.addEventListener('click', () => {
+            cancelarFormulario()
+        });
+    });
 
     function cancelarFormulario() {
         agregar.classList.remove('activate')
         editar.classList.remove('activate')
         eliminar.classList.remove('activate')
+        filtro.classList.remove('activate')
         backgraund_formulario.classList.remove('activate')
     }
 

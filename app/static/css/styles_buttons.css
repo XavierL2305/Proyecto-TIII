@@ -17,13 +17,13 @@
     color: var(--texto_principal);
     transition: all ease .3s;
 }
- #add {
+.add {
     background-color: var(--elementos_primarios);
 }
-#edit {
+.edit {
     background-color: var(--elementos_primarios);
 } 
-#delete {
+.delete {
     background-color: #e74c3c;
     transition: all ease .3s;
 }

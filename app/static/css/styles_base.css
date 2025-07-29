@@ -187,5 +187,5 @@ body{
     position: absolute;
     right: 0;
     z-index: 1;
-    background-color: #273746;
+    background-color: var(--fondos);
 }
