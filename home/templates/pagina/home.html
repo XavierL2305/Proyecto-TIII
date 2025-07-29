@@ -14,7 +14,7 @@ Home
 {% endblock %}
 
 {% block li2 %}
-    Clientes
+    <a href="{% url 'empleados:gestion_empleados' %}" class="ancla {% if request.resolver_match.namespace == 'empleados' %}activo{% endif %}">Empleados</a>
 {% endblock %}
 
 {% block li3 %}
@@ -22,7 +22,7 @@ Home
 {% endblock %}
 
 {% block li4 %}
-    Login
+    <a href="{% url 'login_register:login_register' %}" class="ancla">Login</a>
 {% endblock %}
 
 {% block content %}

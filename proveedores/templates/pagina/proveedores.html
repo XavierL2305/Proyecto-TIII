@@ -18,10 +18,11 @@ Proveedores
     <a href="{% url 'home:home' %}" class="ancla">Home</a>
 {% endblock %}
 {% block li2 %}
-    <a href="{% url 'productos:productos' %}" class="ancla">Productos</a>
+    <a href="{% url 'empleados:gestion_empleados' %}" class="ancla {% if request.resolver_match.namespace == 'empleados' %}activo{% endif %}">Empleados</a>
 {% endblock %}
+
 {% block li3 %}
-    Reportes
+    <a href="{% url 'productos:productos' %}" class="ancla {% if request.resolver_match.namespace == 'productos' %}activo{% endif %}">Productos</a>
 {% endblock %}
 
 {% block content %}
