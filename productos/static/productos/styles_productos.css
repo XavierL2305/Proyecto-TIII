@@ -85,7 +85,6 @@
    ====================== */
 
 body {
-  background-color: var(--fondos);
   min-height: 100vh;
   margin: 0;
   padding: 0;
@@ -95,7 +94,6 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr auto;
-  background-color: var(--secciones);
 }
 
 h1,h2{
