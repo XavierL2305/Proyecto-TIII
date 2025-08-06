@@ -5,7 +5,7 @@ from .forms import ProductoForm
 
 def productos(request):
     filtro = request.GET.get('filtro', 'activos')
-
+    # No aplicamos filtro por búsqueda en backend ya que usas filtro frontend
     if filtro == 'eliminados':
         productos = Productos.objects.filter(status=False)
     else:
@@ -14,7 +14,6 @@ def productos(request):
     formulario = ProductoForm()
 
     if request.method == 'POST':
-
         if 'eliminar_id' in request.POST:
             try:
                 producto = Productos.objects.get(id_producto_PK=request.POST.get('eliminar_id'))
