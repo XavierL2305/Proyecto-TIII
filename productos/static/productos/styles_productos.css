@@ -128,9 +128,11 @@ h1, h2 {
   background-color: var(--fondos);
   border-radius: 0.5rem;
   border: solid 1px #ddd;
+
+  /* Aquí agregamos scroll horizontal cuando sea necesario */
+  max-width: 100%;
   overflow-x: auto;
-  font-size: 15px;
-  overflow: hidden;
+  white-space: nowrap;
 }
 
 .tabla .thead {
@@ -371,8 +373,41 @@ input::placeholder{
   opacity: 1; /* Ensures placeholder is visible */
 }
 
-
 .filtros-inputs select:focus,
 .filtros-inputs input[type="text"]:focus {
   border-color: #2980b9;
+}
+
+@media (max-width: 700px) {
+  .logo img{
+    width: 70px; /* tamaño más pequeño */
+    height: 70px;
+    transition: all 0.3s ease-in-out;
+  }
+  .center-filters {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    margin: 1px;
+    transition: all 0.3s ease-in-out;
+  }
+  .tabla {
+    gap: 0.5em;
+    margin: 30px 1rem 1rem;
+    transition: all 0.3s ease-in-out;
+  }
+}
+
+@media (max-width: 500px) {
+  .logo img{
+    width: 0px; /* tamaño más pequeño */
+    height: 0px;
+    transition: all 0.3s ease-in-out;
+  }
+  .formulario.activate{
+    width: 60%;
+    margin-left: 25px;
+  }
+
 }

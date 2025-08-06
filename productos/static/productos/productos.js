@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   const botonAceptarFiltro = document.getElementById('boton_aceptar_filtro');
 
-  // Listener botón agregar (si existe)
+  //  botón agregar 
   if (button_agregar) {
     button_agregar.addEventListener('click', () => {
       if (!agregar) return;
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Listener botones editar (si existen)
+  //  botones editar 
   if (button_editar && button_editar.length > 0) {
     button_editar.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Listener botones eliminar (si existen)
+  //  botones eliminar 
   if (button_eliminar && button_eliminar.length > 0) {
     button_eliminar.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -75,14 +75,14 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Listener botones cancelar (si existen)
+  //  botones cancelar 
   if (button_cancelar && button_cancelar.length > 0) {
     Array.from(button_cancelar).forEach(btn => {
       btn.addEventListener('click', cancelarFormulario);
     });
   }
 
-  // Listener filtro lupa (si existe)
+  // filtro lupa
   if (filtroBtn) {
     filtroBtn.addEventListener('click', () => {
       if (!formularioFiltro) return;
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Listener botón Aceptar del filtro
+  // Aceptar del filtro
   if (botonAceptarFiltro) {
     botonAceptarFiltro.addEventListener('click', () => {
       // Solo ocultar el modal y fondo, sin limpiar filas
@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Listener fondo modal para cerrar todo con cancelar (clic fuera)
+  // cancelar formulario fuera del cuadro (clic fuera)
   if (bg) {
     bg.addEventListener('click', cancelarFormulario);
   }
@@ -190,7 +190,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  // Bindear eventos para filtro, solo si existen ambos inputs
   if (inputBuscar && selectCampo) {
     inputBuscar.addEventListener('input', filtrarProductos);
     selectCampo.addEventListener('change', filtrarProductos);

@@ -5,7 +5,7 @@ from .forms import ProductoForm
 
 def productos(request):
     filtro = request.GET.get('filtro', 'activos')
-    # No aplicamos filtro por búsqueda en backend ya que usas filtro frontend
+    #if para buscar prodictos si el estado es activo o eliminado
     if filtro == 'eliminados':
         productos = Productos.objects.filter(status=False)
     else:
