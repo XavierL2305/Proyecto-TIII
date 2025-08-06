@@ -14,14 +14,12 @@ document.addEventListener("DOMContentLoaded", function(){
   const eliminarIdInput = document.getElementById("eliminar_id");
 
   const editarForm = editarModal.querySelector('form');
-  // Inputs dentro del formulario de editar
   const inputsEditar = editarForm.elements;
 
   // Abrir modal Agregar
   btnAgregar.addEventListener("click", () => {
     agregarModal.classList.add("activate");
     bg.classList.add("activate");
-    // Reset formulario Agregar
     agregarModal.querySelector("form").reset();
   });
 
@@ -35,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function(){
       inputsEditar['username'].value = btn.dataset.username;
       inputsEditar['email'].value = btn.dataset.email;
       inputsEditar['rol'].value = btn.dataset.rol;
-      inputsEditar['is_cliente'].checked = (btn.dataset.is_cliente === 'True');
     });
   });
 
@@ -48,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
   });
 
-  // Cancelar en cualquiera de los modales
+  // Cancelar en todos los modales
   btnCancelar.forEach(btn => {
     btn.addEventListener("click", () => {
       agregarModal.classList.remove("activate");
@@ -60,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
   });
 
-  // Cerrar modal clic fuera
+  // Cerrar modal haciendo clic fuera
   bg.addEventListener("click", () => {
     agregarModal.classList.remove("activate");
     editarModal.classList.remove("activate");
@@ -70,7 +67,33 @@ document.addEventListener("DOMContentLoaded", function(){
     empleadoIdEditar.value = "";
   });
 
-  // Opcional: auto ocultar alertas tras 3s
+
+  // ------- Filtro modal empleados --------
+  const filtroEmpleadosBtn = document.getElementById('filtro_empleados');
+  const filtroEmpleadosModal = document.getElementById('formulario_filtro_empleados');
+  const filtroEmpleadosBg = document.getElementById('backgraund_filtro_empleados');
+  const cancelarFiltroEmpleadosBtn = document.getElementById('cancelar_filtro_empleados');
+
+  function abrirFiltroEmpleados() {
+    filtroEmpleadosModal.classList.add('activate');
+    filtroEmpleadosBg.classList.add('activate');
+    // Autofocus al input para mejor UX
+    setTimeout(() => {
+      const inp = document.getElementById('buscador_empleados');
+      if (inp) inp.focus();
+    }, 60);
+  }
+
+  function cerrarFiltroEmpleados() {
+    filtroEmpleadosModal.classList.remove('activate');
+    filtroEmpleadosBg.classList.remove('activate');
+  }
+
+  if(filtroEmpleadosBtn) filtroEmpleadosBtn.addEventListener('click', abrirFiltroEmpleados);
+  if(cancelarFiltroEmpleadosBtn) cancelarFiltroEmpleadosBtn.addEventListener('click', cerrarFiltroEmpleados);
+  if(filtroEmpleadosBg) filtroEmpleadosBg.addEventListener('click', cerrarFiltroEmpleados);
+
+  // Ocultar alertas automáticas después de 3 segundos
   setTimeout(() => {
     const alertas = document.getElementById("alertas");
     if(alertas) alertas.style.display = "none";

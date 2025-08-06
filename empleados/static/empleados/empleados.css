@@ -1,5 +1,4 @@
 :root {
-  /* Paleta principal */
   --fondos: #1c2833;
   --secciones: #273746;
   --elementos_primarios: #34495e;
@@ -13,116 +12,145 @@
   --transparent: rgba(255, 255, 255, 0.5);
 }
 
-/* ==============================
-    Estilos generales y layout
-   ============================== */
-
 body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--fondos);
   color: var(--texto_principal);
 }
 
-.empleados {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto 1fr;
+/*lupa */
+.filtro {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease;
+  margin-left: 1rem;
+}
+.filtro:hover {
+  transform: scale(1.1);
+}
+
+/* Contenedor botón y lupa */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 1rem;
-  padding: 1.5rem 2rem;
-  max-width: 1000px;
-  margin: auto;
+  margin-top: 20px;
 }
 
 /* Título */
-.empleados > center h1.titulo {
-  font-size: 2.2rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
+.titulo {
+  font-size: 1.5rem;
+  color: var(--main-text);
+  text-align: center;
+  margin: 20px 0;
 }
 
-/* Botón agregar */
+/* Tabla */
+.tabla {
+  width: 100%;
+  max-width: 900px;
+  margin: 2rem auto;
+  border-collapse: collapse;
+  color: var(--texto_principal);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid var(--elementos_primarios);
+}
+
+/* Cabecera tabla */
+.tabla thead {
+  background-color: var(--elementos_primarios);
+  color: var(--main-text);
+}
+
+.tabla thead th {
+  padding: 12px 15px;
+  text-align: center;
+  font-weight: 600;
+  border-bottom: 2px solid var(--main-bg);
+}
+
+/* Filas cuerpo */
+.tabla tbody tr {
+  border-bottom: 1px solid var(--elementos_primarios);
+  background-color: transparent; 
+}
+
+.tabla tbody tr:nth-child(even) {
+  background-color: transparent; /* misma transparencia para pares */
+}
+
+/* Celdas cuerpo */
+.tabla tbody td {
+  padding: 10px 12px;
+  text-align: center;
+  vertical-align: middle;
+  word-break: break-word;
+}
+
+/* Contenedor botones */
+.tbody .acciones {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Botones acciones */
+.tbody .acciones .button {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  background: var(--elementos_primarios);
+  border: none;
+  border-radius: 5px;
+  color: var(--texto_principal);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.tbody .acciones .button:hover {
+  background: var(--detalles_hover);
+}
+
+/* Botones generales */
 .button {
   background: var(--elementos_primarios);
   color: var(--texto_principal);
-  padding: 10px 24px;
-  border-radius: 5px;
   border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
   cursor: pointer;
-  font-weight: 600;
   transition: background 0.2s ease;
+  font-weight: 600;
   user-select: none;
 }
 .button:hover {
   background: var(--detalles_hover);
 }
 
-/* Tabla estilo grid */
-.tabla {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  background-color: var(--secciones);
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid var(--elementos_primarios);
-  font-size: 0.95rem;
-}
-
-.tabla .thead, .tabla .tbody {
-  display: contents;
-}
-
-.tabla .thead b {
-  padding: 12px 10px;
-  background-color: var(--elementos_primarios);
-  color: var(--main-text);
-  text-align: center;
-  border-bottom: 1.5px solid var(--main-bg);
-  font-weight: 600;
-}
-
-.tabla .tbody p {
-  padding: 5px 10px;
-  color: var(--texto_principal);
-  border-bottom: 1px solid var(--elementos_primarios);
-  text-align: center;
-}
-
-.tbody .acciones {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  align-items: center;
-  padding: 8px 5px;
-}
-
-.tbody .acciones .button {
-  padding: 6px 12px;
-  font-size: 0.85rem;
-}
-
-/* Formularios modales */
+/* Modales */
 .formulario {
   position: fixed;
-  left: 50%;
   top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
+  width: 320px;
+  max-width: 90vw;
   background-color: var(--secciones);
+  color: var(--texto_principal);
+  border-radius: 8px;
+  padding: 30px 25px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.6);
+  z-index: 1001;
   opacity: 0;
   visibility: hidden;
-  z-index: 105;
-  transition: all ease 0.3s;
-  width: 250px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
-  padding: 10px 30px;
-}
-
-.formulario form {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
+  transition: all 0.3s ease;
+  font-family: inherit;
 }
 
 .formulario.activate {
@@ -130,62 +158,59 @@ body {
   visibility: visible;
 }
 
-/* Campos formulario */
+.formulario form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 form label {
-  font-size: 0.9rem;
-  margin-bottom: 2px;
-  color: var(--texto_principal);
   font-weight: 600;
+  margin-bottom: 3px;
+  display: block;
 }
 
 form input[type="text"],
 form input[type="email"],
-form select {
-  padding: 4px 12px;
-  border-radius: 5px;
+form select,
+form input[type="password"] {
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 4px;
   border: 1px solid var(--elementos_primarios);
   background-color: var(--elementos_secundarios);
   color: var(--texto_principal);
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
 form input[type="text"]:focus,
 form input[type="email"]:focus,
-form select:focus {
+form select:focus,
+form input[type="password"]:focus {
   border-color: var(--detalles_hover);
 }
 
-/* Checkbox */
-form input[type="checkbox"] {
-  transform: scale(1.2);
-  margin-right: 8px;
-  cursor: pointer;
-}
-
-/* Botones en formularios */
-form .actions {
+.actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 1rem;
+  gap: 10px;
 }
 
-form .actions .button {
-  width: 48%;
-  padding: 5px 0;
-  font-size: 1rem;
+.actions .button {
+  flex: 1;
 }
 
-/* Fondo modal */
+/* Fondo modal trasparente */
 .backgraund {
   position: fixed;
-  left: 0; top: 0; right: 0; bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   width: 100vw; height: 100vh;
-  z-index: 4;
   background: #000000bb;
   opacity: 0;
   visibility: hidden;
+  z-index: 2;
   transition: opacity 0.3s ease;
 }
 .backgraund.activate {
@@ -198,8 +223,9 @@ form .actions .button {
   position: fixed;
   top: 1rem;
   right: 1rem;
-  z-index: 110;
+  z-index: 1050;
   min-width: 250px;
+  font-family: inherit;
 }
 .alert {
   padding: 12px 20px;
@@ -222,4 +248,49 @@ form .actions .button {
 }
 .alert-info {
   background-color: #2196f3;
+}
+
+/* Responsive para tablas y modales */
+@media (max-width: 700px) {
+  .tabla {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    gap: 0.5em;
+    margin: 30px 1rem 1rem;
+    transition: all 0.3s ease-in-out;
+  }
+  .container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .logo img{
+    width: 80px; /* tamaño más pequeño */
+    height: 80px;
+    transition: all 0.3s ease-in-out;
+  }
+}
+
+@media (max-width: 500px) {
+  .logo img{
+    width: 0px; /* tamaño más pequeño */
+    height: 0px;
+    transition: all 0.3s ease-in-out;
+  }
+  .formulario.activate{
+    width: 60%;
+    margin-left: 25px;
+  }
+  .backgraund.activate {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  #empleado_id_editar{
+    height: 20px;
+    padding: 0;
+    margin: 0;
+  }
 }

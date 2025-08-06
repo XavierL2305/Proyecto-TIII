@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
+from django.db.models import Q
 from .forms import EmpleadoCreationForm, EmpleadoChangeForm
 
 User = get_user_model()
@@ -14,13 +15,15 @@ def es_admin(user):
 @user_passes_test(es_admin)
 @require_http_methods(["GET", "POST"])
 def gestion_empleados(request):
+    busqueda = request.GET.get('buscador_empleados', '').strip()
+
     # Crear empleado
     if request.method == 'POST' and 'crear' in request.POST:
         form_crear = EmpleadoCreationForm(request.POST)
         if form_crear.is_valid():
             form_crear.save()
             messages.success(request, 'Empleado creado correctamente.')
-            return redirect('empleados:gestion_empleados')  # Namespace usado aquí
+            return redirect('empleados:gestion_empleados')
         else:
             messages.error(request, 'Error al crear empleado. Revisa los datos.')
     else:
@@ -51,11 +54,28 @@ def gestion_empleados(request):
             messages.error(request, 'Error al eliminar empleado.')
         return redirect('empleados:gestion_empleados')
 
-    # Filtrar usuarios que no sean clientes ni superusuarios
+    # Usuarios filtrados (no clientes ni superusuarios)
     empleados = User.objects.exclude(rol=User.CLIENTE).exclude(is_superuser=True)
+
+    # Filtro con búsqueda, o mostrar todos si vacío/no resultados
+    if busqueda:
+        empleados_filtrados = empleados.filter(
+            Q(username__icontains=busqueda) |
+            Q(email__icontains=busqueda) |
+            Q(rol__icontains=busqueda)
+        )
+        if empleados_filtrados.exists():
+            empleados = empleados_filtrados
+        else:
+            # No hay coincidencias, mostrar todos
+            pass
+    else:
+        # Búsqueda vacía, mostrar todos (ya asignado en empleados)
+        pass
 
     return render(request, 'empleados/gestion_empleados.html', {
         'empleados': empleados,
         'form_crear': form_crear,
         'form_editar': form_editar,
+        'busqueda': busqueda,
     })
