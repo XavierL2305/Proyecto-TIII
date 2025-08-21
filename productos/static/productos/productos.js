@@ -1,6 +1,5 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", () => {
   const bg = document.getElementById("backgraund_form");
-
   const agregar = document.getElementById("formulario_agregar");
   const editar = document.getElementById("formulario_editar");
   const eliminar = document.getElementById("formulario_eliminar");
@@ -17,56 +16,43 @@ document.addEventListener("DOMContentLoaded", function() {
 
   const botonAceptarFiltro = document.getElementById('boton_aceptar_filtro');
 
-  //  botón agregar 
   if (button_agregar) {
     button_agregar.addEventListener('click', () => {
-      if (!agregar) return;
       agregar.classList.add('activate');
       bg.classList.add('activate');
-      // Limpiar inputs antes de abrir
       agregar.querySelectorAll('input[type=text], textarea, input[type=number]').forEach(i => i.value = '');
       const fileInput = agregar.querySelector('input[type=file]');
       if (fileInput) fileInput.value = '';
     });
   }
 
-  //  botones editar 
-  if (button_editar && button_editar.length > 0) {
+  if (button_editar.length > 0) {
     button_editar.forEach(btn => {
       btn.addEventListener('click', () => {
-        if (!editar) return;
         editar.classList.add('activate');
         bg.classList.add('activate');
         const datos = {...btn.dataset};
-        const idInput = document.getElementById('producto_id_editar');
-        const nombreInput = document.getElementById('nombre_editar');
-        const descripcionInput = document.getElementById('descripcion_editar');
-        const precioInput = document.getElementById('precio_editar');
-        if (idInput) idInput.value = datos.id || '';
-        if (nombreInput) nombreInput.value = datos.nombre || '';
-        if (descripcionInput) descripcionInput.value = datos.descripcion || '';
-        if (precioInput) precioInput.value = datos.precio || '';
-        const imgPreviewEditar = document.getElementById('img_preview_editar');
-        if (imgPreviewEditar) {
-          if (datos.imagen) {
-            imgPreviewEditar.src = datos.imagen;
-            imgPreviewEditar.style.display = 'block';
-          } else {
-            imgPreviewEditar.style.display = 'none';
-            imgPreviewEditar.removeAttribute('src');
-          }
+        document.getElementById('producto_id_editar').value = datos.id || '';
+        document.getElementById('nombre_editar').value = datos.nombre || '';
+        document.getElementById('descripcion_editar').value = datos.descripcion || '';
+        document.getElementById('precio_editar').value = datos.precio || '';
+        const imgPreview = document.getElementById('img_preview_editar');
+        if (datos.imagen) {
+          imgPreview.src = datos.imagen;
+          imgPreview.style.display = 'block';
+        } else {
+          imgPreview.style.display = 'none';
+          imgPreview.removeAttribute('src');
         }
-        const fileInput = editar.querySelector('input[type="file"]');
+        const fileInput = editar.querySelector('input[type=file]');
         if (fileInput) fileInput.value = '';
       });
     });
   }
 
-  //  botones eliminar 
-  if (button_eliminar && button_eliminar.length > 0) {
+  if (button_eliminar.length > 0) {
     button_eliminar.forEach(btn => {
       btn.addEventListener('click', () => {
-        if (!eliminar) return;
         eliminar.classList.add('activate');
         bg.classList.add('activate');
         const eliminarInput = document.getElementById('eliminar_id_input');
@@ -75,79 +61,56 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  //  botones cancelar 
-  if (button_cancelar && button_cancelar.length > 0) {
+  if (button_cancelar.length > 0) {
     Array.from(button_cancelar).forEach(btn => {
-      btn.addEventListener('click', cancelarFormulario);
+      btn.addEventListener('click', () => {
+        agregar.classList.remove('activate');
+        editar.classList.remove('activate');
+        eliminar.classList.remove('activate');
+        formularioFiltro.classList.remove('activate');
+        bg.classList.remove('activate');
+      });
     });
   }
 
-  // filtro lupa
   if (filtroBtn) {
     filtroBtn.addEventListener('click', () => {
-      if (!formularioFiltro) return;
       formularioFiltro.classList.add('activate');
       bg.classList.add('activate');
-      // Limpiamos inputs para nueva búsqueda
       if (inputBuscar) inputBuscar.value = '';
       if (selectCampo) selectCampo.value = '';
       mostrarTodasFilas();
     });
   }
 
-  // Aceptar del filtro
   if (botonAceptarFiltro) {
     botonAceptarFiltro.addEventListener('click', () => {
-      // Solo ocultar el modal y fondo, sin limpiar filas
-      if (formularioFiltro) formularioFiltro.classList.remove('activate');
-      if (bg) bg.classList.remove('activate');
-
-      // Aplicar filtro si hay texto y campo seleccionado
-      if (inputBuscar && selectCampo) {
-        if (inputBuscar.value.trim() !== '' && selectCampo.value !== '') {
-          filtrarProductos();
-        }
+      formularioFiltro.classList.remove('activate');
+      bg.classList.remove('activate');
+      if (inputBuscar.value.trim() !== '' && selectCampo.value !== '') {
+        filtrarProductos();
       }
     });
   }
 
-  // cancelar formulario fuera del cuadro (clic fuera)
   if (bg) {
-    bg.addEventListener('click', cancelarFormulario);
-  }
-
-  function cancelarFormulario() {
-    if (agregar) agregar.classList.remove('activate');
-    if (editar) editar.classList.remove('activate');
-    if (eliminar) eliminar.classList.remove('activate');
-    if (formularioFiltro) formularioFiltro.classList.remove('activate');
-    if (bg) bg.classList.remove('activate');
-
-    const eliminarInput = document.getElementById('eliminar_id_input');
-    if (eliminarInput) eliminarInput.value = '';
-
-    const imgPreviewEditar = document.getElementById('img_preview_editar');
-    if (imgPreviewEditar) imgPreviewEditar.style.display = 'none';
-
-    // Limpiamos el filtro y mostramos todos los productos
-    if (inputBuscar) inputBuscar.value = '';
-    if (selectCampo) selectCampo.value = '';
-    mostrarTodasFilas();
+    bg.addEventListener('click', () => {
+      agregar.classList.remove('activate');
+      editar.classList.remove('activate');
+      eliminar.classList.remove('activate');
+      formularioFiltro.classList.remove('activate');
+      bg.classList.remove('activate');
+    });
   }
 
   function mostrarTodasFilas() {
-    const tbody = document.querySelector('.tabla .tbody');
-    if (!tbody) return;
-    Array.from(tbody.children).forEach(el => {
-      if(el.style) el.style.display = '';
+    const filas = document.querySelectorAll('.fila-producto');
+    filas.forEach(fila => {
+      fila.style.display = '';
     });
   }
 
   function filtrarProductos() {
-    if (!selectCampo || !inputBuscar) {
-      return mostrarTodasFilas();
-    }
-
     const campo = selectCampo.value;
     const filtro = inputBuscar.value.trim().toLowerCase();
 
@@ -156,38 +119,36 @@ document.addEventListener("DOMContentLoaded", function() {
       return;
     }
 
-    const tbody = document.querySelector('.tabla .tbody');
-    if (!tbody) return;
-    const hijos = Array.from(tbody.children);
+    const filas = document.querySelectorAll('.fila-producto');
 
-    // Cada producto ocupa 6 elementos consecutivos en la tabla
-    for (let i = 0; i < hijos.length; i += 6) {
-      const filaGrupo = hijos.slice(i, i + 6);
-      let texto = '';
-
+    filas.forEach(fila => {
+      let textoBusqueda = '';
       switch (campo) {
         case 'id_producto_PK':
-          texto = filaGrupo[0]?.textContent.toLowerCase() || '';
+          textoBusqueda = fila.children[0].textContent.toLowerCase();
           break;
         case 'nombre':
-          texto = filaGrupo[2]?.textContent.toLowerCase() || '';
+          textoBusqueda = fila.children[2].textContent.toLowerCase();
           break;
         case 'descripcion':
-          texto = filaGrupo[3]?.textContent.toLowerCase() || '';
+          textoBusqueda = fila.children[3].textContent.toLowerCase();
           break;
         case 'precio':
-          texto = filaGrupo[4]?.textContent.toLowerCase() || '';
+          textoBusqueda = fila.children[4].textContent.toLowerCase();
+          break;
+        case 'categoria':
+          textoBusqueda = fila.children[5].textContent.toLowerCase();
           break;
         default:
-          texto = '';
+          textoBusqueda = '';
       }
 
-      if (texto.includes(filtro)) {
-        filaGrupo.forEach(el => el.style.display = '');
+      if (textoBusqueda.includes(filtro)) {
+        fila.style.display = '';
       } else {
-        filaGrupo.forEach(el => el.style.display = 'none');
+        fila.style.display = 'none';
       }
-    }
+    });
   }
 
   if (inputBuscar && selectCampo) {
@@ -195,7 +156,6 @@ document.addEventListener("DOMContentLoaded", function() {
     selectCampo.addEventListener('change', filtrarProductos);
   }
 
-  // Ocultar alertas después de 3 segundos
   setTimeout(() => {
     const alertas = document.getElementById('alertas');
     if (alertas) alertas.style.display = 'none';

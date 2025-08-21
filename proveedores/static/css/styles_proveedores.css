@@ -231,3 +231,37 @@ form input:not(:placeholder-shown) + label{
 .alert-error, .alert-danger { background: #f44336; }
 .alert-warning { background: #ff9800; }
 .alert-info { background: #2196f3; }
+
+@media (max-width: 700px) {
+  .logo img{
+    width: 70px; /* tamaño más pequeño */
+    height: 70px;
+    transition: all 0.3s ease-in-out;
+  }
+  .center-filters {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    margin: 1px;
+    transition: all 0.3s ease-in-out;
+  }
+  .tabla {
+    gap: 0.5em;
+    margin: 30px 1rem 1rem;
+    transition: all 0.3s ease-in-out;
+  }
+}
+
+@media (max-width: 500px) {
+  .logo img{
+    width: 0px; /* tamaño más pequeño */
+    height: 0px;
+    transition: all 0.3s ease-in-out;
+  }
+  .formulario.activate{
+    width: 60%;
+    margin-left: 25px;
+  }
+
+}

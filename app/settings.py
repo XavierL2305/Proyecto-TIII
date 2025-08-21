@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'login_register',
     'productos',
     'empleados',
+    'categorias',
 ]
 
 MIDDLEWARE = [
