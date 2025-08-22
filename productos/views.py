@@ -2,14 +2,18 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Productos
 from .forms import ProductoForm
+from categorias.models import Categoria
+
 
 def productos(request):
     filtro = request.GET.get('filtro', 'activos')
-    #if para buscar prodictos si el estado es activo o eliminado
+
     if filtro == 'eliminados':
         productos = Productos.objects.filter(status=False)
     else:
         productos = Productos.objects.filter(status=True)
+
+    categorias = Categoria.objects.filter(status=True)
 
     formulario = ProductoForm()
 
@@ -40,16 +44,21 @@ def productos(request):
             producto = Productos.objects.get(id_producto_PK=producto_id)
             formulario = ProductoForm(request.POST, request.FILES, instance=producto)
             if formulario.is_valid():
-                formulario.save()
+                producto_actualizado = formulario.save(commit=False)
+                producto_actualizado.status = True  
+                producto_actualizado.save()
                 messages.success(request, "Producto actualizado con éxito.")
             else:
                 messages.error(request, "Corrige los errores en el formulario.")
             return redirect(f"{request.path}?filtro={filtro}")
 
-        else:
+
+        if not producto_id:
             formulario = ProductoForm(request.POST, request.FILES)
             if formulario.is_valid():
-                formulario.save()
+                producto_nuevo = formulario.save(commit=False)
+                producto_nuevo.status = True 
+                producto_nuevo.save()
                 messages.success(request, "Producto creado con éxito.")
             else:
                 messages.error(request, "Corrige los errores en el formulario.")
@@ -59,4 +68,5 @@ def productos(request):
         'productos': productos,
         'formulario': formulario,
         'filtro': filtro,
+        'categorias': categorias,
     })

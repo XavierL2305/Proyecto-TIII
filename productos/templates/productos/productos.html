@@ -154,6 +154,17 @@
       <div><input type="text" name="nombre" id="nombre_agregar" placeholder=" " required><label for="nombre_agregar">Nombre</label></div>
       <div><textarea name="descripcion" id="descripcion_agregar" rows="2" placeholder=" " required></textarea><label for="descripcion_agregar">Descripción</label></div>
       <div><input type="number" step="0.01" min="0" name="precio" id="precio_agregar" placeholder=" " required><label for="precio_agregar">Precio</label></div>
+      <div>
+        <label for="categoria_agregar"></label>
+        <select name="categoria" id="categoria_agregar" required>
+          <option value="" disabled selected>Seleccione una categoría</option>
+          {% for categoria in categorias %}
+            <option value="{{ categoria.id_categoria_PK }}" {% if formulario.instance.categoria and formulario.instance.categoria.id_categoria_PK == categoria.id_categoria_PK %}selected{% endif %}>
+              {{ categoria.descripcion }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
       <div><input type="file" name="imagen" id="imagen_agregar" accept="image/*" class="form_img"><label for="imagen_agregar" style="left: 0; top: 44px;">Imagen (opcional)</label></div>
       <div class="actions"><button type="submit" class="button">Guardar</button><button type="button" class="button" name="cancelar">Cancelar</button></div>
     </form>
@@ -167,6 +178,18 @@
       <div><input type="text" name="nombre" id="nombre_editar" placeholder=" " required><label for="nombre_editar">Nombre</label></div>
       <div><textarea name="descripcion" id="descripcion_editar" rows="2" placeholder=" " required></textarea><label for="descripcion_editar">Descripción</label></div>
       <div><input type="number" step="0.01" min="0" name="precio" id="precio_editar" placeholder=" " required><label for="precio_editar">Precio</label></div>
+      <div>
+        <label for="categoria_agregar"></label>
+        <select name="categoria" id="categoria_agregar" required>
+          <option value="" disabled selected>Seleccione una categoría</option>
+          {% for categoria in categorias %}
+            <option value="{{ categoria.id_categoria_PK }}"
+              {% if producto and producto.categoria.id_categoria_PK == categoria.id_categoria_PK %}selected{% endif %}>
+              {{ categoria.descripcion }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
       <div><input type="file" name="imagen" id="imagen_editar" accept="image/*" class="form_img_editar"><label for="imagen_editar" style="left: 0; top: 44px;">Imagen (si desea cambiar)</label><br><img id="img_preview_editar" class="img-thumb" style="max-height:50px;display:none;"></div>
       <div class="actions"><button type="submit" class="button">Actualizar</button><button type="button" class="button" name="cancelar">Cancelar</button></div>
     </form>

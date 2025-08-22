@@ -124,7 +124,14 @@ h1, h2 {
 
 .tabla .thead {
   display: grid;
-  grid-template-columns: 50px 70px 1.5fr 2fr 1fr 1.2fr 1.2fr;
+  grid-template-columns: 
+  minmax(3rem, 3rem)    /* columna fija de 3rem */
+  minmax(6rem, 6rem)    /* columna fija de 6rem */
+  minmax(150px, 1.5fr)  /* columna con mínimo 150px y crece con fr */
+  minmax(200px, 2fr)    /* columna con mínimo 200px y crece */
+  minmax(100px, 1fr)    /* columna con mínimo 100px y crece */
+  minmax(120px, 1.2fr)  /* */
+  minmax(120px, 1.2fr); /* */
   gap: 10px;
   font-weight: bold;
   color: var(--texto_principal);
@@ -142,7 +149,14 @@ h1, h2 {
 
 .fila-producto {
   display: grid;
-  grid-template-columns: 50px 70px 1.5fr 2fr 1fr 1.2fr 1.2fr;
+  grid-template-columns: 
+  minmax(3rem, 3rem)    /* columna fija de 3rem */
+  minmax(6rem, 6rem)    /* columna fija de 6rem */
+  minmax(150px, 1.5fr)  /* columna con mínimo 150px y crece con fr */
+  minmax(200px, 2fr)    /* columna con mínimo 200px y crece */
+  minmax(100px, 1fr)    /* columna con mínimo 100px y crece */
+  minmax(120px, 1.2fr)  /* */
+  minmax(120px, 1.2fr); /* */
   gap: 10px;
   border-bottom: 1px solid #555;
   padding: 10px 8px;
@@ -150,6 +164,7 @@ h1, h2 {
   color: var(--texto_principal);
   font-size: 0.85rem;
 }
+
 
 .fila-producto p {
   margin: 0;
@@ -166,7 +181,12 @@ h1, h2 {
   border: 1px solid #888;
 }
 
-
+.fila-producto div {
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  padding: .5rem 1rem .5rem 0;
+}
 
 .fila-producto .acciones {
   display: flex;
@@ -383,6 +403,19 @@ input::placeholder{
   border-color: #2980b9;
 }
 
+
+#categoria_agregar {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #2196f3;
+  font-size: 14px;
+  background-color: var(--elementos_secundarios);
+  color: #fff;
+}
+
+
+/* Responsive Styles */
 @media (max-width: 700px) {
   .logo img{
     width: 70px;
