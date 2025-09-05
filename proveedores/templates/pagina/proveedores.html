@@ -25,6 +25,10 @@ Proveedores
     <a href="{% url 'productos:productos' %}" class="ancla {% if request.resolver_match.namespace == 'productos' %}activo{% endif %}">Productos</a>
 {% endblock %}
 
+{% block li4 %}
+    <a href="{% url 'categorias:categorias' %}" class="ancla {% if request.resolver_match.namespace == 'categorias' %}activo{% endif %}">Categorías</a>
+{% endblock %}
+
 {% block content %}
 <!-- Tu contenido aquí -->
 <section class="proveedores">

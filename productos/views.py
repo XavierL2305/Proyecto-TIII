@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Productos
 from .forms import ProductoForm
-from categorias.models import Categoria
+from categorias.models import Categorias
 
 
 def productos(request):
@@ -13,7 +13,7 @@ def productos(request):
     else:
         productos = Productos.objects.filter(status=True)
 
-    categorias = Categoria.objects.filter(status=True)
+    categorias = Categorias.objects.filter(status=True)
 
     formulario = ProductoForm()
 

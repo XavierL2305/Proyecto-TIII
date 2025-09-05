@@ -1,5 +1,5 @@
 from django.db import models
-from categorias.models import Categoria
+from categorias.models import Categorias
 
 class Productos(models.Model):
     id_producto_PK = models.AutoField(primary_key=True)
@@ -9,7 +9,7 @@ class Productos(models.Model):
     imagen = models.ImageField(upload_to="productos", blank=True, null=True, verbose_name="Imagen")
     status = models.BooleanField(default=True, verbose_name="Activo")
     
-    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Categoría")
+    categoria = models.ForeignKey(Categorias, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Categorías")
 
     def __str__(self):
         return f"{self.id_producto_PK} - {self.nombre}"

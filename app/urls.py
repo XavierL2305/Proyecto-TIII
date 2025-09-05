@@ -26,4 +26,5 @@ urlpatterns = [
     path('accounts/', include('login_register.urls')),
     path('productos/', include('productos.urls', namespace='productos')),
     path('empleados/', include('empleados.urls', namespace='empleados')),
+    path('categorias/', include('categorias.urls', namespace='categorias')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

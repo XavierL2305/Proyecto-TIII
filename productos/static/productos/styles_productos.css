@@ -128,10 +128,10 @@ h1, h2 {
   minmax(3rem, 3rem)    /* columna fija de 3rem */
   minmax(6rem, 6rem)    /* columna fija de 6rem */
   minmax(150px, 1.5fr)  /* columna con mínimo 150px y crece con fr */
-  minmax(200px, 2fr)    /* columna con mínimo 200px y crece */
-  minmax(100px, 1fr)    /* columna con mínimo 100px y crece */
-  minmax(120px, 1.2fr)  /* */
-  minmax(120px, 1.2fr); /* */
+  minmax(200px, 2fr)    
+  minmax(100px, 1fr)    
+  minmax(120px, 1.2fr)
+  minmax(120px, 1.2fr);
   gap: 10px;
   font-weight: bold;
   color: var(--texto_principal);

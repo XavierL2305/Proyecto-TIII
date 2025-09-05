@@ -20,6 +20,9 @@
 {% block li3 %}
 <a href="{% url 'proveedores:proveedores' %}" class="ancla {% if request.resolver_match.namespace == 'proveedores' %}activo{% endif %}">Proveedores</a>
 {% endblock %}
+{% block li4 %}
+    <a href="{% url 'categorias:categorias' %}" class="ancla {% if request.resolver_match.namespace == 'categorias' %}activo{% endif %}">Categorías</a>
+{% endblock %}
 
 {% block content %}
 <section class="empleados">

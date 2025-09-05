@@ -22,6 +22,10 @@ Home
 {% endblock %}
 
 {% block li4 %}
+    <a href="{% url 'categorias:categorias' %}" class="ancla {% if request.resolver_match.namespace == 'categorias' %}activo{% endif %}">Categorías</a>
+{% endblock %}
+
+{% block li5 %}
     <a href="{% url 'login_register:login_register' %}" class="ancla">Login</a>
 {% endblock %}
 

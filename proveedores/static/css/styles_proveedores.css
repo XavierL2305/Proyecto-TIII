@@ -253,6 +253,7 @@ form input:not(:placeholder-shown) + label{
   }
 }
 
+
 @media (max-width: 500px) {
   .logo img{
     width: 0px; /* tamaño más pequeño */

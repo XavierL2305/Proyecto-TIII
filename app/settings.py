@@ -83,7 +83,7 @@ STATIC_URL = '/static/'
 # Para desarrollo, agrega esto:
 import os
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    #os.path.join(BASE_DIR, 'static'),
     os.path.join(BASE_DIR, 'app', 'static'),
     os.path.join(BASE_DIR, 'proveedores/static'),
     os.path.join(BASE_DIR, 'home/static'),
