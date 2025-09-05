@@ -30,6 +30,7 @@ def categorias(request):
             categoria = get_object_or_404(Categorias, id_categoria_PK=categoria_id)
             formulario = CategoriasForm(request.POST, instance=categoria)
             if formulario.is_valid():
+                categoria.status = True  
                 formulario.save()
                 messages.success(request, "Categoría actualizada con éxito.")
             else:

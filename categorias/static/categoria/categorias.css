@@ -291,11 +291,21 @@ form input:not(:placeholder-shown) + label {
     width: 15rem;
     margin-left: 2rem;
   }
+  .logo img{
+    width: 70px;
+    height: 70px;
+    transition: all 0.3s ease-in-out;
+  }
 }
 
 @media (max-width: 500px) {
   .formulario.activate {
     width: 12rem;
     margin-left: 2rem;
+  }
+  .logo img{
+    width: 0px;
+    height: 0px;
+    transition: all 0.3s ease-in-out;
   }
 }
