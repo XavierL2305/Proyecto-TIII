@@ -1,0 +1,126 @@
+{% extends "template_base.html" %}
+{% load static %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/styles_home.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+<script src="{% static 'js/cards.js' %}" defer></script>
+{% endblock %}
+
+{% block li1 %}
+    <a href="{% url 'proveedores:proveedores' %}" class="ancla">Proveedores</a>
+{% endblock %}
+
+{% block li2 %}
+    <a href="{% url 'empleados:gestion_empleados' %}" class="ancla {% if request.resolver_match.namespace == 'empleados' %}activo{% endif %}">Empleados</a>
+{% endblock %}
+
+{% block li3 %}
+    <a href="{% url 'productos:productos' %}" class="ancla">Productos</a>
+{% endblock %}
+
+{% block li4 %}
+    <a href="{% url 'categorias:categorias' %}" class="ancla {% if request.resolver_match.namespace == 'categorias' %}activo{% endif %}">Categorías</a>
+{% endblock %}
+
+{% block li5 %}
+    <a href="{% url 'login_register:login_register' %}" class="ancla">Login</a>
+{% endblock %}
+
+{% block content %}
+<section class="home">
+    <div class="barra_nav">
+        <nav class="nav-bar">
+            <ul>
+                <li class="redes">
+                    <a href="https://www.facebook.com/" class="redes-link">
+                        <img src="{% static 'img/redes/facebook_whithe.png' %}" class="redes-img" alt="Facebook">
+                    </a>
+                    <a href="https://www.instagram.com/" class="redes-link">
+                        <img src="{% static 'img/redes/instagram_whithe.png' %}" class="redes-img" alt="Instagram">
+                    </a>
+                    <a href="https://www.twitter.com/" class="redes-link">
+                        <img src="{% static 'img/redes/twitter_black.png' %}" class="redes-img" alt="Twitter">
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="main-content" >
+        <div class="welcome" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url({% static 'img/fondos/fondo.jpg' %}), no-repeat, center; background-size: cover;">
+            <div>
+                <h1><i>TU LUGAR DE <b>CONFIANZA</b></i></h1>
+            </div>
+        </div>
+        
+        <div class="mini-navbar">
+            <div class="busqueda">
+                <img src="{% static 'img/buscar.png' %}" alt="Buscar" width="30px" height="30px">
+            </div>
+            <ul>
+                <li class="dropdown">
+                    <a href="#" class="drop">Productos</a>
+                    <div class="dropdown-content">
+                        {% for categoria in categorias %}
+                            <a href="#">{{ categoria }}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+            </ul>
+            {% include "componentes/carrito.html" %}
+        </div>
+
+        <div class="cards">
+            {% for producto in productos_list %}
+            <div class="card" id="producto-{{ producto.id_producto_PK }}">
+                <div class="imagen-card imagen">
+                    {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" alt="Producto {{ producto.id_producto_PK }}">
+                    {% else %}
+                        <span>Sin imagen</span>
+                    {% endif %}
+                </div>
+                <div class="contenido">
+                    <h2 class="nombre">{{ producto.nombre }}</h2>
+                    <p class="descripcion">{{ producto.descripcion }}</p>
+                    <p class="precio">Precio: ${{ producto.precio }}</p>
+
+                    <button 
+                        class="btn-agregar-carrito"
+                        
+                        data-id="{{ producto.id }}"
+                        data-nombre="{{ producto.nombre }}"
+                        data-descripcion="{{ producto.descripcion }}"
+                        data-imagen="
+                        {% if producto.imagen %}
+                            {{ producto.imagen.url }}
+                        {% else %}
+                            {% static 'img/home/sin_imagen.png' %}
+                        {% endif %}"
+                        data-precio="{{ producto.precio }}"
+                        data-status="{{ producto.status }}"
+                        onclick="agregarProductos()"
+                        >Agregar al carrito
+                    </button>
+                        <div class="acciones">
+                            <span>Agregar al carrito</span>
+                            <img src="{% static 'img/home/compraCarrito.png' %}" alt="Agregar al carrito de compras" width="30px" height="30px">
+                        </div>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="background" id="background_main"></div>
+            <div class="card-modal">
+                <!-- Aqui se agrega el modal de la visualizacion de cada card -->
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

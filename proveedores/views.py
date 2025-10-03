@@ -7,8 +7,10 @@ from .forms import ProveedorForm
 
 from django.contrib.auth.decorators import login_required
 
+
+
 # Create your views here.
-@login_required #validacionn requerida para ingresar a proveedores
+#@login_required #validacionn requerida para ingresar a proveedores
 def proveedores(request):
     proveedores = Proveedores.objects.filter(estatus=True).order_by('id_proveedor_PK')
     formulario = ProveedorForm()
@@ -60,8 +62,7 @@ def proveedores(request):
                 return redirect('proveedores:proveedores')
 
     return render(
-        request, 
-        'pagina/proveedores.html', 
+        request,'pagina/proveedores.html', 
         {
         'proveedores': proveedores, 
         'formulario': formulario,

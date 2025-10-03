@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function(){
-  const bg = document.getElementById("backgraund_form");
+  const bg = document.getElementById("background_form");
   const agregarModal = document.getElementById("formulario_agregar");
   const editarModal = document.getElementById("formulario_editar");
   const eliminarModal = document.getElementById("formulario_eliminar");
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function(){
   // ------- Filtro modal empleados --------
   const filtroEmpleadosBtn = document.getElementById('filtro_empleados');
   const filtroEmpleadosModal = document.getElementById('formulario_filtro_empleados');
-  const filtroEmpleadosBg = document.getElementById('backgraund_filtro_empleados');
+  const filtroEmpleadosBg = document.getElementById('background_filtro_empleados');
   const cancelarFiltroEmpleadosBtn = document.getElementById('cancelar_filtro_empleados');
 
   function abrirFiltroEmpleados() {

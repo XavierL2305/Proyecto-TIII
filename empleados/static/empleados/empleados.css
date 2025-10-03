@@ -203,7 +203,7 @@ form input[type="password"]:focus {
 }
 
 /* Fondo modal trasparente */
-.backgraund {
+.background {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   width: 100vw; height: 100vh;
@@ -213,7 +213,7 @@ form input[type="password"]:focus {
   z-index: 2;
   transition: opacity 0.3s ease;
 }
-.backgraund.activate {
+.background.activate {
   opacity: 0.65;
   visibility: visible;
 }
@@ -283,7 +283,7 @@ form input[type="password"]:focus {
     width: 60%;
     margin-left: 25px;
   }
-  .backgraund.activate {
+  .background.activate {
     width: 100%;
     padding: 0;
     margin: 0;

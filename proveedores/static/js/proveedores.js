@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function(){
-    let backgraund_formulario = document.getElementById("backgraund_form")
+    let background_formulario = document.getElementById("background_form")
     // Selecciona el formulario de agregar
 
 
@@ -23,10 +23,10 @@ document.addEventListener("DOMContentLoaded", function(){
     filtro.addEventListener('click', () => {
         if (contenedor_filtro.classList.contains('activate')) {
             contenedor_filtro.classList.remove('activate')
-            backgraund_formulario.classList.remove('activate')
+            background_formulario.classList.remove('activate')
         } else {
             contenedor_filtro.classList.add('activate')
-            backgraund_formulario.classList.add('activate')
+            background_formulario.classList.add('activate')
         }
     })
 
@@ -54,24 +54,24 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     // Formulario agregar
-    backgraund_formulario.addEventListener('click', () => {
+    background_formulario.addEventListener('click', () => {
         if (agregar.classList.contains('activate')) {
             agregar.classList.remove('activate')
-            backgraund_formulario.classList.remove('activate')
+            background_formulario.classList.remove('activate')
         }if (editar.classList.contains('activate')) {
             editar.classList.remove('activate')
-            backgraund_formulario.classList.remove('activate')
+            background_formulario.classList.remove('activate')
         }if (eliminar.classList.contains('activate')) {
             eliminar.classList.remove('activate')
-            backgraund_formulario.classList.remove('activate')
+            background_formulario.classList.remove('activate')
         }if (contenedor_filtro.classList.contains('activate')) {
             contenedor_filtro.classList.remove('activate')
-            backgraund_formulario.classList.remove('activate')
+            background_formulario.classList.remove('activate')
         }
     })
     button_agregar.addEventListener('click', () => {
         agregar.classList.add('activate')
-        backgraund_formulario.classList.add('activate')
+        background_formulario.classList.add('activate')
         console.log(button_agregar.value)
     })
 
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function(){
     button_editar.forEach(function(btn) {
         btn.addEventListener('click', () => {
             editar.classList.add('activate')
-            backgraund_formulario.classList.add('activate')
+            background_formulario.classList.add('activate')
 
             let informacion = { ...btn.dataset }
             Object.entries(informacion).forEach(([key, value]) => {
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function(){
     button_eliminar.forEach(function(btn) {
         btn.addEventListener('click', () => {
             eliminar.classList.add('activate')
-            backgraund_formulario.classList.add('activate')
+            background_formulario.classList.add('activate')
             document.getElementById('proveedor_id_eliminar').value = btn.value;
         });
     });
@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function(){
         editar.classList.remove('activate')
         eliminar.classList.remove('activate')
         filtro.classList.remove('activate')
-        backgraund_formulario.classList.remove('activate')
+        background_formulario.classList.remove('activate')
     }
 
     setTimeout(function() {

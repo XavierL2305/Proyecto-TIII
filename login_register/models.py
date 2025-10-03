@@ -16,5 +16,9 @@ class CustomUser(AbstractUser):
         (CLIENTE, 'Cliente'),
     ]
 
-    rol = models.CharField(max_length=20, choices=ROL_CHOICES, default=CLIENTE)
+    rol = models.CharField(
+        max_length=20, 
+        choices=ROL_CHOICES, 
+        default=CLIENTE
+    )
     is_cliente = models.BooleanField(default=False)

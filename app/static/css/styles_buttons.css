@@ -5,6 +5,9 @@
     --elementos_secundarios: #5d6d7e;
     --texto_principal: #ecf0f1;
     --detalles_hover: #2980b9;
+
+    --verde-comprar: #27ae60;
+    --rojo-eliminar: #c0392b;
 }
 
 .button {
@@ -38,6 +41,26 @@
     background-color: var(--detalles_hover);
 }
 .button:active {
+    /* opacity: 0.9; */
+    scale: 1;
+}
+
+.btn-carrito{
+    /* background-color: var(--verde-comprar); */
+    font-weight: bold;
+    padding: 7px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: var(--texto_principal);
+    transition: all ease .3s;
+}
+.btn-carrito:hover{
+    opacity: 0.9;
+    scale: 1.05;
+    /* background-color: var(--verde-comprar); */
+}
+.btn-carrito:active{
     /* opacity: 0.9; */
     scale: 1;
 }

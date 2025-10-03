@@ -330,7 +330,7 @@ form textarea {
   z-index: 2000;
 }
 
-.backgraund {
+.background {
   position: fixed;
   left: 0; top: 0; right: 0; bottom: 0;
   width: 100vw;
@@ -343,7 +343,7 @@ form textarea {
   pointer-events: none;
 }
 
-.backgraund.activate {
+.background.activate {
   opacity: 0.65;
   visibility: visible;
   pointer-events: auto;
