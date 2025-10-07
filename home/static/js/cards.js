@@ -30,34 +30,37 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
     document.getElementById('tbody_carrito').addEventListener('click', function(e) {
-    if (e.target.closest('.btn-quitar')) {
-        let id = e.target.closest('.btn-quitar').dataset.id;
-        quitarProducto(id);
-    }
-    if (e.target.closest('.btn-agregar')) {
-        let id = e.target.closest('.btn-agregar').dataset.id;
-        agregarProducto(id);
-    }
-});
-})
-function agregarProductos() {
-    document.querySelectorAll('.btn-agregar-carrito').forEach(function(boton) {
-        boton.addEventListener('click', function() {
-            let id = this.getAttribute('data-id');
-            let nombre = this.getAttribute('data-nombre');
-            let precio = parseFloat(this.getAttribute('data-precio'));
-
-            // Busca si el producto ya está en el carrito
-            let producto = carrito.find(p => p.id === id);
-            if (producto) {
-                producto.cantidad += 1;
-            } else {
-                carrito.push({id, nombre, precio, cantidad: 1});
-            }
-            actualizarCarrito();
-        });
+        if (e.target.closest('.btn-quitar')) {
+            let id = e.target.closest('.btn-quitar').dataset.id;
+            quitarProducto(id);
+        }
+        if (e.target.closest('.btn-agregar')) {
+            let id = e.target.closest('.btn-agregar').dataset.id;
+            agregarProducto(id);
+        }
     });
-}
+    // Usamos delegación de eventos para capturar clicks en botones
+    // "Agregar al carrito", esto funciona también para botones que se
+    // insertan dinámicamente dentro del modal de la card.
+    document.addEventListener('click', function(e) {
+        let btn = e.target.closest('.btn-agregar-carrito');
+        if (!btn) return;
+        // Si se hace click en un botón de agregar al carrito (ya sea en la card
+        // principal o en el modal insertado), procesamos la adición.
+        let id = (btn.getAttribute('data-id') || btn.dataset.id || '').toString().trim();
+        let nombre = (btn.getAttribute('data-nombre') || btn.dataset.nombre || '').toString().trim();
+        let precio = parseFloat(btn.getAttribute('data-precio') || btn.dataset.precio) || 0;
+        console.log('[carrito] click add:', {id, nombre, precio});
+
+        let producto = carrito.find(p => p.id === id);
+        if (producto) {
+            producto.cantidad += 1;
+        } else {
+            carrito.push({id, nombre, precio, cantidad: 1});
+        }
+        actualizarCarrito();
+    });
+})
 
 function actualizarCarrito() {
     let tbody = document.getElementById('tbody_carrito');
@@ -70,16 +73,16 @@ function actualizarCarrito() {
             let subtotal = producto.precio * producto.cantidad;
             total += subtotal;
             tbody.innerHTML += `
-                <div class="fila_carrito">
-                    <span>${producto.nombre}</span>
-                    <span>${producto.cantidad}</span>
-                    <span>${producto.precio.toFixed(2)}$</span>
-                    <span>${subtotal.toFixed(2)}$</span>
-                    <div class="acciones_carrito">
+                <tr class="fila_carrito">
+                    <td>${producto.nombre}</td>
+                    <td>${producto.cantidad}</td>
+                    <td>${producto.precio.toFixed(2)}$</td>
+                    <td>${subtotal.toFixed(2)}$</td>
+                    <td class="acciones_carrito">
                         <button class="btn-quitar" data-id="${producto.id}"><img src="/static/img/home/minus.png" width="30px" height="30px"></button>
                         <button class="btn-agregar" data-id="${producto.id}"><img src="/static/img/home/plus.png" width="30px" height="30px"></button>
-                    </div>
-                </div>
+                    </td>
+                </tr>
             `;
         });
     }

@@ -6,27 +6,31 @@
     <div class="modal-carrito">
         <h2>Carrito de Compras</h2>
         <div class="productos_carrito" id="productos_carrito">
-            <div class="tabla_carrito">
+            <table class="tabla_carrito">
                 {% if not productos_carrito%}
-                <div class="thead">
-                    <div class="fila_carrito">
-                        <span>Producto</span>
-                        <span>Cantidad</span>
-                        <span>Precio</span>
-                        <span>Subtotal</span>
-                        <span>Acciones</span>
-                    </div>
-                </div>
+                
+
+                <thead class="thead">
+                    <tr class="fila_carrito">
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Subtotal</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
                 {% endif %}
-                <div class="tbody" id="tbody_carrito">
+                <tbody class="tbody" id="tbody_carrito">
                     {% if not productos_carrito %}
-                        <span class="sin_productos">No tienes poductos por comprar</span>
+                        <tr>
+                            <td class="sin_productos">No tienes productos por comprar</td>
+                        </tr>
                     {% endif %}
-                </div>
-            </div>
+                </tbody>
+            </table>
         </div>
         <div class="total-carrito">
-            <span id="total_carrito">Total: </span>
+            <span id="total_carrito">Total: 0.00$</span>
         </div>
         <div class="btns-carrito">
             <button class="btn-carrito btn-cancelar" id="btn_limpiar_carrito" onclick="limpiarCarrito();">Limpiar</button>

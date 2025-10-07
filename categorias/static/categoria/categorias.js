@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const bg = document.getElementById("backgraund_form");
+  const bg = document.getElementById("background_form");
   const agregar = document.getElementById("formulario_agregar");
   const editar = document.getElementById("formulario_editar");
   const eliminar = document.getElementById("formulario_eliminar");

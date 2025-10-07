@@ -1,0 +1,5 @@
+pip install django==3.2.8 requests psycopg2 pymysql Pyllow
+
+Estas dos dependencias son paquetes de python
+python -m pip install distutils
+python -m pip install setuptools

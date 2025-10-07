@@ -267,7 +267,7 @@ form input:not(:placeholder-shown) + label {
   flex: 1;
 }
 
-.backgraund{
+.background{
   position: fixed;
   top: 0;
   left: 0;

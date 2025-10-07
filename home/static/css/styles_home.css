@@ -98,7 +98,7 @@ html, body {
 
 .main-content {
     padding: 0;
-    height: 25vh;
+    min-height: 25vh; /* Cambiado de height a min-height para permitir contenido dinámico */
     box-shadow: 0 0 3rem var(--detalles_hover);
     margin: 2rem;
     border-radius: 1rem;
@@ -138,6 +138,8 @@ html, body {
 }
 
 .mini-navbar{
+    position: sticky;
+    top: 0;
     margin-top: 2rem;
     height: 30px;
     background-color: var(--gris-fondo);
@@ -274,7 +276,7 @@ html, body {
     text-align: center;
 }
 
-.card .descripcion, .card-modal .descripcion {
+.contenido .nombre,.card .descripcion, .card-modal .descripcion {
     font-size: 0.9rem;
     margin: 0.5rem 0;
     /* flex-grow: 1; */
@@ -396,22 +398,24 @@ html, body {
 }
 
 .modal-carrito{
+    /* Use fixed so the cart modal floats above other stacking contexts */
     position: absolute;
     visibility: hidden;
     opacity: 0;
-    right: -8px;
-    top: -42.6px;
+    right: -8px; /* position near the cart icon */
+    top: 10px;
     width: max-content;
     padding: 10px;
     min-height: 300px;
     max-height: max-content;
     display: flex;
-    z-index: 3;
+    z-index: 9999; /* ensure it sits above buttons and modals */
     flex-direction: column;
     align-items: center;
     background-color: var(--gris-fondo);
     transform: translateY(0px);
     border-radius: 0 0 10px 10px;
+    transform: translateY(20px);
     transition: all ease .3s;
     h2{
         margin: 0;
@@ -424,7 +428,7 @@ html, body {
     visibility: visible;
     opacity: 1;
     z-index: 3;
-    transform: translateY(80px);
+    /* transform: translateY(80px); */
     transition: all ease .3s;
 }
 
@@ -432,29 +436,21 @@ html, body {
     height: 100%;
     border-radius: 10px;
     margin: 10px;
-    /* padding: 10px; */
+    padding: 10px;
     color: #000;
-    display: grid;
-    grid-template-rows: 1fr auto;
-    grid-template-columns: 1fr;
     .thead{
         gap: 5px;
         margin-bottom: 5px;
         font-weight: bold;
     }
     .tbody{
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        max-height: 200px;
+        max-height: 180px;
         overflow-y:auto;
     }
 }
 .fila_carrito{
-    display: flex;
     gap: 7px;
     width: 100%;
-    justify-content: space-between;
 }
 
 .acciones_carrito{

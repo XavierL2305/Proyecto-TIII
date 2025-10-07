@@ -67,9 +67,13 @@ Home
                 <li class="dropdown">
                     <a href="#" class="drop">Productos</a>
                     <div class="dropdown-content">
-                        {% for categoria in categorias %}
-                            <a href="#">{{ categoria }}</a>
-                        {% endfor %}
+                        {% if Categorias %}
+                            <a href="#">No hay categoria de productos</a>
+                        {% else %}
+                            {% for categoria in categorias %}
+                                <a href="#">{{ categoria }}</a>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </li>
             </ul>
@@ -91,10 +95,10 @@ Home
                     <p class="descripcion">{{ producto.descripcion }}</p>
                     <p class="precio">Precio: ${{ producto.precio }}</p>
 
-                    <button 
+                    <button
                         class="btn-agregar-carrito"
                         
-                        data-id="{{ producto.id }}"
+                        data-id="{{ producto.id_producto_PK }}"
                         data-nombre="{{ producto.nombre }}"
                         data-descripcion="{{ producto.descripcion }}"
                         data-imagen="
@@ -105,9 +109,7 @@ Home
                         {% endif %}"
                         data-precio="{{ producto.precio }}"
                         data-status="{{ producto.status }}"
-                        onclick="agregarProductos()"
-                        >Agregar al carrito
-                    </button>
+                    >
                         <div class="acciones">
                             <span>Agregar al carrito</span>
                             <img src="{% static 'img/home/compraCarrito.png' %}" alt="Agregar al carrito de compras" width="30px" height="30px">

@@ -4,6 +4,7 @@ from app.apiDolarBcv import dataApiBcv
 
 from productos.models import Productos
 from categorias.models import Categorias
+from django.db.models import Prefetch
 
 from django.contrib.auth.decorators import login_required
 
@@ -13,9 +14,10 @@ from .models import Carrito, DetallesCarrito
 
 def home(request):
     #funcion para caputurar la api del bcv
-    productos_list = Productos.objects.filter(status=True)
-    categorias = Categorias.objects.all()
-    # print(categorias)
+    # Traer productos activos y ordenarlos por la descripción de su categoría
+    productos_list = Productos.objects.filter(status=True).select_related('categoria').order_by('categoria__descripcion', 'nombre')
+    # Traer categorías activas ordenadas por su campo 'descripcion' (no existe 'categoria')
+    categorias = Categorias.objects.filter(status=True).order_by('descripcion')
     if not productos_list:
         respuesta = "No hay productos disponibles"
         return render(request, 'home.html', {"respuesta": respuesta})
