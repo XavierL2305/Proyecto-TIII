@@ -1,9 +1,9 @@
 from django.urls import path
-from . import views
+from .views import proveedores, exportar_proveedores_excel
 
-from django.conf import settings
-from django.contrib.staticfiles.urls import static
+app_name = 'proveedores'
 
 urlpatterns = [
-    path('', views.proveedores, name='proveedores'),
-] # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('', proveedores, name='proveedores'),
+    path('exportar_excel/', exportar_proveedores_excel, name='exportar_proveedores_excel'),
+]

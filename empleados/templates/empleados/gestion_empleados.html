@@ -31,6 +31,9 @@
     <div class="container">
       <button class="button" id="add" name="button_agregar">Agregar Empleado</button>
       <img src="{% static 'img/buscar.png' %}" alt="Filtro empleados" class="filtro" id="filtro_empleados">
+      <a href="{% url 'empleados:exportar_empleados_excel' %}" title="Descargar Excel Empleados">
+        <img src="{% static 'img/home/exc.png' %}" alt="Exportar a Excel" style="width:35px; height:35px; vertical-align:middle; cursor:pointer; margin-left:8px;">
+      </a>
     </div>
   </center>
 

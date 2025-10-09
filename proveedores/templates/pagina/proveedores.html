@@ -37,6 +37,10 @@ Proveedores
         <div class="container">
             <button class="button add" name="button_agregar">Agregar</button>
             <img src="{% static 'img/buscar.png' %}" alt="Filtro" class="filtro" id="filtro">
+            <a href="{% url 'proveedores:exportar_proveedores_excel' %}" title="Descargar Excel Proveedores">
+                <img src="{% static 'img/home/exc.png' %}" alt="Exportar a Excel" style="width:35px; height:35px; vertical-align:middle; cursor:pointer; margin-left:8px;">
+            </a>
+
         </div>
     </center>
     <form action="" method="get">

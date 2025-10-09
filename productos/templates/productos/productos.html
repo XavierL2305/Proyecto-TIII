@@ -51,6 +51,11 @@
     <button class="button" id="button_agregar">Agregar</button>
 
     <img src="{% static 'img/buscar.png' %}" alt="Filtro" class="filtro" id="filtro_productos">
+    
+    <a href="{% url 'productos:exportar_excel' %}">
+      <img src="{% static 'img/home/exc.png' %}" alt="Exportar a Excel" title="Descargar Excel" style="width:35px; height:35px; vertical-align:middle; cursor:pointer; margin-left:8px;">
+    </a>
+    
   </div>
 
   <!-- Modal filtro -->

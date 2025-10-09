@@ -52,6 +52,10 @@
     </form>
 
     <button class="button" id="button_agregar">Agregar</button>
+
+    <a href="{% url 'categorias:exportar_categorias_excel' %}" title="Descargar excel de categorías">
+      <img src="{% static 'img/home/exc.png' %}" alt="Exportar a Excel" style="width:35px; height:35px; vertical-align:middle; cursor:pointer; margin-left:8px;">
+    </a>
   </div>
 
   <div class="tabla">
