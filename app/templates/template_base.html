@@ -28,12 +28,14 @@
 
             </ul>
             <div class="engranaje_cuenta">
-                <a class="engranaje" href="#"> 
-                    <img src="{% static 'img/config.png'%}" alt="">
-                </a>
-            
-                <a href="{% url 'clientes:editar_perfil_cliente' %}"" class="cuenta">
-                    <img src="{% static 'img/perfil.png'%}" alt="">
+                <form method="post" action="{% url 'login_register:logout' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="redes-link" style="background:none; border:none; cursor:pointer; padding-left: 15px; padding-right: 25px;">
+                        <img src="{% static 'img/home/salir3.png' %}" class="redes-img" alt="Salir">
+                    </button>
+                </form>
+                <a href="{% url 'clientes:editar_perfil_cliente' %}" class="cuenta">
+                    <img src="{% static 'img/perfil.png'%}" alt="Perfil">
                 </a>
             </div>
         </nav>

@@ -48,9 +48,13 @@ Home
                     <a href="https://www.twitter.com/" class="redes-link">
                         <img src="{% static 'img/redes/twitter_black.png' %}" class="redes-img" alt="Twitter">
                     </a>
-                    <a href="" class="redes-link">
-                        <img src="{% static 'img/home/salir.png' %}" class="redes-img" alt="Salir">
-                    </a>
+                    <form method="post" action="{% url 'login_register:logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="redes-link" style="background:none; border:none; padding:0; width:3rem; height: 3rem; cursor:pointer;">
+                            <img src="{% static 'img/home/salir3.png' %}" class="redes-img" alt="Salir">
+                        </button>
+                    </form>
+
                 </li>
             </ul>
         </nav>
