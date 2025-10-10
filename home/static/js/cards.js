@@ -1,4 +1,6 @@
 let carrito = []; // <-- array para los productos
+let background = document.getElementById("background_main");
+let modal_carrito = document.querySelector(".modal-carrito");
 
 document.addEventListener("DOMContentLoaded", function(){
     // Modal de las cards para ver detalles
@@ -25,10 +27,29 @@ document.addEventListener("DOMContentLoaded", function(){
 
     let imagen_carrito = document.getElementById("imagen-carrito");
     let modal_carrito = document.querySelector(".modal-carrito");
+
+
+    if (modal_carrito && modal_carrito.parentNode !== document.body) {
+        document.body.appendChild(modal_carrito);
+        // Asegurar un z-index alto desde JS como respaldo
+        modal_carrito.style.zIndex = '4';
+    }
+
     imagen_carrito.addEventListener("click", function() {
-        modal_carrito.classList.toggle("active");
+        if(modal_carrito.classList.contains("active") && background.classList.contains("active")){
+            modal_carrito.classList.remove("active");
+            background.classList.remove("active");
+        }else if(!modal_carrito.classList.contains("active") && !background.classList.contains("active")){
+            modal_carrito.classList.add("active");
+            background.classList.add("active");
+        }
     });
 
+    background.addEventListener("click", function() {
+        if(modal_carrito.classList.contains("active")){
+            modal_carrito.classList.remove("active");
+        }
+    });
     document.getElementById('tbody_carrito').addEventListener('click', function(e) {
         if (e.target.closest('.btn-quitar')) {
             let id = e.target.closest('.btn-quitar').dataset.id;
@@ -50,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function(){
         let id = (btn.getAttribute('data-id') || btn.dataset.id || '').toString().trim();
         let nombre = (btn.getAttribute('data-nombre') || btn.dataset.nombre || '').toString().trim();
         let precio = parseFloat(btn.getAttribute('data-precio') || btn.dataset.precio) || 0;
-        console.log('[carrito] click add:', {id, nombre, precio});
+        // console.log('[carrito] click add:', {id, nombre, precio});
 
         let producto = carrito.find(p => p.id === id);
         if (producto) {
@@ -66,8 +87,15 @@ function actualizarCarrito() {
     let tbody = document.getElementById('tbody_carrito');
     let total = 0;
     tbody.innerHTML = '';
+
+    if(carrito.length === 1) {
+        modal_carrito.classList.add("active");
+        background.classList.add("active");
+    }
+
     if (carrito.length === 0) {
         tbody.innerHTML = '<span class="sin_productos">No tienes productos por comprar</span>';
+        
     } else {
         carrito.forEach(function(producto) {
             let subtotal = producto.precio * producto.cantidad;

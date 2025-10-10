@@ -146,7 +146,6 @@ html, body {
     padding: .5rem;
     display: flex;
     justify-content: space-between;
-    border-radius: 10px 10px 0 10px;
     ul{
         padding: 0;
         margin: 0;
@@ -358,7 +357,7 @@ html, body {
     left: calc(50% + 70px);
     transform: translate(-50%, -50%);
     box-shadow: 0 0 3rem var(--detalles_hover);
-    z-index: 4;
+    z-index: 3;
     transition: all ease .3s;
 }
 
@@ -398,24 +397,18 @@ html, body {
 }
 
 .modal-carrito{
-    /* Use fixed so the cart modal floats above other stacking contexts */
-    position: absolute;
+    position: fixed;
     visibility: hidden;
     opacity: 0;
-    right: -8px; /* position near the cart icon */
-    top: 10px;
-    width: max-content;
-    padding: 10px;
-    min-height: 300px;
-    max-height: max-content;
+    right: 0;
+    top: 0;
+    padding: 0 10px;
+    width: 400px;
+    height: 100dvh;
     display: flex;
-    z-index: 9999; /* ensure it sits above buttons and modals */
     flex-direction: column;
     align-items: center;
     background-color: var(--gris-fondo);
-    transform: translateY(0px);
-    border-radius: 0 0 10px 10px;
-    transform: translateY(20px);
     transition: all ease .3s;
     h2{
         margin: 0;
@@ -427,7 +420,6 @@ html, body {
 .modal-carrito.active{
     visibility: visible;
     opacity: 1;
-    z-index: 3;
     /* transform: translateY(80px); */
     transition: all ease .3s;
 }
@@ -455,7 +447,6 @@ html, body {
 
 .acciones_carrito{
     display: flex;
-    gap: 7px;
     justify-content: center;
     align-items: center;
     button{

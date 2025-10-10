@@ -1,0 +1,46 @@
+{% extends 'template_base.html' %}
+{% load static %}
+{% block title %}Editar Perfil Cliente{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'clientes/styles_perfil_cliente.css' %}">
+{% endblock %}
+
+{% block li1 %}
+    <a href="{% url 'home:home' %}" class="ancla">Inicio</a>
+{% endblock %}
+
+{% block content %}
+<div class="perfil-container">
+  <h2>Perfil</h2>
+  <div class="saludo">
+    <p>Bienvenido, <strong>{{ request.user.username }}</strong></p>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <label for="id_telefono">Teléfono</label>
+    {{ form.telefono }}
+
+    <label for="id_direccion">Dirección</label>
+    {{ form.direccion }}
+
+    <label>Usuario</label>
+    <input type="text" value="{{ request.user.username }}" readonly>
+
+    <label for="email">Correo electrónico</label>
+    <input type="email" name="email" value="{{ request.user.email }}" required>
+
+    <label>Contraseña</label>
+    <input type="password" value="********" readonly class="readonly-pass">
+
+    <button type="submit">Guardar</button>
+  </form>
+  
+  {% if messages %}
+    {% for message in messages %}
+      <p style="margin-top:1rem; color: lightgreen;">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

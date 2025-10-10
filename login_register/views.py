@@ -5,6 +5,7 @@ from django.contrib.auth.views import LogoutView
 from django.contrib import messages
 from .forms import RegistroForm
 
+
 def login_register(request):
     if request.method == 'POST':
         if 'register' in request.POST:
@@ -44,4 +45,8 @@ def login_register(request):
 
 
 class CustomLogoutView(LogoutView):
-    next_page = '/proveedores'  # redirige a la página de proveedores después de cerrar sesión
+    next_page = '/accounts'  # redirige a la página de proveedores después de cerrar sesión
+
+    def post(self, request, *args, **kwargs):
+            messages.success(request, "Sesión cerrada correctamente.")
+            return super().post(request, *args, **kwargs)
