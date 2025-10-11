@@ -35,45 +35,51 @@
       </div>
     </form>
 
+    {% if es_admin %}
     <button class="button" id="button_agregar">Agregar</button>
+    {% endif %}
 
     <a href="{% url 'categorias:exportar_categorias_excel' %}" title="Descargar excel de categorías">
       <img src="{% static 'img/home/exc.png' %}" alt="Exportar a Excel" style="width:35px; height:35px; vertical-align:middle; cursor:pointer; margin-left:8px;">
     </a>
   </div>
 
-  <div class="tabla">
+  <div class="tabla {% if es_admin %}con-acciones{% else %}sin-acciones{% endif %}">
     <div class="thead">
       <b>ID</b>
       <b>Descripción</b>
       <b>Estado</b>
+      {% if es_admin %}
       <b>Acciones</b>
+      {% endif %}
     </div>
     <div class="tbody">
       {% for categoria in categorias %}
       <div class="fila-categoria">
-      <div>{{ categoria.id_categoria_PK }}</div>
-      <div>{{ categoria.descripcion }}</div>
-      <div>{% if categoria.status %}Activo{% else %}Eliminado{% endif %}</div>
-      <div class="acciones">
+        <div>{{ categoria.id_categoria_PK }}</div>
+        <div>{{ categoria.descripcion }}</div>
+        <div>{% if categoria.status %}Activo{% else %}Eliminado{% endif %}</div>
+        {% if es_admin %}
+        <div class="acciones">
           {% if filtro == 'eliminados' %}
-            <form method="post" style="display:inline-block; margin:0;">
-              {% csrf_token %}
-              <input type="hidden" name="activar_id" value="{{ categoria.id_categoria_PK }}">
-              <button type="submit" class="button" title="Reactivar categoría">Reactivar</button>
-            </form>
+          <form method="post" style="display:inline-block; margin:0;">
+            {% csrf_token %}
+            <input type="hidden" name="activar_id" value="{{ categoria.id_categoria_PK }}">
+            <button type="submit" class="button" title="Reactivar categoría">Reactivar</button>
+          </form>
           {% else %}
-            <button class="button edit-btn"
-                    data-id="{{ categoria.id_categoria_PK }}"
-                    data-descripcion="{{ categoria.descripcion|escapejs }}"
-                    data-status="{{ categoria.status }}">
-              Editar
-            </button>
-            <button class="button delete-btn" value="{{ categoria.id_categoria_PK }}">
-              Eliminar
-            </button>
+          <button class="button edit-btn"
+                  data-id="{{ categoria.id_categoria_PK }}"
+                  data-descripcion="{{ categoria.descripcion|escapejs }}"
+                  data-status="{{ categoria.status }}">
+            Editar
+          </button>
+          <button class="button delete-btn" value="{{ categoria.id_categoria_PK }}">
+            Eliminar
+          </button>
           {% endif %}
         </div>
+        {% endif %}
       </div>
       {% empty %}
       <p colspan="4" style="text-align:center;color:#ccc;">No hay categorías registradas.</p>
@@ -128,7 +134,7 @@
     </form>
   </div>
 
-  <div class="backgraund" id="backgraund_form"></div>
+  <div class="background" id="background_form"></div>
 
 </section>
 {% endblock %}
