@@ -11,19 +11,6 @@
 <script src="{% static 'empleados/empleados.js' %}" defer></script>
 {% endblock %}
 
-{% block li1 %}
-<a href="{% url 'home:home' %}" class="ancla {% if request.resolver_match.namespace == 'home' %}activo{% endif %}">Inicio</a>
-{% endblock %}
-{% block li2 %}
-<a href="{% url 'productos:productos' %}" class="ancla {% if request.resolver_match.namespace == 'productos' %}activo{% endif %}">Productos</a>
-{% endblock %}
-{% block li3 %}
-<a href="{% url 'proveedores:proveedores' %}" class="ancla {% if request.resolver_match.namespace == 'proveedores' %}activo{% endif %}">Proveedores</a>
-{% endblock %}
-{% block li4 %}
-    <a href="{% url 'categorias:categorias' %}" class="ancla {% if request.resolver_match.namespace == 'categorias' %}activo{% endif %}">Categorías</a>
-{% endblock %}
-
 {% block content %}
 <section class="empleados">
   <center>

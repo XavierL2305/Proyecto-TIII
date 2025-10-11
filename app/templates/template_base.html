@@ -20,24 +20,31 @@
         </ul>
         <nav class="nav">
             <ul class="lista">
-                <li class="elementos_lista"><a href="#" class="ancla">{% block li1 %} {% endblock %}</a></li>
-                <li class="elementos_lista"><a href="#" class="ancla">{% block li2 %} {% endblock %}</a></li>
-                <li class="elementos_lista"><a href="#" class="ancla">{% block li3 %} {% endblock %}</a></li>
-                <li class="elementos_lista"><a href="#" class="ancla">{% block li4 %} {% endblock %}</a></li>
-                <li class="elementos_lista"><a href="#" class="ancla">{% block li5 %} {% endblock %}</a></li>
-
+                {% if menu_items %}
+                    {% for item in menu_items %}
+                        <li class="elementos_lista">
+                            <a href="{% url item.url %}" class="ancla">{{ item.label }}</a>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="elementos_lista">No hay items de navegación</li>
+                {% endif %}
             </ul>
+
             <div class="engranaje_cuenta">
-                <form method="post" action="{% url 'login_register:logout' %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="redes-link" style="background:none; border:none; cursor:pointer; padding-left: 15px; padding-right: 25px;">
-                        <img src="{% static 'img/home/salir3.png' %}" class="redes-img" alt="Salir">
-                    </button>
-                </form>
-                <a href="{% url 'clientes:editar_perfil_cliente' %}" class="cuenta">
-                    <img src="{% static 'img/perfil.png'%}" alt="Perfil">
-                </a>
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'login_register:logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="redes-link" style="background:none; border:none; cursor:pointer; padding-left: 15px; padding-right: 25px;">
+                            <img src="{% static 'img/home/salir3.png' %}" class="redes-img" alt="Salir">
+                        </button>
+                    </form>
+                    <a href="{% url 'clientes:editar_perfil_cliente' %}" class="cuenta">
+                        <img src="{% static 'img/perfil.png'%}" alt="Perfil">
+                    </a>
+                {% endif %}
             </div>
+
         </nav>
     </header>
     

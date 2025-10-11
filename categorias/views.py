@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Categorias
 from .forms import CategoriasForm
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 import openpyxl
 from openpyxl.styles import Font, Alignment, Border, Side
@@ -13,6 +14,13 @@ import os
 from django.conf import settings
 from .models import Categorias
 
+
+def es_empleado(user):
+    return user.is_authenticated and user.rol == 'admin' or user.rol == 'empleado'
+
+# Create your views here.
+@login_required #validacionn requerida para ingresar a proveedores
+@user_passes_test(es_empleado)
 def categorias(request):
     filtro = request.GET.get('filtro', 'activos')
     if filtro == 'eliminados':

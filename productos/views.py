@@ -3,6 +3,8 @@ from django.contrib import messages
 from .models import Productos
 from .forms import ProductoForm
 from categorias.models import Categorias
+from django.contrib.auth.decorators import login_required, user_passes_test
+
 import openpyxl
 from openpyxl.styles import Font, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
@@ -14,6 +16,13 @@ import os
 from django.conf import settings
 from openpyxl.utils import get_column_letter
 
+
+def es_empleado(user):
+    return user.is_authenticated and user.rol == 'admin' or user.rol == 'empleado'
+
+# Create your views here.
+@login_required #validacionn requerida para ingresar a proveedores
+@user_passes_test(es_empleado)
 def productos(request):
     filtro = request.GET.get('filtro', 'activos')
 
@@ -243,7 +252,7 @@ def exportar_excel(request):
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
-    response['Content-Disposition'] = 'attachment; filename=productos_contacto.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=productos_ferreteria_JLARA.xlsx'
     with BytesIO() as b:
         wb.save(b)
         response.write(b.getvalue())

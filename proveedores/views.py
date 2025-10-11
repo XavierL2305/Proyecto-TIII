@@ -2,21 +2,22 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Proveedores
 from .forms import ProveedorForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 import openpyxl
 from openpyxl.styles import Font, Alignment, Border, Side
-from openpyxl.utils import get_column_letter
 from openpyxl.drawing.image import Image
 from io import BytesIO
 from django.http import HttpResponse
 import os
 from django.conf import settings
-from .models import Proveedores
 
+def es_empleado(user):
+    return user.is_authenticated and user.rol == 'admin' or user.rol == 'empleado'
 
 # Create your views here.
-#@login_required #validacionn requerida para ingresar a proveedores
+@login_required #validacionn requerida para ingresar a proveedores
+@user_passes_test(es_empleado)
 def proveedores(request):
     proveedores = Proveedores.objects.filter(estatus=True).order_by('id_proveedor_PK')
     formulario = ProveedorForm()

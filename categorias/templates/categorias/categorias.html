@@ -11,22 +11,6 @@
 <script src="{% static 'categoria/categorias.js' %}" defer></script>
 {% endblock %}
 
-{% block li1 %}
-    <a href="{% url 'home:home' %}" class="ancla">Inicio</a>
-{% endblock %}
-
-{% block li2 %}
-    <a href="{% url 'empleados:gestion_empleados' %}" class="ancla {% if request.resolver_match.namespace == 'empleados' %}activo{% endif %}">Empleados</a>
-{% endblock %}
-
-{% block li3 %}
-    <a href="{% url 'productos:productos' %}" class="ancla">Productos</a>
-{% endblock %}
-
-{% block li4 %}
-    <a href="{% url 'proveedores:proveedores' %}" class="ancla">Proveedores</a>
-{% endblock %}
-
 {% block content %}
 <section class="categorias">
 

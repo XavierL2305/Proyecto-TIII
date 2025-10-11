@@ -38,9 +38,3 @@ def compra_carrito_productos(request):
         {
             'productos_carrito': productos_carrito
         })
-
-
-#señorsa y señores buenas tardes buenas noches buenas tardes buenas noches señoritas y señores hoy estar aqui es mi pasion que alegreia pues la musica es mi vida y la vida es la musica y la musica es alegria y la alegria es la vida y la vida es alegria y la alegria es musica y la musica es mi lengua y le mundo mi familia
-#angel me pide leche y el viejo tienes canas en el culo xddd me dijo caren xddd 
-#mi gente me dice que soy un crack xddd
-#y yo les digo que soy un crack xddd
