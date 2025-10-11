@@ -8,13 +8,11 @@ from .forms import EmpleadoCreationForm, EmpleadoChangeForm
 
 import openpyxl
 from openpyxl.styles import Font, Alignment, Border, Side
-from openpyxl.utils import get_column_letter
 from openpyxl.drawing.image import Image
 from io import BytesIO
 from django.http import HttpResponse
 import os
 from django.conf import settings
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 

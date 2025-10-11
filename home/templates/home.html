@@ -13,26 +13,6 @@ Home
 <script src="{% static 'js/cards.js' %}" defer></script>
 {% endblock %}
 
-{% block li1 %}
-    <a href="{% url 'proveedores:proveedores' %}" class="ancla">Proveedores</a>
-{% endblock %}
-
-{% block li2 %}
-    <a href="{% url 'empleados:gestion_empleados' %}" class="ancla {% if request.resolver_match.namespace == 'empleados' %}activo{% endif %}">Empleados</a>
-{% endblock %}
-
-{% block li3 %}
-    <a href="{% url 'productos:productos' %}" class="ancla">Productos</a>
-{% endblock %}
-
-{% block li4 %}
-    <a href="{% url 'categorias:categorias' %}" class="ancla {% if request.resolver_match.namespace == 'categorias' %}activo{% endif %}">Categorías</a>
-{% endblock %}
-
-{% block li5 %}
-    <a href="{% url 'login_register:login_register' %}" class="ancla">Login</a>
-{% endblock %}
-
 {% block content %}
 <section class="home">
     <div class="barra_nav">
@@ -49,11 +29,6 @@ Home
                     <a href="https://www.twitter.com/" class="redes-link">
                         <img src="{% static 'img/redes/twitter_black.png' %}" class="redes-img" alt="Twitter">
                     </a>
-                    <form method="post" action="{% url 'login_register:logout' %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="redes-link" style="background:none; border:none; padding:0; width:3rem; height: 3rem; cursor:pointer;">
-                            <img src="{% static 'img/home/salir3.png' %}" class="redes-img" alt="Salir">
-                        </button>
                     </form>
 
                 </li>
