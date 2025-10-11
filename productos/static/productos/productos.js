@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('nombre_editar').value = datos.nombre || '';
         document.getElementById('descripcion_editar').value = datos.descripcion || '';
         document.getElementById('precio_editar').value = datos.precio || '';
+        document.getElementById('cantidad_editar').value = datos.cantidad || 0;
         const imgPreview = document.getElementById('img_preview_editar');
         if (datos.imagen) {
           imgPreview.src = datos.imagen;
@@ -137,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
           textoBusqueda = fila.children[4].textContent.toLowerCase();
           break;
         case 'categoria':
-          textoBusqueda = fila.children[5].textContent.toLowerCase();
+          textoBusqueda = fila.children[6].textContent.toLowerCase();
           break;
         default:
           textoBusqueda = '';

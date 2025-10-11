@@ -7,6 +7,10 @@ from categorias.models import Categorias
 from django.db.models import Prefetch
 
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
+from django.db.models import Sum
 
 from .models import Carrito, DetallesCarrito
 
@@ -30,16 +34,39 @@ def home(request):
         'categorias': categorias,
         })
 
+
 @login_required
-def compra_carrito_productos(request):
-    productos_carrito = DetallesCarrito.objects.all()
-    productos_carrito = [1,2,3,4,5,6,7,8,9,10]
-    print(productos_carrito)
-    return render(
-        request, 'home.html',
-        {
-            'productos_carrito': productos_carrito
-        })
+@require_POST
+def add_to_cart(request):
+    """Recibe POST con 'product_id' y 'cantidad' y añade/actualiza el detalle en el carrito del usuario."""
+    try:
+        product_id = int(request.POST.get('product_id'))
+        cantidad = int(request.POST.get('cantidad', 1))
+    except (TypeError, ValueError):
+        return JsonResponse({'ok': False, 'error': 'Parametros invalidos'}, status=400)
+
+    # Obtener producto o 404
+    producto = get_object_or_404(Productos, id_producto_PK=product_id)
+
+    # Obtener o crear carrito activo para el usuario
+    carrito_obj, created = Carrito.objects.get_or_create(id_usuario_FK=request.user, estatus=True, defaults={'total': 0})
+
+    # Buscar detalle existente
+    detalle = DetallesCarrito.objects.filter(id_carrito_FK=carrito_obj, id_producto_FK=producto).first()
+    if detalle:
+        detalle.cantidad += cantidad
+        detalle.subtotal = detalle.cantidad * producto.precio
+        detalle.save()
+    else:
+        subtotal = cantidad * producto.precio
+        detalle = DetallesCarrito.objects.create(id_carrito_FK=carrito_obj, id_producto_FK=producto, cantidad=cantidad, subtotal=subtotal)
+
+    # Recalcular total del carrito
+    total = DetallesCarrito.objects.filter(id_carrito_FK=carrito_obj).aggregate(Sum('subtotal'))['subtotal__sum'] or 0
+    carrito_obj.total = total
+    carrito_obj.save()
+
+    return JsonResponse({'ok': True, 'producto': {'id': producto.id_producto_PK, 'nombre': producto.nombre, 'precio': str(producto.precio)}, 'cantidad': detalle.cantidad, 'total': str(carrito_obj.total)})
 
 
 #señorsa y señores buenas tardes buenas noches buenas tardes buenas noches señoritas y señores hoy estar aqui es mi pasion que alegreia pues la musica es mi vida y la vida es la musica y la musica es alegria y la alegria es la vida y la vida es alegria y la alegria es musica y la musica es mi lengua y le mundo mi familia

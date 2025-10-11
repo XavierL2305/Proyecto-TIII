@@ -93,18 +93,18 @@ def exportar_excel(request):
     ws_activos.title = "Productos Activos"
 
     # Configuración del encabezado
-    ws_activos.merge_cells('B1:D1')
+    ws_activos.merge_cells('B1:E1')
     ws_activos['B1'] = "CONTACTOS JLARA"
     ws_activos['B1'].font = Font(size=22, bold=True)
     ws_activos['B1'].alignment = Alignment(horizontal='center', vertical='center')
 
     # Insertar logo en el encabezado
     img = Image(logo_path)
-    img.width = 130
+    img.width = 140
     img.height = 70
-    ws_activos.column_dimensions['E'].width = 18  
+    ws_activos.column_dimensions['F'].width = 18  
     ws_activos.row_dimensions[1].height = 50
-    img.anchor = 'E1'
+    img.anchor = 'F1'
     ws_activos.add_image(img)
 
     # Consulta productos activos
@@ -124,7 +124,7 @@ def exportar_excel(request):
     ws_activos['A3'].font = Font(size=14, bold=True)
 
     # Encabezados de tabla
-    headers = ["ID", "Nombre", "Descripción", "Precio", "Categoría"]
+    headers = ["ID", "Nombre", "Descripción", "Precio", "Cantidad", "Categoría"]
     for col_num, header in enumerate(headers, 1):
         cell = ws_activos.cell(row=5, column=col_num)
         cell.value = header
@@ -139,7 +139,8 @@ def exportar_excel(request):
             p.id_producto_PK, 
             p.nombre, 
             p.descripcion, 
-            float(p.precio), 
+            float(p.precio),
+            int(p.cantidad),
             p.categoria.descripcion if p.categoria else "Sin categoría"
         ]
         for col_num, valor in enumerate(valores, 1):
@@ -156,7 +157,8 @@ def exportar_excel(request):
     ws_activos.column_dimensions['A'].width = 10  
     ws_activos.column_dimensions['C'].width = 40  
     ws_activos.column_dimensions['D'].width = 15  
-    ws_activos.column_dimensions['E'].width = 20  
+    ws_activos.column_dimensions['E'].width = 15  
+    ws_activos.column_dimensions['D'].width = 20  
 
     ws_activos.row_dimensions[5].height = 30  
     for row in range(6, 6 + cantidad_activos):
@@ -166,7 +168,7 @@ def exportar_excel(request):
     ws_inactivos = wb.create_sheet(title="Productos Inactivos")
 
     # Encabezado hoja inactivos
-    ws_inactivos.merge_cells('B1:D1')
+    ws_inactivos.merge_cells('B1:E1')
     ws_inactivos['B1'] = "CONTACTOS JLARA"
     ws_inactivos['B1'].font = Font(size=22, bold=True)
     ws_inactivos['B1'].alignment = Alignment(horizontal='center', vertical='center')
@@ -175,9 +177,9 @@ def exportar_excel(request):
     img_inactivos = Image(logo_path)
     img_inactivos.width = 130
     img_inactivos.height = 70
-    ws_inactivos.column_dimensions['E'].width = 18  
+    ws_inactivos.column_dimensions['F'].width = 18  
     ws_inactivos.row_dimensions[1].height = 50
-    img_inactivos.anchor = 'E1'
+    img_inactivos.anchor = 'F1'
     ws_inactivos.add_image(img_inactivos)
 
     # Imagen izquierda en hoja inactivos
@@ -211,7 +213,8 @@ def exportar_excel(request):
             p.id_producto_PK, 
             p.nombre, 
             p.descripcion, 
-            float(p.precio), 
+            float(p.precio),
+            int(p.cantidad),
             p.categoria.descripcion if p.categoria else "Sin categoría"
         ]
         for col_num, valor in enumerate(valores, 1):
@@ -229,7 +232,8 @@ def exportar_excel(request):
     ws_inactivos.column_dimensions['A'].width = 10  
     ws_inactivos.column_dimensions['C'].width = 40  
     ws_inactivos.column_dimensions['D'].width = 15  
-    ws_inactivos.column_dimensions['E'].width = 20  
+    ws_inactivos.column_dimensions['E'].width = 15  
+    ws_inactivos.column_dimensions['F'].width = 20  
 
     ws_inactivos.row_dimensions[5].height = 30  
     for row in range(6, 6 + cantidad_inactivos):

@@ -1,4 +1,20 @@
 let carrito = []; // <-- array para los productos
+
+// Helper para leer cookie CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 let background = document.getElementById("background_main");
 let modal_carrito = document.querySelector(".modal-carrito");
 
@@ -73,71 +89,27 @@ document.addEventListener("DOMContentLoaded", function(){
         let precio = parseFloat(btn.getAttribute('data-precio') || btn.dataset.precio) || 0;
         // console.log('[carrito] click add:', {id, nombre, precio});
 
-        let producto = carrito.find(p => p.id === id);
-        if (producto) {
-            producto.cantidad += 1;
-        } else {
-            carrito.push({id, nombre, precio, cantidad: 1});
-        }
-        actualizarCarrito();
+        // Enviar al servidor para persistir en el carrito del usuario si está autenticado
+        fetch('add-to-cart/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: `product_id=${encodeURIComponent(id)}&cantidad=1`
+        }).then(r => r.json()).then(data => {
+            if (data.ok) {
+                // Actualizar carrito localmente según la respuesta
+                let productoLocal = carrito.find(p => p.id === id);
+                if (productoLocal) {
+                    productoLocal.cantidad = data.cantidad;
+                } else {
+                    carrito.push({id, nombre, precio, cantidad: data.cantidad});
+                }
+                actualizarCarrito();
+            } else {
+                console.error('Error al agregar al carrito', data);
+            }
+        }).catch(err => console.error('Fetch error', err));
     });
 })
-
-function actualizarCarrito() {
-    let tbody = document.getElementById('tbody_carrito');
-    let total = 0;
-    tbody.innerHTML = '';
-
-    if(carrito.length === 1) {
-        modal_carrito.classList.add("active");
-        background.classList.add("active");
-    }
-
-    if (carrito.length === 0) {
-        tbody.innerHTML = '<span class="sin_productos">No tienes productos por comprar</span>';
-        
-    } else {
-        carrito.forEach(function(producto) {
-            let subtotal = producto.precio * producto.cantidad;
-            total += subtotal;
-            tbody.innerHTML += `
-                <tr class="fila_carrito">
-                    <td>${producto.nombre}</td>
-                    <td>${producto.cantidad}</td>
-                    <td>${producto.precio.toFixed(2)}$</td>
-                    <td>${subtotal.toFixed(2)}$</td>
-                    <td class="acciones_carrito">
-                        <button class="btn-quitar" data-id="${producto.id}"><img src="/static/img/home/minus.png" width="30px" height="30px"></button>
-                        <button class="btn-agregar" data-id="${producto.id}"><img src="/static/img/home/plus.png" width="30px" height="30px"></button>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-    document.getElementById('total_carrito').textContent = 'Total: ' + total.toFixed(2) + '$';
-    document.getElementById('contador_carrito').textContent = carrito.reduce((acc, p) => acc + p.cantidad, 0);
-}
-
-function quitarProducto(id) {
-    let producto = carrito.find(p => p.id === id);
-    if (producto) {
-        producto.cantidad -= 1;
-        if (producto.cantidad <= 0) {
-            carrito = carrito.filter(p => p.id !== id);
-        }
-        actualizarCarrito();
-    }
-}
-
-function agregarProducto(id) {
-    let producto = carrito.find(p => p.id === id);
-    if (producto) {
-        producto.cantidad += 1;
-        actualizarCarrito();
-    }
-}
-
-function limpiarCarrito() {
-    carrito = [];
-    actualizarCarrito();
-}

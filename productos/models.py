@@ -6,6 +6,7 @@ class Productos(models.Model):
     nombre = models.CharField(max_length=120, verbose_name="Nombre")
     descripcion = models.TextField(verbose_name="Descripción")
     precio = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio")
+    cantidad = models.IntegerField(default=0, verbose_name="Cantidad")
     imagen = models.ImageField(upload_to="productos", blank=True, null=True, verbose_name="Imagen")
     status = models.BooleanField(default=True, verbose_name="Activo")
     
@@ -18,3 +19,4 @@ class Productos(models.Model):
         db_table = "productos"
         verbose_name = "Producto"
         ordering = ["id_producto_PK"]
+        

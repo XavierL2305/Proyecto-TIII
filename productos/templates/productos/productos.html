@@ -89,6 +89,7 @@
       <b>Nombre</b>
       <b>Descripción</b>
       <b>Precio</b>
+      <b>Cantidad</b>
       <b>Categoría</b>
       <b>Acciones</b>
     </div>
@@ -107,6 +108,7 @@
           <div>{{ producto.nombre }}</div>
           <div>{{ producto.descripcion }}</div>
           <div>${{ producto.precio }}</div>
+          <div>{{ producto.cantidad }}</div>
           <div>
             {% if producto.categoria %}
               {{ producto.categoria.descripcion }}
@@ -128,6 +130,7 @@
                 data-nombre="{{ producto.nombre|escapejs }}"
                 data-descripcion="{{ producto.descripcion|escapejs }}"
                 data-precio="{{ producto.precio }}"
+                data-cantidad="{{ producto.cantidad }}"
                 data-imagen="{% if producto.imagen %}{{ producto.imagen.url }}{% endif %}">
                 Editar
               </button>
@@ -162,6 +165,7 @@
       <div><input type="text" name="nombre" id="nombre_agregar" placeholder=" " required><label for="nombre_agregar">Nombre</label></div>
       <div><textarea name="descripcion" id="descripcion_agregar" rows="2" placeholder=" " required></textarea><label for="descripcion_agregar">Descripción</label></div>
       <div><input type="number" step="0.01" min="0" name="precio" id="precio_agregar" placeholder=" " required><label for="precio_agregar">Precio</label></div>
+      <div><input type="number" name="cantidad" id="cantidad_agregar" min="0" placeholder=" " required><label for="cantidad_agregar">Cantidad</label></div>
       <div>
         <label for="categoria_agregar"></label>
         <select name="categoria" id="categoria_agregar" required>
@@ -186,6 +190,7 @@
       <div><input type="text" name="nombre" id="nombre_editar" placeholder=" " required><label for="nombre_editar">Nombre</label></div>
       <div><textarea name="descripcion" id="descripcion_editar" rows="2" placeholder=" " required></textarea><label for="descripcion_editar">Descripción</label></div>
       <div><input type="number" step="0.01" min="0" name="precio" id="precio_editar" placeholder=" " required><label for="precio_editar">Precio</label></div>
+      <div><input type="number" name="cantidad" id="cantidad_agregar" min="0" placeholder=" " required><label for="cantidad_agregar">Cantidad</label></div>
       <div>
         <label for="categoria_agregar"></label>
         <select name="categoria" id="categoria_agregar" required>
