@@ -55,6 +55,10 @@ button:hover {
   letter-spacing: 0.15em;
 }
 
+input, select, textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
 
 /* Responsive Styles */
 @media (max-width: 950px) {

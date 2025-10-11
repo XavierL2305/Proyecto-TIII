@@ -15,6 +15,17 @@
 
   <form method="post">
     {% csrf_token %}
+
+    <label for="id_first_name">Nombre</label>
+    {{ form.first_name }}
+
+    <label for="id_last_name">Apellido</label>
+    {{ form.last_name }}
+
+    <label for="id_fecha_nacimiento">Fecha de nacimiento</label>
+    {{ form.fecha_nacimiento }}
+    <small>{{ form.fecha_nacimiento.help_text }}</small>
+
     <label for="id_telefono">Teléfono</label>
     {{ form.telefono }}
 
@@ -25,7 +36,10 @@
     <input type="text" value="{{ request.user.username }}" readonly>
 
     <label for="email">Correo electrónico</label>
-    <input type="email" name="email" value="{{ request.user.email }}" required>
+    {{ form.email }}
+
+    <label>Rol</label>
+    <input type="text" value="{{ rol }}" readonly>
 
     <label>Contraseña</label>
     <input type="password" value="********" readonly class="readonly-pass">
