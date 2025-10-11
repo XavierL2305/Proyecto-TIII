@@ -404,7 +404,6 @@ html, body {
     opacity: 0;
     right: 0;
     top: 0;
-    padding: 0 10px;
     width: 400px;
     height: 100dvh;
     display: flex;
@@ -421,65 +420,46 @@ html, body {
 
 .modal-carrito.active{
     visibility: visible;
-    opacity: 1;
+    opacity: 0.95;
     /* transform: translateY(80px); */
     transition: all ease .3s;
 }
-
-.tabla_carrito{
-    height: 100%;
-    border-radius: 10px;
-    margin: 10px;
-    padding: 10px;
-    color: #000;
-    .thead{
-        gap: 5px;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
-    .tbody{
-        max-height: 180px;
-        overflow-y:auto;
-    }
+#cerrar_carrito{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border: solid 1px transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all ease .3s;
 }
-.fila_carrito{
-    gap: 7px;
+#cerrar_carrito:hover{
+    opacity: 0.8;
+    border: solid 1px #fff;
+}
+#cerrar_carrito:active{
+    animation: click .3s ease forwards;
+}
+
+.contenido_carrito{
     width: 100%;
+    height: 100%;
 }
 
-.acciones_carrito{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    button{
-        background-color: transparent;
-        border: none;
-        width: 30px;
-        height: 30px;
-        cursor: pointer;
-        transition: all ease .3s;
-        margin: 0;
-        padding: 0;
-    }
+.scroll_carrito{
+    overflow-y: auto;
+    padding-bottom: 2rem;
+    height: calc(100dvh - 82px);
 }
 
-.total-carrito{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    margin: 10px;
-}
-.btns-carrito{
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    margin: 10px;
-}
-.btn-comprar{
-    background-color: var(--verde-comprar);
-}
-.btn-cancelar{
-    background-color: var(--rojo-eliminar);
+.productos_carrito{
+    /* width: 100%; */
+    margin-top: 52px;
+    height: max-content;
+    width: 400px;
+    background-color: #fff;
 }
 
 .sin_productos{
@@ -487,5 +467,24 @@ html, body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: max-content;
+    img{
+        width: 45px;
+        height: 45px;
+        margin-right: 1rem;
+        filter: grayscale(100%);
+        opacity: 0.9;
+        position: absolute;
+        top: -50px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    span{
+        font-size: 1.2rem;
+        color: var(--texto_principal);
+        font-weight: bold;
+    }
 }

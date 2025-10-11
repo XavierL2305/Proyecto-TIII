@@ -4,19 +4,28 @@
     <span class="contador-carrito" id="contador_carrito">0</span>
 
     <div class="modal-carrito">
-        <!-- <h2>Carrito de Compras</h2> -->
-        <div class="productos_carrito" id="productos_carrito">
+        <img src="{% static 'img/home/exit.svg' %}" alt="Salir" id="cerrar_carrito">
+        <div class="contenido_carrito" id="contenido_carrito">
+            
+            <div class="scroll_carrito">
+                <div class="productos_carrito">
+                    {% for producto in productos_carrito %}
+                        <h2>{{ producto }}</h2>
+                    {% endfor %}
+                </div>
+
+                <!-- <div class="acciones_carrito">
+
+                </div> -->
+
+            </div>
 
             {% if not productos_carrito %}
-                <span class="sin_productos">No tienes productos por comprar</span>
+                <div class="sin_productos">
+                    <img src="{% static 'img/carritoBlanco.png' %}" alt="">
+                    <span>Tu carro está vacío</span>
+                </div>
             {% endif %}
         </div>
-        <!-- <div class="total-carrito">
-            <span id="total_carrito">Total: 0.00$</span>
-        </div>
-        <div class="btns-carrito">
-            <button class="btn-carrito btn-cancelar" id="btn_limpiar_carrito" onclick="limpiarCarrito();">Limpiar</button>
-            <button class="btn-carrito btn-comprar" id="btn_comprar_carrito">Comprar</button>
-        </div> -->
     </div>
 </div>

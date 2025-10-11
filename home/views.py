@@ -22,6 +22,21 @@ def home(request):
     productos_list = Productos.objects.filter(status=True).select_related('categoria').order_by('categoria__descripcion', 'nombre')
     # Traer categorías activas ordenadas por su campo 'descripcion' (no existe 'categoria')
     categorias = Categorias.objects.filter(status=True).order_by('descripcion')
+
+    if request.user.is_authenticated:
+        productos_carrito = (
+            DetallesCarrito.objects
+            .filter(id_carrito_FK__id_usuario_FK=request.user, id_carrito_FK__estatus=True)
+            .select_related('id_producto_FK')
+            .values(
+                'id_detalles_carrito_PK', 'cantidad', 'subtotal',
+                'id_producto_FK__id_producto_PK', 'id_producto_FK__nombre',
+                'id_producto_FK__precio', 'id_producto_FK__imagen'
+            )
+        )
+    else:
+        productos_carrito = DetallesCarrito.objects.none()
+
     if not productos_list:
         respuesta = "No hay productos disponibles"
         return render(request, 'home.html', {"respuesta": respuesta})
@@ -32,6 +47,8 @@ def home(request):
         # 'dataApiBcv': dataApiBcv,
         'productos_list': productos_list,
         'categorias': categorias,
+        'user': request.user,
+        'productos_carrito': productos_carrito
         })
 
 
@@ -51,12 +68,11 @@ def add_to_cart(request):
     # Obtener o crear carrito activo para el usuario
     carrito_obj, created = Carrito.objects.get_or_create(id_usuario_FK=request.user, estatus=True, defaults={'total': 0})
 
-    # Buscar detalle existente
+    # Buscar detalle existente: si ya existe, no agregamos (solo añadir si no existe)
     detalle = DetallesCarrito.objects.filter(id_carrito_FK=carrito_obj, id_producto_FK=producto).first()
     if detalle:
-        detalle.cantidad += cantidad
-        detalle.subtotal = detalle.cantidad * producto.precio
-        detalle.save()
+        # Producto ya está en el carrito: no aumentamos cantidad por ahora
+        return JsonResponse({'ok': False, 'error': 'exists', 'message': 'Producto ya en el carrito', 'cantidad': detalle.cantidad})
     else:
         subtotal = cantidad * producto.precio
         detalle = DetallesCarrito.objects.create(id_carrito_FK=carrito_obj, id_producto_FK=producto, cantidad=cantidad, subtotal=subtotal)
