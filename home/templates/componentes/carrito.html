@@ -9,8 +9,27 @@
             
             <div class="scroll_carrito">
                 <div class="productos_carrito">
+                    <h2>Tu orden</h2>
                     {% for producto in productos_carrito %}
-                        <h2>{{ producto }}</h2>
+                        <div class="producto">
+                            <div class="descripcion_producto">
+                                {% if producto.id_producto_FK__imagen.url %}
+                                    <img src="{% static 'img/home/no-image.png' %}" alt="Imagen del producto" width="50px" height="50px">
+                                {% else %}
+                                    <img src="media/{{ producto.id_producto_FK__imagen }}" alt="Imagen del producto" width="50px" height="50px">
+                                {% endif %}
+                                <div class="info_producto">
+                                    <span class="nombre_producto">{{ producto.id_producto_FK__nombre }}</span>
+                                    <span class="cantidad_producto">Cantidad: {{ producto.cantidad }}</span>
+                                    <span class="precio_producto">${{ producto.id_producto_FK__precio }}</span>
+                                </div>
+                            </div>
+                            <div class="acciones_carrito">
+                                <button class="btn-disminuir" data-id="{{ producto.id }}"><img src="{% static 'img\home\minus.svg' %}" alt="diminuir"></button>
+                                <button class="btn-aumentar" data-id="{{ producto.id }}"><img src="{% static 'img/home/plus.svg' %}" alt="aumentar"></button>
+                                <button class="btn-eliminar" data-id="{{ producto.id }}"><img src="{% static 'img/home/trash.svg' %}" alt="eliminar"></button>
+                            </div>
+                        </div>
                     {% endfor %}
                 </div>
 
@@ -19,6 +38,8 @@
                 </div> -->
 
             </div>
+
+
 
             {% if not productos_carrito %}
                 <div class="sin_productos">

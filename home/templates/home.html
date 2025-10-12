@@ -53,6 +53,7 @@ Home
                         {% if Categorias %}
                             <a href="#">No hay categoria de productos</a>
                         {% else %}
+                            <a href="#">Todos</a>
                             {% for categoria in categorias %}
                                 <a href="#">{{ categoria }}</a>
                             {% endfor %}

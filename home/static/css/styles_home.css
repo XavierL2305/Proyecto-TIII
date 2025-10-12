@@ -449,18 +449,102 @@ html, body {
 }
 
 .scroll_carrito{
+    margin-top: 52px;
     overflow-y: auto;
-    padding-bottom: 2rem;
-    height: calc(100dvh - 82px);
+    scrollbar-color: #000;
+    height: 100dvb;
+    padding: 0 15px 15px 15px;
 }
 
 .productos_carrito{
-    /* width: 100%; */
-    margin-top: 52px;
     height: max-content;
-    width: 400px;
-    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--gris-hover);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all ease .3s;
+    /* gap: 5px; */
 }
+
+.productos_carrito .producto{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--gris-claro);
+    padding: 10px 0;
+    /* border-radius: 5px; */
+    cursor: pointer;
+    transition: all ease .3s;
+}
+
+.productos_carrito:hover{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.productos_carrito > .producto:first-child{
+    /* Primer hijo directo: esquinas superiores redondeadas */
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.productos_carrito > .producto:not(:last-child){
+    border-bottom: 1px solid var(--gris-fondo);
+}
+
+.productos_carrito > .producto:last-child{
+    /* Último hijo directo: esquinas inferiores redondeadas */
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.descripcion_producto img{
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+.productos_carrito .descripcion_producto{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 10px;
+    width: max-content;
+}
+
+.info_producto{
+    display: flex;
+    flex-direction: column;
+}
+
+.acciones_carrito{
+    display: flex;
+    /* flex-direction: column; */
+    margin-right: 10px;
+    button{
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        margin: 3px 0;
+        img{
+            width: 20px;
+            height: 20px;
+            transition: all ease .3s;
+        }
+        img:hover{
+            opacity: 0.8;
+            scale: 1.2;
+        }
+        img:active{
+            animation: click .3s ease forwards;
+        }
+    }
+}
+
+
 
 .sin_productos{
     position: absolute;
