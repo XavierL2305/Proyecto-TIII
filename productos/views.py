@@ -35,6 +35,7 @@ def productos(request):
 
     formulario = ProductoForm()
 
+    es_admin = request.user.is_superuser or getattr(request.user, 'rol', '') == 'admin'
     if request.method == 'POST':
         if 'eliminar_id' in request.POST:
             try:
@@ -87,8 +88,8 @@ def productos(request):
         'formulario': formulario,
         'filtro': filtro,
         'categorias': categorias,
+        'es_admin': es_admin,  # <--- nuevo contexto
     })
-
 def exportar_excel(request):
     wb = openpyxl.Workbook()
     

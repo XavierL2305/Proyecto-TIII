@@ -30,7 +30,14 @@ def proveedores(request):
         'estatus': 'Estatus'
     }
 
+    # Solo admins pueden modificar, eliminar o crear
+    es_admin = request.user.is_superuser or getattr(request.user, 'rol', '') == 'admin'
+
     if request.method == 'POST':
+        if not es_admin:
+            messages.error(request, 'No tienes permisos para modificar proveedores.')
+            return redirect('proveedores:proveedores')
+        
         proveedor_id = request.POST.get('proveedor_id', '').strip()
         # Eliminar (lógica)
         if 'button_eliminar' in request.POST and proveedor_id:
@@ -69,13 +76,14 @@ def proveedores(request):
                 return redirect('proveedores:proveedores')
 
     return render(
-        request,'pagina/proveedores.html', 
-        {
-        'proveedores': proveedores, 
-        'formulario': formulario,
-        'request': request,
-        'campos': campos 
-        })
+        request, 'pagina/proveedores.html', {
+            'proveedores': proveedores,
+            'formulario': formulario,
+            'request': request,
+            'campos': campos,
+            'es_admin': es_admin  # Pasar variable para frontend
+        }
+    )
 
 
 def exportar_proveedores_excel(request):

@@ -20,7 +20,9 @@ Proveedores
     <center>
         <h1 class="titulo">Proveedores</h1>
         <div class="container">
-            <button class="button add" name="button_agregar">Agregar</button>
+            {% if es_admin %}
+                <button class="button add" name="button_agregar">Agregar</button>
+            {% endif %}
             <img src="{% static 'img/buscar.png' %}" alt="Filtro" class="filtro" id="filtro">
             <a href="{% url 'proveedores:exportar_proveedores_excel' %}" title="Descargar Excel Proveedores">
                 <img src="{% static 'img/home/exc.png' %}" alt="Exportar a Excel" style="width:35px; height:35px; vertical-align:middle; cursor:pointer; margin-left:8px;">
@@ -46,14 +48,16 @@ Proveedores
             </div>
         </div>
     </form>
-    <div class="tabla">
+    <div class="tabla {% if es_admin %}con-acciones{% else %}sin-acciones{% endif %}">
         <div class="thead">
             <b>ID</b>
             <b>Nombre</b>
             <b>Direccion</b>
             <b>Telefono</b>
             <b>Correo</b>
-            <b>Acciones</b>
+            {% if es_admin %}
+                <b>Acciones</b>
+            {% endif %}
         </div>
         <div class="tbody">
             {% for proveedor in proveedores %}
@@ -64,25 +68,26 @@ Proveedores
                 <p class="telefono">{{ proveedor.telefono }}</p>
                 <p class="correo">{{ proveedor.email }}</p>
                 <div class="acciones">
-                    <button 
-                        class="button edit-btn edit"
-                        name="button_editar" 
-                        value="{{ proveedor.id_proveedor_PK}}"
+                    {% if es_admin %}
+                        <button 
+                            class="button edit-btn edit"
+                            name="button_editar" 
+                            value="{{ proveedor.id_proveedor_PK}}"
+                            data-id="{{ proveedor.id_proveedor_PK }}"
+                            data-nombre="{{ proveedor.nombre }}"
+                            data-direccion="{{ proveedor.direccion }}"
+                            data-telefono="{{ proveedor.telefono }}"
+                            data-email="{{ proveedor.email }}">
+                            Editar
+                        </button>
 
-                        data-id="{{ proveedor.id_proveedor_PK }}"
-                        data-nombre="{{ proveedor.nombre }}"
-                        data-direccion="{{ proveedor.direccion }}"
-                        data-telefono="{{ proveedor.telefono }}"
-                        data-email="{{ proveedor.email }}">
-                        Editar
-                    </button>
-
-                    <button 
-                        class="button delete-btn delete"
-                        name="button_eliminar" 
-                        value="{{ proveedor.id_proveedor_PK}}">
-                        Eliminar
-                    </button>
+                        <button 
+                            class="button delete-btn delete"
+                            name="button_eliminar" 
+                            value="{{ proveedor.id_proveedor_PK}}">
+                            Eliminar
+                        </button>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}

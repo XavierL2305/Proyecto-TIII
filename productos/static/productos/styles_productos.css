@@ -122,22 +122,45 @@ h1, h2 {
   white-space: nowrap;
 }
 
-.tabla .thead {
+.tabla.con-acciones .thead,
+.tabla.con-acciones .fila-producto {
   display: grid;
   grid-template-columns: 
-  minmax(3rem, 3rem)    /* columna fija de 3rem */
-  minmax(6rem, 6rem)    /* columna fija de 6rem */
-  minmax(150px, 1.5fr)  /* columna con mínimo 150px y crece con fr */
-  minmax(150px, 1.5fr)  /* columna con mínimo 150px y crece con fr */
-  minmax(100px, 1fr)    
-  minmax(100px, 1fr)    
-  minmax(120px, 1.2fr)
-  minmax(120px, 1.2fr);
+    minmax(3rem, 3rem)    /* ID */
+    minmax(6rem, 6rem)    /* Imagen */
+    minmax(150px, 1.5fr)  /* Nombre */
+    minmax(150px, 1.5fr)  /* Descripción */
+    minmax(100px, 1fr)    /* Precio */
+    minmax(100px, 1fr)    /* Cantidad */
+    minmax(120px, 1.2fr)  /* Categoría */
+    minmax(120px, 1.2fr); /* Acciones */
   gap: 8px;
   font-weight: bold;
   color: var(--texto_principal);
   padding: 10px 8px;
   border-bottom: 2px solid var(--elementos_primarios);
+}
+
+.tabla.sin-acciones .thead,
+.tabla.sin-acciones .fila-producto {
+  display: grid;
+  grid-template-columns: 
+    minmax(3rem, 3rem)    /* ID */
+    minmax(6rem, 6rem)    /* Imagen */
+    minmax(150px, 1.5fr)  /* Nombre */
+    minmax(150px, 1.5fr)  /* Descripción */
+    minmax(100px, 1fr)    /* Precio */
+    minmax(100px, 1fr)    /* Cantidad */
+    minmax(120px, 1.2fr); /* Categoría */
+  gap: 8px;
+  font-weight: bold;
+  color: var(--texto_principal);
+  padding: 10px 8px;
+  border-bottom: 2px solid var(--elementos_primarios);
+}
+
+.tabla .tbody {
+  display: contents;
 }
 
 .tabla .thead b {

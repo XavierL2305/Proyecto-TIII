@@ -28,7 +28,11 @@ def categorias(request):
     else:
         categorias = Categorias.objects.filter(status=True)
 
+    es_admin = request.user.is_superuser or getattr(request.user, 'rol', '') == 'admin'
     if request.method == 'POST':
+        if not es_admin:
+            messages.error(request, "No tienes permisos para modificar categorías.")
+            return redirect(f"{request.path}?filtro={filtro}")
         if 'eliminar_id' in request.POST:
             categoria = get_object_or_404(Categorias, id_categoria_PK=request.POST.get('eliminar_id'))
             categoria.status = False
@@ -71,6 +75,7 @@ def categorias(request):
         'categorias': categorias,
         'filtro': filtro,
         'formulario': formulario,
+        'es_admin': es_admin,
     })
 
 

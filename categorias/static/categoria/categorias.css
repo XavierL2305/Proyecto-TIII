@@ -123,13 +123,29 @@ h1, h2 {
   background: var(--detalles_hover);
 }
 
-.tabla .thead, .fila-categoria {
+.tabla.con-acciones .thead,
+.tabla.con-acciones .fila-categoria {
   display: grid;
   grid-template-columns:
-    minmax(3rem, 3rem)        /* ID */
-    minmax(150px, 1.5fr)      /* Descripción */
-    minmax(120px, 1.2fr)      /* Estado */
-    minmax(120px, 1.2fr);     /* Acciones */
+    minmax(3rem, 3rem)      /* ID */
+    minmax(150px, 1.5fr)    /* Descripción */
+    minmax(120px, 1.2fr)    /* Estado */
+    minmax(120px, 1.2fr);   /* Acciones */
+  gap: 10px;
+  align-items: center;
+  color: var(--texto_principal);
+  font-size: 0.85rem;
+  padding: 10px 8px;
+  border-bottom: 1px solid #555;
+}
+
+.tabla.sin-acciones .thead,
+.tabla.sin-acciones .fila-categoria {
+  display: grid;
+  grid-template-columns:
+    minmax(3rem, 3rem)      /* ID */
+    minmax(150px, 1.5fr)    /* Descripción */
+    minmax(120px, 1.2fr);   /* Estado */
   gap: 10px;
   align-items: center;
   color: var(--texto_principal);
@@ -148,6 +164,7 @@ h1, h2 {
   overflow-x: auto;
   white-space: nowrap;
 }
+
 
 .tabla .thead b {
   margin: 0;

@@ -93,11 +93,23 @@ h1,h2{
     overflow: hidden;
     overflow-x: auto;
 }
-.thead, .fila-proveedor {
+/* 6 columnas para admin (Acciones visible) */
+.tabla.con-acciones .thead,
+.tabla.con-acciones .fila-proveedor {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     align-items: center;
 }
+
+/* 5 columnas para no admin (sin acciones) */
+.tabla.sin-acciones .thead,
+.tabla.sin-acciones .fila-proveedor {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+}
+
+
 .thead {
     background-color: var(--secciones);
     font-weight: bold;
