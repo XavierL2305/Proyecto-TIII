@@ -11,6 +11,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum
+from django.views.decorators.http import require_POST
 
 from .models import Carrito, DetallesCarrito
 
@@ -22,11 +23,15 @@ def home(request):
     productos_list = Productos.objects.filter(status=True).select_related('categoria').order_by('categoria__descripcion', 'nombre')
     # Traer categorías activas ordenadas por su campo 'descripcion' (no existe 'categoria')
     categorias = Categorias.objects.filter(status=True).order_by('descripcion')
-
+    
     if request.user.is_authenticated:
         productos_carrito = (
             DetallesCarrito.objects
-            .filter(id_carrito_FK__id_usuario_FK=request.user, id_carrito_FK__estatus=True)
+            .filter(
+                id_carrito_FK__id_usuario_FK=request.user, 
+                id_carrito_FK__estatus=True, 
+                id_producto_FK__status=True
+            )
             .select_related('id_producto_FK')
             .values(
                 'id_detalles_carrito_PK', 'cantidad', 'subtotal',
@@ -36,6 +41,14 @@ def home(request):
         )
     else:
         productos_carrito = DetallesCarrito.objects.none()
+    
+    if request.user.is_authenticated:
+        info_carrito = {
+            'total_carrito':Carrito.objects.filter(id_usuario_FK=request.user, estatus=True).aggregate(Sum('total'))['total__sum'] or 0,
+            'cantidad_elementos': productos_carrito.count()
+        }
+    else:
+        info_carrito = [0, 0]
 
     if not productos_list:
         respuesta = "No hay productos disponibles"
@@ -48,6 +61,8 @@ def home(request):
         'productos_list': productos_list,
         'categorias': categorias,
         'user': request.user,
+        'info_carrito': info_carrito,
+
         'productos_carrito': productos_carrito
         })
 
@@ -82,7 +97,94 @@ def add_to_cart(request):
     carrito_obj.total = total
     carrito_obj.save()
 
-    return JsonResponse({'ok': True, 'producto': {'id': producto.id_producto_PK, 'nombre': producto.nombre, 'precio': str(producto.precio)}, 'cantidad': detalle.cantidad, 'total': str(carrito_obj.total)})
+    imagen_url = producto.imagen.url if producto.imagen else ''
+    return JsonResponse({
+        'ok': True,
+        'detalle_id': detalle.id_detalles_carrito_PK,
+        'producto': {
+            'id': producto.id_producto_PK,
+            'nombre': producto.nombre,
+            'precio': str(producto.precio),
+            'imagen': imagen_url,
+        },
+        'cantidad': detalle.cantidad,
+        'total': str(carrito_obj.total)
+    })
+
+
+@login_required
+@require_POST
+def remove_from_cart(request):
+    """Elimina un DetallesCarrito (detalle) por su id y recalcula el total del carrito."""
+    try:
+        detalle_id = int(request.POST.get('detalle_id'))
+    except (TypeError, ValueError):
+        return JsonResponse({'ok': False, 'error': 'invalid_id'}, status=400)
+
+    detalle = get_object_or_404(DetallesCarrito, pk=detalle_id)
+
+    # Seguridad: verificar que el detalle pertenece al carrito del usuario
+    carrito_obj = detalle.id_carrito_FK
+    if carrito_obj.id_usuario_FK != request.user:
+        return JsonResponse({'ok': False, 'error': 'forbidden'}, status=403)
+
+    # Borrar el detalle
+    detalle.delete()
+
+    # Recalcular total
+    total = DetallesCarrito.objects.filter(id_carrito_FK=carrito_obj).aggregate(Sum('subtotal'))['subtotal__sum'] or 0
+    carrito_obj.total = total
+    carrito_obj.save()
+
+    return JsonResponse({'ok': True, 'total': str(total)})
+
+
+@login_required
+@require_POST
+def update_cart_item(request):
+    """Incrementa o decrementa la cantidad de un DetallesCarrito.
+    Espera POST con 'detalle_id' y 'action' ('increment'|'decrement').
+    Si la cantidad llega a 0 se elimina el detalle.
+    Devuelve JSON con cantidad, subtotal y total del carrito.
+    """
+    try:
+        detalle_id = int(request.POST.get('detalle_id'))
+    except (TypeError, ValueError):
+        return JsonResponse({'ok': False, 'error': 'invalid_id'}, status=400)
+
+    action = request.POST.get('action')
+    if action not in ('increment', 'decrement'):
+        return JsonResponse({'ok': False, 'error': 'invalid_action'}, status=400)
+
+    detalle = get_object_or_404(DetallesCarrito, pk=detalle_id)
+    carrito_obj = detalle.id_carrito_FK
+    if carrito_obj.id_usuario_FK != request.user:
+        return JsonResponse({'ok': False, 'error': 'forbidden'}, status=403)
+
+    if action == 'increment':
+        detalle.cantidad += 1
+        detalle.subtotal = detalle.cantidad * detalle.id_producto_FK.precio
+        detalle.save()
+        deleted = False
+    else:  # decrement
+        detalle.cantidad -= 1
+        if detalle.cantidad <= 0:
+            detalle.delete()
+            deleted = True
+        else:
+            detalle.subtotal = detalle.cantidad * detalle.id_producto_FK.precio
+            detalle.save()
+            deleted = False
+
+    # Recalcular total del carrito
+    total = DetallesCarrito.objects.filter(id_carrito_FK=carrito_obj).aggregate(Sum('subtotal'))['subtotal__sum'] or 0
+    carrito_obj.total = total
+    carrito_obj.save()
+
+    if deleted:
+        return JsonResponse({'ok': True, 'deleted': True, 'total': str(total)})
+    else:
+        return JsonResponse({'ok': True, 'deleted': False, 'cantidad': detalle.cantidad, 'subtotal': str(detalle.subtotal), 'total': str(total)})
 
 
 #señorsa y señores buenas tardes buenas noches buenas tardes buenas noches señoritas y señores hoy estar aqui es mi pasion que alegreia pues la musica es mi vida y la vida es la musica y la musica es alegria y la alegria es la vida y la vida es alegria y la alegria es musica y la musica es mi lengua y le mundo mi familia

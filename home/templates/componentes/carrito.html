@@ -1,51 +1,75 @@
 {% load static %}
 <div class="carrito-compras">
     <img src="{% static 'img/carritoBlanco.png' %}" alt="Carrito de compas" id="imagen-carrito" width="30px" height="30px">
-    <span class="contador-carrito" id="contador_carrito">0</span>
+    <span class="contador-carrito" id="contador_carrito">{{ productos_carrito|length }}</span>
 
     <div class="modal-carrito">
-        <img src="{% static 'img/home/exit.svg' %}" alt="Salir" id="cerrar_carrito">
+        <img src="{% static 'img/home/exit.svg' %}" alt="Salir" id="cerrar_carrito" style="z-index: 1;">
         <div class="contenido_carrito" id="contenido_carrito">
             
+            {% if user.is_anonymous  %}
+
+            <div class="inicia_sesion">
+                <h2>Inicia sesión para ver tu carrito</h2>
+
+                <a href="{% url 'login_register:login_register' %}" class="btn-iniciar-sesion">Iniciar sesión</a>
+            </div>
+
+            {% elif not productos_carrito %}
+
+                <div class="sin_productos">
+                    <img src="{% static 'img/carritoBlanco.png' %}" alt="">
+                    <span>Tu carro está vacío</span>
+                </div>
+
+            {% else %}
+
             <div class="scroll_carrito">
                 <div class="productos_carrito">
                     <h2>Tu orden</h2>
                     {% for producto in productos_carrito %}
                         <div class="producto">
                             <div class="descripcion_producto">
-                                {% if producto.id_producto_FK__imagen.url %}
-                                    <img src="{% static 'img/home/no-image.png' %}" alt="Imagen del producto" width="50px" height="50px">
+                                {# Si el campo imagen tiene un valor (filename) lo mostramos desde MEDIA, sino usamos la imagen por defecto #}
+                                {% if producto.id_producto_FK__imagen %}
+                                    <img src="/media/{{ producto.id_producto_FK__imagen }}" alt="Imagen del producto" width="50" height="50">
                                 {% else %}
-                                    <img src="media/{{ producto.id_producto_FK__imagen }}" alt="Imagen del producto" width="50px" height="50px">
+                                    <img src="{% static 'img/home/no-image.svg' %}" alt="Imagen del producto" width="50" height="50">
                                 {% endif %}
                                 <div class="info_producto">
                                     <span class="nombre_producto">{{ producto.id_producto_FK__nombre }}</span>
-                                    <span class="cantidad_producto">Cantidad: {{ producto.cantidad }}</span>
+                                    <span class="cantidad_producto">
+                                        {{ producto.cantidad }} 
+                                        {% if producto.cantidad == 1 %}
+                                            elemento
+                                        {% else %}
+                                            elementos
+                                        {% endif %}
+                                    </span>
                                     <span class="precio_producto">${{ producto.id_producto_FK__precio }}</span>
                                 </div>
                             </div>
                             <div class="acciones_carrito">
-                                <button class="btn-disminuir" data-id="{{ producto.id }}"><img src="{% static 'img\home\minus.svg' %}" alt="diminuir"></button>
-                                <button class="btn-aumentar" data-id="{{ producto.id }}"><img src="{% static 'img/home/plus.svg' %}" alt="aumentar"></button>
-                                <button class="btn-eliminar" data-id="{{ producto.id }}"><img src="{% static 'img/home/trash.svg' %}" alt="eliminar"></button>
+                                <button class="btn-disminuir" data-id="{{ producto.id_detalles_carrito_PK }}"><img src="{% static 'img/home/minus.svg' %}" alt="diminuir"></button>
+                                <button class="btn-aumentar" data-id="{{ producto.id_detalles_carrito_PK }}"><img src="{% static 'img/home/plus.svg' %}" alt="aumentar"></button>
+                                <button class="btn-eliminar" data-id="{{ producto.id_detalles_carrito_PK }}"><img src="{% static 'img/home/trash.svg' %}" alt="eliminar"></button>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
-
-                <!-- <div class="acciones_carrito">
-
-                </div> -->
-
-            </div>
-
-
-
-            {% if not productos_carrito %}
-                <div class="sin_productos">
-                    <img src="{% static 'img/carritoBlanco.png' %}" alt="">
-                    <span>Tu carro está vacío</span>
+                <div class="info_carrito">
+                    <span id="total_amount">Total: ${{ info_carrito.total_carrito }}</span>
+                    {% if info_carrito.cantidad_elementos == 1 %}
+                        <span id="total_elementos">Producto: {{ info_carrito.cantidad_elementos }}</span>
+                    {% else %}
+                        <span id="total_elementos">Productos: {{ info_carrito.cantidad_elementos }}</span>
+                    {% endif %}
                 </div>
+
+                <div class="acciones_carrito">
+
+                </div>
+            </div>
             {% endif %}
         </div>
     </div>

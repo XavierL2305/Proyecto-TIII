@@ -1,4 +1,6 @@
 let carrito = []; // <-- array para los productos
+const totalAmountEl = document.getElementById('total_amount');
+const totalElementosEl = document.getElementById('total_elementos');
 
 // Helper para leer cookie CSRF
 function getCookie(name) {
@@ -27,7 +29,7 @@ function showToast(message, timeout = 2500) {
     toast.style.color = '#fff';
     toast.style.padding = '10px 14px';
     toast.style.borderRadius = '6px';
-    toast.style.zIndex = '9999999';
+    toast.style.zIndex = '5';
     document.body.appendChild(toast);
     setTimeout(() => {
         toast.style.transition = 'opacity 0.3s';
@@ -96,6 +98,7 @@ document.addEventListener("DOMContentLoaded", function(){
     // Delegación: manejar clicks en botones "Agregar al carrito"
     document.addEventListener('click', function(e) {
         let btn = e.target.closest('.btn-agregar-carrito');
+        // console.log('Clicked add to cart button:', btn);
         if (!btn) return;
 
         // Leer datos del botón
@@ -104,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function(){
         let precio = parseFloat(btn.getAttribute('data-precio') || btn.dataset.precio) || 0;
 
         // Enviar al servidor para persistir en el carrito del usuario
-        fetch('/add-to-cart/', {
+    fetch('/add-to-cart/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -118,12 +121,23 @@ document.addEventListener("DOMContentLoaded", function(){
                 if (productosContainer) {
                     // crear fila simple para mostrar el producto
                     const fila = document.createElement('div');
-                    fila.className = 'fila_carrito_item';
-                    fila.setAttribute('data-id', data.producto.id);
+                    fila.className = 'producto';
+                    // Guardar el id del detalle (PK de DetallesCarrito) para futuras acciones
+                    fila.setAttribute('data-detalle-id', data.detalle_id);
                     fila.innerHTML = `
-                        <div class="fila_nombre">${data.producto.nombre}</div>
-                        <div class="fila_cantidad">${data.cantidad}</div>
-                        <div class="fila_precio">${data.producto.precio}$</div>
+                        <div class="descripcion_producto">
+                            <img src="${data.producto.imagen || '/static/img/home/no-image.svg'}" alt="Imagen del producto" width="50" height="50">
+                            <div class="info_producto">
+                                <span class="nombre_producto">${data.producto.nombre}</span>
+                                <span class="cantidad_producto">1 elemento</span>
+                                <span class="precio_producto">${data.producto.precio}$</span>
+                            </div>
+                        </div>
+                        <div class="acciones_carrito">
+                            <button class="btn-disminuir" data-id="${data.detalle_id}"><img src="/static/img/home/minus.svg" alt="diminuir"></button>
+                            <button class="btn-aumentar" data-id="${data.detalle_id}"><img src="/static/img/home/plus.svg" alt="aumentar"></button>
+                            <button class="btn-eliminar" data-id="${data.detalle_id}"><img src="/static/img/home/trash.svg" alt="eliminar"></button>
+                        </div>
                     `;
                     productosContainer.appendChild(fila);
                 }
@@ -134,6 +148,16 @@ document.addEventListener("DOMContentLoaded", function(){
                     // incrementar contador en 1 (solo añadimos un producto nuevo)
                     let current = parseInt(contador.textContent) || 0;
                     contador.textContent = current + 1;
+                }
+
+                // Actualizar total mostrado en el modal (si existe)
+                if (totalAmountEl && typeof data.total !== 'undefined') {
+                    totalAmountEl.textContent = 'Total: $' + data.total;
+                }
+                if (totalElementosEl) {
+                    // Sin valor exacto desde el servidor, usamos el contador visual como fuente de la verdad
+                    const cnt = document.getElementById('contador_carrito');
+                    totalElementosEl.textContent = 'Elemento: ' + (cnt ? cnt.textContent : (parseInt(data.cantidad) || 1));
                 }
 
                 showToast('Producto agregado al carrito');
@@ -151,4 +175,133 @@ document.addEventListener("DOMContentLoaded", function(){
         });
     });
 
+    // Delegación: manejar clicks en botones "Eliminar" dentro del modal carrito
+    document.addEventListener('click', function(e) {
+        let btnDel = e.target.closest('.btn-eliminar');
+        // Debug: mostrar el elemento objetivo y el botón resuelto
+        // console.log('click target:', e.target);
+        // console.log('Clicked trash to cart button (resolved):', btnDel);
+        if (!btnDel) return;
+
+        const detalleId = btnDel.dataset.id;
+        if (!detalleId) return;
+
+    fetch('/remove-from-cart/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: `detalle_id=${encodeURIComponent(detalleId)}`
+        }).then(r => r.json()).then(data => {
+            if (data.ok) {
+                // Eliminar la fila del DOM
+                const fila = btnDel.closest('.producto');
+                if (fila) fila.remove();
+
+                // Actualizar contador
+                const contador = document.getElementById('contador_carrito');
+                if (contador) {
+                    let current = parseInt(contador.textContent) || 0;
+                    contador.textContent = Math.max(0, current - 1);
+                }
+
+                    // Actualizar total mostrado en el modal
+                    if (totalAmountEl && typeof data.total !== 'undefined') {
+                        totalAmountEl.textContent = 'Total: $' + data.total;
+                    }
+                    if (totalElementosEl) {
+                        const cnt = document.getElementById('contador_carrito');
+                        totalElementosEl.textContent = 'Elemento: ' + (cnt ? cnt.textContent : '0');
+                    }
+
+                showToast('Producto eliminado del carrito');
+            } else {
+                console.error('Error al eliminar detalle', data);
+                showToast('No se pudo eliminar el producto');
+            }
+        }).catch(err => {
+            console.error('Fetch error', err);
+            showToast('Error de red al eliminar');
+        });
+    });
+
+    // Delegación: manejar clicks en botones "Aumentar" y "Disminuir" dentro del modal carrito
+    document.addEventListener('click', function(e) {
+        let btnInc = e.target.closest('.btn-aumentar');
+        let btnDec = e.target.closest('.btn-disminuir');
+        if (!btnInc && !btnDec) return;
+
+        const btn = btnInc || btnDec;
+        const action = btnInc ? 'increment' : 'decrement';
+        const detalleId = btn.dataset.id;
+        if (!detalleId) return;
+
+        fetch('/update-cart-item/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: `detalle_id=${encodeURIComponent(detalleId)}&action=${action}`
+        }).then(r => r.json()).then(data => {
+            if (data.ok) {
+                if (data.deleted) {
+                    // fila eliminada por llegar a 0
+                    const fila = btn.closest('.producto');
+                    if (fila) fila.remove();
+
+                    // Actualizar contador
+                    const contador = document.getElementById('contador_carrito');
+                    if (contador) {
+                        let current = parseInt(contador.textContent) || 0;
+                        contador.textContent = Math.max(0, current - 1);
+                    }
+
+                    // Actualizar total mostrado en el modal
+                    if (totalAmountEl && typeof data.total !== 'undefined') {
+                        totalAmountEl.textContent = 'Total: $' + data.total;
+                    }
+                    if (totalElementosEl) {
+                        const cnt = document.getElementById('contador_carrito');
+                        totalElementosEl.textContent = 'Elemento: ' + (cnt ? cnt.textContent : '0');
+                    }
+
+                    showToast('Producto eliminado del carrito');
+                } else {
+                    // Actualizar cantidad y subtotal en la fila
+                    const fila = btn.closest('.producto');
+                    if (fila) {
+                        const cantidadSpan = fila.querySelector('.cantidad_producto');
+                        if (cantidadSpan && typeof data.cantidad !== 'undefined') {
+                            let qty = parseInt(data.cantidad) || 0;
+                            cantidadSpan.textContent = qty + (qty === 1 ? ' elemento' : ' elementos');
+                        }
+
+                        const precioSpan = fila.querySelector('.precio_producto');
+                        if (precioSpan && typeof data.subtotal !== 'undefined') {
+                            // Mostrar subtotal si viene del servidor (formateado como string)
+                            precioSpan.textContent = '$' + data.subtotal;
+                        }
+                    }
+
+
+                    // Actualizar total mostrado en el modal usando el total retornado por el servidor
+                    if (totalAmountEl && typeof data.total !== 'undefined') {
+                        totalAmountEl.textContent = 'Total: $' + data.total;
+                    }
+
+                    showToast(action === 'increment' ? 'Cantidad aumentada' : 'Cantidad disminuida');
+                }
+            } else {
+                console.error('Error al actualizar detalle', data);
+                showToast('No se pudo actualizar la cantidad');
+            }
+        }).catch(err => {
+            console.error('Fetch error', err);
+            showToast('Error de red al actualizar');
+        });
+    });
+
 })
+
