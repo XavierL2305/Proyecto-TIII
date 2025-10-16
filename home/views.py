@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from app.apiDolarBcv import dataApiBcv
 
@@ -14,6 +14,8 @@ from django.db.models import Sum
 from django.views.decorators.http import require_POST
 
 from .models import Carrito, DetallesCarrito
+
+from .form import DetallesCarritoForm
 
 # Create your views here.
 
@@ -66,6 +68,38 @@ def home(request):
         'productos_carrito': productos_carrito
         })
 
+@login_required
+@require_POST
+def comprar_carrito(request):
+    # Procesar el formulario de detalles de la orden que viene desde el modal del carrito
+    if request.user.is_authenticated:
+        productos_carrito = (
+                DetallesCarrito.objects
+                .filter(
+                    id_carrito_FK__id_usuario_FK=request.user, 
+                    id_carrito_FK__estatus=True, 
+                    id_producto_FK__status=True
+                )
+            )
+        form = DetallesCarritoForm(request.POST)
+        if form.is_valid():
+            # Imprimir en el terminal (servidor) los datos limpios
+            print('--- Nuevo pedido desde modal carrito ---')
+            print('Usuario:', request.user)
+            print('Datos validados:', form.cleaned_data)
+            print(productos_carrito)
+            # Aquí podrías crear la orden en la base de datos
+            # Por ahora redirigimos al home con un mensaje simple
+            return redirect('home:home')
+        else:
+            # Imprimir errores para depuración
+            print('--- Error al procesar formulario de compra ---')
+            print('Usuario:', request.user)
+            print('POST:', dict(request.POST))
+            print('Errores:', form.errors)
+            # Redirigir al home; podrías mostrar mensajes de error en la UI más adelante
+            return redirect('home:home')
+    return('home:home')
 
 @login_required
 @require_POST

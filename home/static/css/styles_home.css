@@ -616,7 +616,7 @@ html, body {
 .acciones_carrito{
     padding: 1rem;
     margin-top: 1rem;
-    border-radius: 5px;
+    border-radius: 0 0 5px 5px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -625,11 +625,11 @@ html, body {
     background-color: #fff;
     h2, h3{
         color: #000;
+        margin-top: 1rem;
     }
 }
 
 .tipo_entrega input, .metodo_pago input{
-    /* keep inputs in the accessibility tree but visually hidden */
     position: absolute;
     opacity: 0;
     width: 1px;
@@ -701,13 +701,13 @@ html, body {
 }
 
 /* Enfoque para accesibilidad en botones tipo pill */
-.pill-button:focus{
+.pill-button:focus, .comprar button:hover{
     outline: none;
     box-shadow: 0 0 0 3px rgba(59,130,246,0.18);
 }
 
 /* Micro-interacción al pasar el cursor */
-.pill-button:hover{
+.pill-button:hover, .comprar button:hover{
     transform: translateY(-1px);
 }
 
@@ -722,6 +722,15 @@ html, body {
     background: linear-gradient(90deg, #2563eb, #06b6d4);
     color: #fff;
     box-shadow: 0 6px 18px rgba(37,99,235,0.18);
+}
+
+.comprar{
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
 /* Botones de acción por producto (más, menos, eliminar): apariencia tipo pill, tamaño y transiciones */
@@ -781,4 +790,40 @@ html, body {
 .acciones_carrito button[type="reset"]{
     background: #f2f2f2;
     color: #222;
+}
+
+.nombre{
+    position: relative;
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.nombre input{
+    border: 1px solid #b1b1b1;
+    background-color: var(--fondos);
+    width: 85%;
+    padding: 9px;
+    border-radius: 5px;
+}
+.nombre label{
+    color: var(--elementos_primarios);
+    cursor:auto;
+    font-size: 15px;
+    position: absolute;
+    left: 5%;
+    top: 10px;
+    border-radius: .3rem;
+    transition: all ease .2s;
+}
+.nombre input:focus + label{
+    background-color: var(--fondos);
+    font-size: 13px;
+    top: -11px;
+    padding: 2px;
+}
+.nombre input:not(:placeholder-shown) + label{
+    background-color: var(--fondos);
+    font-size: 13px;
+    top: -11px;
+    padding: 2px;
 }

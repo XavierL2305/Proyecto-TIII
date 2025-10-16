@@ -68,13 +68,15 @@
 
                 <div class="acciones_carrito">
                     <h2>Detalles de la Orden</h2>
-                    <form action="" method="post">
+                        <form enctype="multipart/form-data" method="post" action="{% url 'home:comprar_carrito' %}">
                         {% csrf_token %}
                         <div class="detalles_orden">
                             <div class="quien">
                                 <h3>Para quien es el pedido</h3>
-                                <label for="quien">Nombre</label>
-                                <input name="quien" type="text" required>
+                                <div class="nombre">
+                                    <input name="quien" id="quien" type="text" placeholder=" " required>
+                                    <label for="quien">Nombre</label>
+                                </div>
                             </div>
                             <div class="tipo_entrega">
                                 <h3>Tipo de entrega</h3>
