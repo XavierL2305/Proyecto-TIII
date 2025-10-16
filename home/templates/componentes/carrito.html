@@ -49,7 +49,7 @@
                                     <span class="precio_producto">${{ producto.id_producto_FK__precio }}</span>
                                 </div>
                             </div>
-                            <div class="acciones_carrito">
+                            <div class="acciones_producto_carrito">
                                 <button class="btn-disminuir" data-id="{{ producto.id_detalles_carrito_PK }}"><img src="{% static 'img/home/minus.svg' %}" alt="diminuir"></button>
                                 <button class="btn-aumentar" data-id="{{ producto.id_detalles_carrito_PK }}"><img src="{% static 'img/home/plus.svg' %}" alt="aumentar"></button>
                                 <button class="btn-eliminar" data-id="{{ producto.id_detalles_carrito_PK }}"><img src="{% static 'img/home/trash.svg' %}" alt="eliminar"></button>
@@ -67,7 +67,54 @@
                 </div>
 
                 <div class="acciones_carrito">
+                    <h2>Detalles de la Orden</h2>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <div class="detalles_orden">
+                            <div class="quien">
+                                <h3>Para quien es el pedido</h3>
+                                <label for="quien">Nombre</label>
+                                <input name="quien" type="text" required>
+                            </div>
+                            <div class="tipo_entrega">
+                                <h3>Tipo de entrega</h3>
+                                <div class="input_label">
+                                    <input id="input_delivery" name="tipo_entrega" type="radio" value="delivery" required>
+                                    <label for="input_delivery">Delivery</label>
+                                </div>
+                                <div class="input_label">
+                                    <input id="input_agencia" name="tipo_entrega" type="radio" value="agencia" required>
+                                    <label for="input_agencia">Envío por agencia</label>
+                                </div>
+                            </div>
+                            <div class="metodo_pago">
+                                <h3>Método de pago</h3>
+                                <div class="input_label">
+                                    <input id="metodo_efectivo" name="metodo_pago" type="radio" value="efectivo" required>
+                                    <label for="metodo_efectivo">Efectivo</label>
+                                </div>
+                                <div class="input_label">
+                                    <input id="metodo_zelle" name="metodo_pago" type="radio" value="zelle" required>
+                                    <label for="metodo_zelle">Zelle</label>
+                                </div>
+                                <div class="input_label">
+                                    <input id="metodo_binance" name="metodo_pago" type="radio" value="binance" required>
+                                    <label for="metodo_binance">Binance</label>
+                                </div>
+                                <div class="input_label">
+                                    <input id="metodo_transferencia" name="metodo_pago" type="radio" value="transferencia" required>
+                                    <label for="metodo_transferencia">Transferencia bancaria</label>
+                                </div>
+                            </div>
+                            <div class="total_elementos">
 
+                            </div>
+                            <div class="comprar">
+                                <button type="reset" class="">Limpiar</button>
+                                <button type="submit" class="">Comprar</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
             {% endif %}

@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function(){
                                 <span class="precio_producto">${data.producto.precio}$</span>
                             </div>
                         </div>
-                        <div class="acciones_carrito">
+                        <div class="acciones_producto_carrito">
                             <button class="btn-disminuir" data-id="${data.detalle_id}"><img src="/static/img/home/minus.svg" alt="diminuir"></button>
                             <button class="btn-aumentar" data-id="${data.detalle_id}"><img src="/static/img/home/plus.svg" alt="aumentar"></button>
                             <button class="btn-eliminar" data-id="${data.detalle_id}"><img src="/static/img/home/trash.svg" alt="eliminar"></button>

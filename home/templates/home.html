@@ -9,7 +9,7 @@ Home
 <link rel="stylesheet" href="{% static 'css/styles_home.css' %}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+<!-- <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet"> -->
 <script src="{% static 'js/cards.js' %}" defer></script>
 {% endblock %}
 
@@ -72,7 +72,7 @@ Home
                     {% if producto.imagen %}
                         <img src="{{ producto.imagen.url }}" alt="Producto {{ producto.id_producto_PK }}">
                     {% else %}
-                        <span>Sin imagen</span>
+                        <img src="{% static 'img/home/no-image.svg' %}" alt="">
                     {% endif %}
                 </div>
                 <div class="contenido">

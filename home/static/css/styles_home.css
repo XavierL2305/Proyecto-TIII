@@ -130,7 +130,7 @@ html, body {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     text-align: center;
 
-    font-family: "Oswald", sans-serif;
+    font-family: sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-size: 7rem;
@@ -411,7 +411,7 @@ html, body {
     align-items: center;
     background-color: var(--gris-fondo);
     transition: all ease .3s;
-    h2{
+    h2, h3{
         margin: 0;
         margin-bottom: 1rem;
         color: var(--texto_principal);
@@ -473,9 +473,9 @@ html, body {
 
 .scroll_carrito{
     margin-top: 52px;
-    overflow-y: auto;
+    overflow: auto;
     scrollbar-color: #000;
-    height: 100dvb;
+    height: calc(100dvb - 65px);
     padding: 0 15px 15px 15px;
 }
 
@@ -485,7 +485,6 @@ html, body {
     flex-direction: column;
     background-color: var(--gris-hover);
     padding: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     transition: all ease .3s;
 }
@@ -543,7 +542,7 @@ html, body {
     color: var(--elementos_primarios);
 }
 
-.acciones_carrito{
+.acciones_producto_carrito{
     display: flex;
     /* flex-direction: column; */
     margin-right: 10px;
@@ -612,4 +611,174 @@ html, body {
         color: var(--texto_principal);
         font-weight: bold;
     }
+}
+
+.acciones_carrito{
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: max-content;
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3);
+    background-color: #fff;
+    h2, h3{
+        color: #000;
+    }
+}
+
+.tipo_entrega input, .metodo_pago input{
+    /* keep inputs in the accessibility tree but visually hidden */
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    overflow: hidden;
+}
+
+.detalles_orden .input_label{
+    display: inline-block;
+    margin: 6px 6px 6px 0;
+}
+
+.tipo_entrega label, .metodo_pago label{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #f2f2f2;
+    color: #222;
+    cursor: pointer;
+    transition: transform 0.08s ease, box-shadow 0.12s ease, background 0.12s ease;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+    user-select: none;
+    font-weight: 600;
+}
+
+/* Enfoque accesible: cuando el input asociado (oculto) recibe focus, el label muestra un anillo para usuarios de teclado */
+.detalles_orden input:focus + label{
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.18);
+}
+
+/* Estado seleccionado: cuando el input está checked, el label se muestra como un botón activo (fondo degradado, texto blanco) */
+.detalles_orden input:checked + label{
+    background: linear-gradient(90deg, #2563eb, #06b6d4);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(37,99,235,0.18);
+}
+
+/* Imagen dentro del label: tamaño y opacidad para iconos pequeños */
+.detalles_orden label img{
+    width: 18px;
+    height: 18px;
+    opacity: 0.95;
+}
+
+/* Estilo reutilizable: botón tipo "pill" (forma, espaciado y transiciones) */
+.pill-button{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #f2f2f2;
+    color: #222;
+    cursor: pointer;
+    transition: transform 0.08s ease, box-shadow 0.12s ease, background 0.12s ease;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+    user-select: none;
+    font-weight: 600;
+    border: none;
+}
+
+/* Enfoque para accesibilidad en botones tipo pill */
+.pill-button:focus{
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.18);
+}
+
+/* Micro-interacción al pasar el cursor */
+.pill-button:hover{
+    transform: translateY(-1px);
+}
+
+/* Variante destructiva: para acciones peligrosas como eliminar */
+.pill-button--destructive{
+    background: #fee2e2;
+    color: #9f1239;
+}
+
+/* Variante primaria: estilo destacado para acciones principales */
+.pill-button--primary{
+    background: linear-gradient(90deg, #2563eb, #06b6d4);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(37,99,235,0.18);
+}
+
+/* Botones de acción por producto (más, menos, eliminar): apariencia tipo pill, tamaño y transiciones */
+.acciones_producto_carrito .btn-disminuir,
+.acciones_producto_carrito .btn-aumentar,
+.acciones_producto_carrito .btn-eliminar{
+    padding: 6px 10px;
+    min-width: 44px;
+    height: 36px;
+    border-radius: 999px;
+    background: #f2f2f2;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+/* Hover para botones de incrementar/disminuir: se muestran con el degradado primario */
+.acciones_producto_carrito .btn-disminuir:hover,
+.acciones_producto_carrito .btn-aumentar:hover{
+    background: linear-gradient(90deg, #2563eb, #06b6d4);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+/* Estilo específico para el botón eliminar (color de advertencia) */
+.acciones_producto_carrito .btn-eliminar{
+    background: #fff6f6;
+    color: #9f1239;
+}
+
+/* Hover para eliminar: fondo rojizo y ligera elevación */
+.acciones_producto_carrito .btn-eliminar:hover{
+    background: #fecaca;
+    color: #7f1d1d;
+    transform: translateY(-1px);
+}
+
+/* Estilos tipo pill para los botones principales del formulario (Limpiar / Comprar) */
+.acciones_carrito .btn,
+.comprar button{
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Botón principal de compra: estilo destacado */
+.acciones_carrito .btn-comprar{
+    background: linear-gradient(90deg, #2563eb, #06b6d4);
+    color: #fff;
+}
+
+/* Botón secundario (reset) */
+.acciones_carrito button[type="reset"]{
+    background: #f2f2f2;
+    color: #222;
 }
