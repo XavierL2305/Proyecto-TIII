@@ -140,6 +140,7 @@ html, body {
 .mini-navbar{
     position: sticky;
     top: 0;
+    z-index: 3;
     margin-top: 2rem;
     height: 30px;
     background-color: var(--gris-fondo);

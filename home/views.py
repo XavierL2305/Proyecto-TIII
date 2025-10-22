@@ -45,8 +45,15 @@ def home(request):
         productos_carrito = DetallesCarrito.objects.none()
     
     if request.user.is_authenticated:
+        # Calcular total solo con DetallesCarrito cuyos productos siguen activos
+        total_activos = DetallesCarrito.objects.filter(
+            id_carrito_FK__id_usuario_FK=request.user,
+            id_carrito_FK__estatus=True,
+            id_producto_FK__status=True
+        ).aggregate(Sum('subtotal'))['subtotal__sum'] or 0
+
         info_carrito = {
-            'total_carrito':Carrito.objects.filter(id_usuario_FK=request.user, estatus=True).aggregate(Sum('total'))['total__sum'] or 0,
+            'total_carrito': total_activos,
             'cantidad_elementos': productos_carrito.count()
         }
     else:
@@ -74,13 +81,13 @@ def comprar_carrito(request):
     # Procesar el formulario de detalles de la orden que viene desde el modal del carrito
     if request.user.is_authenticated:
         productos_carrito = (
-                DetallesCarrito.objects
-                .filter(
-                    id_carrito_FK__id_usuario_FK=request.user, 
-                    id_carrito_FK__estatus=True, 
-                    id_producto_FK__status=True
-                )
+            DetallesCarrito.objects
+            .filter(
+                id_carrito_FK__id_usuario_FK=request.user, 
+                id_carrito_FK__estatus=True, 
+                id_producto_FK__status=True
             )
+        )
         form = DetallesCarritoForm(request.POST)
         if form.is_valid():
             # Imprimir en el terminal (servidor) los datos limpios
@@ -126,8 +133,8 @@ def add_to_cart(request):
         subtotal = cantidad * producto.precio
         detalle = DetallesCarrito.objects.create(id_carrito_FK=carrito_obj, id_producto_FK=producto, cantidad=cantidad, subtotal=subtotal)
 
-    # Recalcular total del carrito
-    total = DetallesCarrito.objects.filter(id_carrito_FK=carrito_obj).aggregate(Sum('subtotal'))['subtotal__sum'] or 0
+    # Recalcular total del carrito (solo subtotales de productos activos)
+    total = DetallesCarrito.objects.filter(id_carrito_FK=carrito_obj, id_producto_FK__status=True).aggregate(Sum('subtotal'))['subtotal__sum'] or 0
     carrito_obj.total = total
     carrito_obj.save()
 
@@ -165,8 +172,8 @@ def remove_from_cart(request):
     # Borrar el detalle
     detalle.delete()
 
-    # Recalcular total
-    total = DetallesCarrito.objects.filter(id_carrito_FK=carrito_obj).aggregate(Sum('subtotal'))['subtotal__sum'] or 0
+    # Recalcular total (solo subtotales de productos activos)
+    total = DetallesCarrito.objects.filter(id_carrito_FK=carrito_obj, id_producto_FK__status=True).aggregate(Sum('subtotal'))['subtotal__sum'] or 0
     carrito_obj.total = total
     carrito_obj.save()
 
@@ -210,8 +217,8 @@ def update_cart_item(request):
             detalle.save()
             deleted = False
 
-    # Recalcular total del carrito
-    total = DetallesCarrito.objects.filter(id_carrito_FK=carrito_obj).aggregate(Sum('subtotal'))['subtotal__sum'] or 0
+    # Recalcular total del carrito (solo subtotales de productos activos)
+    total = DetallesCarrito.objects.filter(id_carrito_FK=carrito_obj, id_producto_FK__status=True).aggregate(Sum('subtotal'))['subtotal__sum'] or 0
     carrito_obj.total = total
     carrito_obj.save()
 

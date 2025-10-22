@@ -6,6 +6,11 @@
     <div class="modal-carrito">
         <img src="{% static 'img/home/exit.svg' %}" alt="Salir" id="cerrar_carrito" style="z-index: 1;">
         <div class="contenido_carrito" id="contenido_carrito">
+            {# Nodo para estado vacío (presente siempre, oculto por defecto). JS toggleará su visibilidad. #}
+            <div class="sin_productos" id="sin_productos" style="display: none;">
+                <img src="{% static 'img/carritoBlanco.png' %}" alt="">
+                <span>Tu carro está vacío</span>
+            </div>
             
             {% if user.is_anonymous  %}
 
