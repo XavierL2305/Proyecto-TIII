@@ -65,6 +65,87 @@ document.addEventListener("DOMContentLoaded", function(){
     let imagen_carrito = document.getElementById("imagen-carrito");
     let modal_carrito = document.querySelector(".modal-carrito");
 
+    // Search toggle and AJAX
+    const busqueda = document.querySelector('.busqueda');
+    if (busqueda) {
+        const img = busqueda.querySelector('img');
+        const input = busqueda.querySelector('input[name="producto"]');
+
+        // Helper to render search results into the .cards container
+        function renderSearchResults(results) {
+            const cardsContainer = document.querySelector('.cards');
+            if (!cardsContainer) return;
+            // Clear existing cards
+            cardsContainer.innerHTML = '';
+            if (!results || results.length === 0) {
+                cardsContainer.innerHTML = '<p style="padding:24px">No se encontraron productos.</p>';
+                return;
+            }
+            // Render products
+            results.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.id = `producto-${p.id}`;
+                card.innerHTML = `
+                            <div class="imagen-card imagen">
+                                <img src="${p.imagen || '/static/img/home/no-image.svg'}" alt="${p.nombre}">
+                            </div>
+                            <div class="contenido">
+                                <h2 class="nombre">${p.nombre}</h2>
+                                <p class="descripcion">${p.descripcion}</p>
+                                <p class="precio">Precio: $${p.precio}</p>
+                                <p class="cantidad">Cantidad: ${p.cantidad}</p>
+                                <button class="btn-agregar-carrito" data-id="${p.id}" data-nombre="${p.nombre}" data-precio="${p.precio}">
+                                    <div class="acciones"><span>Agregar al carrito</span><img src="/static/img/home/compraCarrito.png" width="30" height="30"></div>
+                                </button>
+                            </div>
+                        `;
+                cardsContainer.appendChild(card);
+            });
+        }
+
+        img.addEventListener('click', function(e){
+            e.preventDefault();
+            busqueda.classList.toggle('expanded');
+            if (busqueda.classList.contains('expanded')) input.focus();
+        });
+
+        busqueda.addEventListener('submit', function(ev){
+            ev.preventDefault();
+            const q = input.value.trim();
+            if (!q) return;
+            // Perform AJAX search
+            fetch(`/search-products/?q=${encodeURIComponent(q)}`)
+                .then(r => r.json())
+                .then(json => {
+                    if (!json.ok) return;
+                    const results = json.results || [];
+                    renderSearchResults(results);
+                }).catch(err => {
+                    console.error('Search fetch error', err);
+                });
+        });
+
+        // Delegación: manejar clicks sobre el dropdown de categorías que tengan data-cat-id
+        document.addEventListener('click', function(e) {
+            const catLink = e.target.closest('.dropdown-content a[data-cat-id]');
+            if (!catLink) return;
+            e.preventDefault();
+            const catId = catLink.getAttribute('data-cat-id');
+            if (typeof catId === 'undefined' || catId === null) return;
+            // Fetch products by category (server-side category param takes priority)
+            fetch(`/search-products/?category=${encodeURIComponent(catId)}`)
+                .then(r => r.json())
+                .then(json => {
+                    if (!json.ok) return;
+                    const results = json.results || [];
+                    renderSearchResults(results);
+                }).catch(err => {
+                    console.error('Category search fetch error', err);
+                });
+        });
+    }
+
 
     if (modal_carrito && modal_carrito.parentNode !== document.body) {
         document.body.appendChild(modal_carrito);
@@ -165,6 +246,7 @@ document.addEventListener("DOMContentLoaded", function(){
         if (contador) contador.textContent = String(count);
     }
 
+    // mostrar y cerrar el carrito de compras
     imagen_carrito.addEventListener("click", function() {
         if(modal_carrito.classList.contains("active") && background.classList.contains("active")){
             modal_carrito.classList.remove("active");
@@ -181,6 +263,7 @@ document.addEventListener("DOMContentLoaded", function(){
             background.classList.remove("active");
         }
     });
+    // Cuando se presione el background hace que se cierre el carrito
     background.addEventListener("click", function() {
         if(modal_carrito.classList.contains("active")){
             modal_carrito.classList.remove("active");
@@ -373,9 +456,7 @@ document.addEventListener("DOMContentLoaded", function(){
                         span.textContent = String(newCount);
                         header.appendChild(span);
                     }
-                }
-
-                
+                }                
 
                 // Intento de ocultar cualquier nodo .sin_productos que pudiera quedar (doble verificación)
                 const allEmptyCheck = contenidoCarrito ? contenidoCarrito.querySelectorAll('.sin_productos') : document.querySelectorAll('.sin_productos');
@@ -389,7 +470,13 @@ document.addEventListener("DOMContentLoaded", function(){
 
                 showToast('Producto agregado al carrito');
             } else {
-                if (data.error === 'exists' || data.message === 'Producto ya en el carrito') {
+                // Manejar producto sin existencias o falta de stock suficiente
+                if (data.error === 'out_of_stock' || data.message === 'Producto sin existencias') {
+                    showToast('Producto sin existencias');
+                } else if (data.error === 'insufficient_stock') {
+                    const avail = data.available !== undefined ? data.available : '0';
+                    showToast('No hay suficiente stock. Disponibles: ' + avail);
+                } else if (data.error === 'exists' || data.message === 'Producto ya en el carrito') {
                     showToast('El producto ya está en el carrito');
                 } else {
                     console.error('Error al agregar al carrito', data);

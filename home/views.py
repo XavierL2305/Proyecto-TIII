@@ -13,9 +13,14 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Sum
 from django.views.decorators.http import require_POST
 
-from .models import Carrito, DetallesCarrito
+from .models import Carrito, DetallesCarrito, Pedido, PedidoItem
+from django.views.decorators.http import require_GET
+from django.core import serializers
 
 from .form import DetallesCarritoForm
+from django.db import transaction
+from django.db.models import F
+import urllib.parse
 
 # Create your views here.
 
@@ -38,7 +43,7 @@ def home(request):
             .values(
                 'id_detalles_carrito_PK', 'cantidad', 'subtotal',
                 'id_producto_FK__id_producto_PK', 'id_producto_FK__nombre',
-                'id_producto_FK__precio', 'id_producto_FK__imagen'
+                'id_producto_FK__precio', 'id_producto_FK__imagen', 'id_producto_FK__cantidad'
             )
         )
     else:
@@ -78,35 +83,159 @@ def home(request):
 @login_required
 @require_POST
 def comprar_carrito(request):
-    # Procesar el formulario de detalles de la orden que viene desde el modal del carrito
-    if request.user.is_authenticated:
-        productos_carrito = (
-            DetallesCarrito.objects
-            .filter(
-                id_carrito_FK__id_usuario_FK=request.user, 
-                id_carrito_FK__estatus=True, 
-                id_producto_FK__status=True
-            )
-        )
-        form = DetallesCarritoForm(request.POST)
-        if form.is_valid():
-            # Imprimir en el terminal (servidor) los datos limpios
+    """
+    Procesa el formulario de detalles: sólo POST está permitido.
+    Si el carrito del usuario está vacío redirige al home.
+    """
+    # Obtener los productos del carrito del usuario (solo activos)
+    productos_carrito = DetallesCarrito.objects.filter(
+        id_carrito_FK__id_usuario_FK=request.user,
+        id_carrito_FK__estatus=True,
+        id_producto_FK__status=True
+    )
+
+    # Si no hay productos en el carrito, redirigir al home
+    if not productos_carrito.exists():
+        return redirect('home:home')
+
+    form = DetallesCarritoForm(request.POST)
+    if form.is_valid():
+            # Aquí podrías crear la orden en la base de datos usando form.cleaned_data
             print('--- Nuevo pedido desde modal carrito ---')
             print('Usuario:', request.user)
             print('Datos validados:', form.cleaned_data)
-            print(productos_carrito)
-            # Aquí podrías crear la orden en la base de datos
-            # Por ahora redirigimos al home con un mensaje simple
-            return redirect('home:home')
-        else:
-            # Imprimir errores para depuración
-            print('--- Error al procesar formulario de compra ---')
-            print('Usuario:', request.user)
-            print('POST:', dict(request.POST))
-            print('Errores:', form.errors)
-            # Redirigir al home; podrías mostrar mensajes de error en la UI más adelante
-            return redirect('home:home')
-    return('home:home')
+            print('Productos enviados:', productos_carrito)
+
+            # Preparar datos para la vista de confirmación
+            datos = form.cleaned_data
+            tipo_entrega = datos.get('tipo_entrega')
+            metodo_pago = datos.get('metodo_pago')
+
+            # Construir lista legible de productos y totales
+            productos_list = []
+            total_general = 0
+            for det in productos_carrito:
+                # det puede ser DetallesCarrito instance o queryset element
+                try:
+                    prod = det.id_producto_FK
+                    nombre = prod.nombre
+                    cantidad_det = det.cantidad
+                    subtotal = det.subtotal
+                except Exception:
+                    # valores desde values() (diccionario)
+                    nombre = det.get('id_producto_FK__nombre')
+                    cantidad_det = det.get('cantidad')
+                    subtotal = det.get('subtotal')
+                productos_list.append({'nombre': nombre, 'cantidad': cantidad_det, 'subtotal': subtotal})
+                total_general += (subtotal or 0)
+
+            # Información de pago específica
+            binance_info = {
+                'email': 'pagos@miempresa.com',
+                'logo_url': '/static/img/binance-logo.png'
+            }
+
+            # Construir mensaje para WhatsApp
+            whatsapp_number = '+584163782641'
+            msg_lines = []
+            msg_lines.append('Nuevo pedido desde la web')
+            msg_lines.append(f'Usuario: {request.user}')
+            msg_lines.append(f'Nombre: {datos.get("quien") or "-"}')
+            msg_lines.append(f'Tipo entrega: {tipo_entrega}')
+            msg_lines.append(f'Método pago: {metodo_pago}')
+            msg_lines.append('Productos:')
+            for p in productos_list:
+                msg_lines.append(f"- {p['nombre']} x{p['cantidad']} -> {p.get('subtotal', 0)}")
+            msg_lines.append(f'Total: {total_general}')
+
+            # Usar urllib.parse.quote_plus para codificar correctamente el mensaje de WhatsApp
+            whatsapp_text = urllib.parse.quote_plus('\n'.join(msg_lines))
+            whatsapp_url = f'https://wa.me/{whatsapp_number.replace("+", "")}?text={whatsapp_text}'
+
+            # Guardar pedido y items en la base de datos y decrementar stock dentro de una transacción
+            try:
+                with transaction.atomic():
+                    pedido = Pedido.objects.create(
+                        usuario=request.user,
+                        quien=datos.get('quien') or '',
+                        tipo_entrega=tipo_entrega or '',
+                        metodo_pago=metodo_pago or '',
+                        total=total_general
+                    )
+
+                    # Bloquear y procesar cada detalle del carrito
+                    for det in productos_carrito.select_for_update():
+                        prod = det.id_producto_FK
+                        cantidad_det = det.cantidad
+                        subtotal = det.subtotal
+
+                        # Volver a obtener el producto con bloqueo de fila para validar stock
+                        producto_locked = Productos.objects.select_for_update().get(pk=prod.pk)
+                        if producto_locked.cantidad < cantidad_det:
+                            raise ValueError(f"Insufficient stock for product {producto_locked.nombre}")
+
+                        # Crear el item del pedido
+                        PedidoItem.objects.create(
+                            pedido=pedido,
+                            producto=prod,
+                            cantidad=cantidad_det,
+                            precio_unitario=prod.precio,
+                            subtotal=subtotal
+                        )
+
+                        # Decrementar stock de forma segura
+                        Productos.objects.filter(pk=producto_locked.pk).update(cantidad=F('cantidad') - cantidad_det)
+            except ValueError as ve:
+                # Mostrar error amigable si algún producto no tiene stock suficiente
+                return render(request, 'comprar_carrito.html', {
+                    'form': form,
+                    'productos_carrito': productos_carrito,
+                    'errors': {'stock': str(ve)}
+                })
+            except Exception as e:
+                # Registrar y devolver error genérico
+                print('Error al crear pedido y decrementar stock:', e)
+                return render(request, 'comprar_carrito.html', {
+                    'form': form,
+                    'productos_carrito': productos_carrito,
+                    'errors': {'general': 'Ocurrió un error al procesar su pedido. Intente nuevamente.'}
+                })
+
+            # Marcar carrito del usuario como inactivo (cerrado)
+            try:
+                carrito_obj = Carrito.objects.filter(id_usuario_FK=request.user, estatus=True).first()
+                if carrito_obj:
+                    carrito_obj.estatus = False
+                    carrito_obj.save()
+                    # Eliminar detalles relacionados
+                    DetallesCarrito.objects.filter(id_carrito_FK=carrito_obj).delete()
+            except Exception as e:
+                print('Error al cerrar carrito:', e)
+
+            # Renderizar la plantilla de confirmation/compra con contexto enriquecido
+            return render(request, 'comprar_carrito.html', {
+                'form': form,
+                'productos_carrito': productos_carrito,
+                'success': True,
+                'productos_list': productos_list,
+                'total_general': total_general,
+                'tipo_entrega': tipo_entrega,
+                'metodo_pago': metodo_pago,
+                'binance_info': binance_info,
+                'whatsapp_url': whatsapp_url,
+                'pedido_id': pedido.id_pedido_PK,
+            })
+    else:
+        # Mostrar la plantilla con los errores del formulario (POST inválido)
+        print('--- Error al procesar formulario de compra ---')
+        print('Usuario:', request.user)
+        print('POST:', dict(request.POST))
+        print('Errores:', form.errors)
+        return render(request, 'comprar_carrito.html', {
+            'form': form,
+            'productos_carrito': productos_carrito,
+            'errors': form.errors,
+        })
 
 @login_required
 @require_POST
@@ -121,6 +250,23 @@ def add_to_cart(request):
     # Obtener producto o 404
     producto = get_object_or_404(Productos, id_producto_PK=product_id)
 
+    # Validar existencias: si cantidad en BD es 0, no permitir agregar
+    if getattr(producto, 'cantidad', 0) <= 0:
+        return JsonResponse({
+            'ok': False,
+            'error': 'out_of_stock',
+            'message': 'Producto sin existencias'
+        }, status=400)
+
+    # Validar que la cantidad solicitada no exceda el stock disponible
+    if cantidad > getattr(producto, 'cantidad', 0):
+        return JsonResponse({
+            'ok': False,
+            'error': 'insufficient_stock',
+            'message': 'Cantidad solicitada mayor al stock disponible',
+            'available': producto.cantidad
+        }, status=400)
+
     # Obtener o crear carrito activo para el usuario
     carrito_obj, created = Carrito.objects.get_or_create(id_usuario_FK=request.user, estatus=True, defaults={'total': 0})
 
@@ -128,7 +274,13 @@ def add_to_cart(request):
     detalle = DetallesCarrito.objects.filter(id_carrito_FK=carrito_obj, id_producto_FK=producto).first()
     if detalle:
         # Producto ya está en el carrito: no aumentamos cantidad por ahora
-        return JsonResponse({'ok': False, 'error': 'exists', 'message': 'Producto ya en el carrito', 'cantidad': detalle.cantidad})
+        return JsonResponse({
+            'ok': False,
+            'error': 'exists',
+            'message': 'Producto ya en el carrito',
+            'cantidad': detalle.cantidad,
+            'available': producto.cantidad
+        })
     else:
         subtotal = cantidad * producto.precio
         detalle = DetallesCarrito.objects.create(id_carrito_FK=carrito_obj, id_producto_FK=producto, cantidad=cantidad, subtotal=subtotal)
@@ -203,6 +355,15 @@ def update_cart_item(request):
         return JsonResponse({'ok': False, 'error': 'forbidden'}, status=403)
 
     if action == 'increment':
+        # Antes de incrementar, validar stock disponible
+        producto = detalle.id_producto_FK
+        if detalle.cantidad + 1 > getattr(producto, 'cantidad', 0):
+            return JsonResponse({
+                'ok': False,
+                'error': 'insufficient_stock',
+                'message': 'No hay suficiente stock para aumentar la cantidad',
+                'available': producto.cantidad
+            }, status=400)
         detalle.cantidad += 1
         detalle.subtotal = detalle.cantidad * detalle.id_producto_FK.precio
         detalle.save()
@@ -226,6 +387,39 @@ def update_cart_item(request):
         return JsonResponse({'ok': True, 'deleted': True, 'total': str(total)})
     else:
         return JsonResponse({'ok': True, 'deleted': False, 'cantidad': detalle.cantidad, 'subtotal': str(detalle.subtotal), 'total': str(total)})
+
+
+@require_GET
+def search_products(request):
+    """Devuelve JSON con productos cuyo nombre contiene la query (case-insensitive)."""
+    # Prioridad a búsqueda por categoría si viene el parámetro
+    cat = request.GET.get('category')
+    q = request.GET.get('q', '').strip()
+
+    if cat is not None and cat != '':
+        try:
+            cat_id = int(cat)
+        except ValueError:
+            return JsonResponse({'ok': False, 'error': 'invalid_category'}, status=400)
+        if cat_id == 0:
+            matches = Productos.objects.filter(status=True)[:40]
+        else:
+            matches = Productos.objects.filter(categoria__id_categoria_PK=cat_id, status=True)[:40]
+    else:
+        if not q:
+            return JsonResponse({'ok': True, 'results': []})
+        matches = Productos.objects.filter(nombre__icontains=q, status=True)[:40]
+    data = []
+    for p in matches:
+        data.append({
+            'id': p.id_producto_PK,
+            'nombre': p.nombre,
+            'descripcion': p.descripcion[:140],
+            'precio': str(p.precio),
+            'cantidad': p.cantidad,
+            'imagen': p.imagen.url if p.imagen else ''
+        })
+    return JsonResponse({'ok': True, 'results': data})
 
 
 #señorsa y señores buenas tardes buenas noches buenas tardes buenas noches señoritas y señores hoy estar aqui es mi pasion que alegreia pues la musica es mi vida y la vida es la musica y la musica es alegria y la alegria es la vida y la vida es alegria y la alegria es musica y la musica es mi lengua y le mundo mi familia

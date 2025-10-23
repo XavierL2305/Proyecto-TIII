@@ -1,0 +1,98 @@
+{% extends "template_base.html" %}
+{% load static %}
+
+{% block title %}
+Relizar compra
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/comprar_carrito.css' %}">
+<link rel="stylesheet" href="{% static 'css/styles_home.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+<script src="{% static 'js/comprar_carrito.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+
+<section>
+    {% include 'componentes/nav.html' %}
+</section>
+
+
+<main class="container comprar-carrito">
+    <h1>Confirmar compra</h1>
+        
+        {% if success %}
+        <div class="confirmacion">
+            <h2>Pedido recibido</h2>
+            {% if pedido_id %}
+                <p class="muted">Tu número de pedido es <strong>#{{ pedido_id }}</strong>. Hemos vaciado tu carrito.</p>
+            {% endif %}
+            <p>Gracias. Revisa los detalles de tu pedido abajo y confirma el pago según el método elegido.</p>
+
+            <section class="resumen_productos">
+                <h3>Productos</h3>
+                <ul>
+                    {% for p in productos_list %}
+                        <li>{{ p.nombre }} — Cantidad: {{ p.cantidad }} — Subtotal: {{ p.subtotal }}</li>
+                    {% empty %}
+                        <li>No hay productos en el carrito.</li>
+                    {% endfor %}
+                </ul>
+                <p class="total">Total: {{ total_general }}</p>
+            </section>
+
+            <section class="instrucciones_pago">
+                <h3>Instrucciones de pago</h3>
+                {% if metodo_pago == 'efectivo' %}
+                    <p>Pagar en efectivo a la entrega / retiro. Confirma los datos y presiona "Enviar por WhatsApp" para notificar al vendedor.</p>
+                {% elif metodo_pago == 'zelle' or metodo_pago == 'transferencia' %}
+                    <p>Usa Zelle/Transferencia. Envía la captura y confirma por WhatsApp.</p>
+                {% elif metodo_pago == 'binance' %}
+                    <div class="binance">
+                        <img src="{% static 'img/comprar_carrito/binance.png' %}" alt="Binance" style="height:48px;">
+                        <p>Enviar pago a: <strong>{{ binance_info.email }}</strong></p>
+                    </div>
+                {% elif metodo_pago == 'zelle' %}
+                    <p>Enviar pago a: soporte@ejemplo.com</p>
+                {% endif %}
+            </section>
+
+            <section class="acciones_confirmacion">
+                <a class="btn btn-primary" href="{{ whatsapp_url }}" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+                <a class="btn" href="{% url 'home:home' %}">Volver al inicio</a>
+            </section>
+        </div>
+    {% else %}
+
+        <div class="formulario_compra">
+            <h2>Detalles del pedido</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Confirmar</button>
+            </form>
+        </div>
+
+        <aside class="resumen_lateral">
+            <h3>Resumen</h3>
+            <ul>
+                {% for det in productos_carrito %}
+                    <li>
+                        {% if det.id_producto_FK %}
+                            {{ det.id_producto_FK.nombre }} — Cant: {{ det.cantidad }} — Subtotal: {{ det.subtotal }}
+                        {% else %}
+                            {{ det.id_producto_FK__nombre }} — Cant: {{ det.cantidad }} — Subtotal: {{ det.subtotal }}
+                        {% endif %}
+                    </li>
+                {% empty %}
+                    <li>Tu carrito está vacío.</li>
+                {% endfor %}
+            </ul>
+        </aside>
+
+    {% endif %}
+
+    {% endblock %}
