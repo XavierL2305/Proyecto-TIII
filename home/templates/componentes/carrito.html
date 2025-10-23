@@ -56,7 +56,7 @@
                             </div>
                             <div class="acciones_producto_carrito">
                                 <button class="btn-disminuir" data-id="{{ producto.id_detalles_carrito_PK }}"><img src="{% static 'img/home/minus.svg' %}" alt="diminuir"></button>
-                                <button class="btn-aumentar" data-id="{{ producto.id_detalles_carrito_PK }}"><img src="{% static 'img/home/plus.svg' %}" alt="aumentar"></button>
+                                <button disabled class="btn-aumentar" data-id="{{ producto.id_detalles_carrito_PK }}"><img src="{% static 'img/home/plus.svg' %}" alt="aumentar"></button>
                                 <button class="btn-eliminar" data-id="{{ producto.id_detalles_carrito_PK }}"><img src="{% static 'img/home/trash.svg' %}" alt="eliminar"></button>
                             </div>
                         </div>

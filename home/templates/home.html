@@ -9,32 +9,13 @@ Home
 <link rel="stylesheet" href="{% static 'css/styles_home.css' %}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet"> -->
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 <script src="{% static 'js/cards.js' %}" defer></script>
 {% endblock %}
 
 {% block content %}
 <section class="home">
-    <div class="barra_nav">
-        <nav class="nav-bar">
-            <ul>
-                <li><p>Bienvenido <i>{{ user }}</i></p></li>
-                <li class="redes">
-                    <a href="https://www.facebook.com/" class="redes-link">
-                        <img src="{% static 'img/redes/facebook_whithe.png' %}" class="redes-img" alt="Facebook">
-                    </a>
-                    <a href="https://www.instagram.com/" class="redes-link">
-                        <img src="{% static 'img/redes/instagram_whithe.png' %}" class="redes-img" alt="Instagram">
-                    </a>
-                    <a href="https://www.twitter.com/" class="redes-link">
-                        <img src="{% static 'img/redes/twitter_black.png' %}" class="redes-img" alt="Twitter">
-                    </a>
-                    </form>
-
-                </li>
-            </ul>
-        </nav>
-    </div>
+    {% include "componentes/nav.html" %}
     <div class="main-content" >
         <div class="welcome" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url({% static 'img/fondos/fondo.jpg' %}), no-repeat, center; background-size: cover;">
             <div>
@@ -44,19 +25,26 @@ Home
         
         <div class="mini-navbar">
             <div class="busqueda">
-                <img src="{% static 'img/buscar.png' %}" alt="Buscar" width="30px" height="30px">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <img src="{% static 'img/buscar.png' %}" alt="Buscar" width="30px" height="30px">
+                    <div class="nombre">
+                        <input name="producto" id="producto" type="text" placeholder=" " required>
+                        <label for="producto">Producto</label>
+                    </div>
+                </form>
             </div>
             <ul>
                 <li class="dropdown">
                     <a href="#" class="drop">Productos</a>
                     <div class="dropdown-content">
-                        {% if Categorias %}
-                            <a href="#">No hay categoria de productos</a>
-                        {% else %}
-                            <a href="#">Todos</a>
+                        {% if categorias %}
+                            <a href="#" data-cat-id="0">Todos</a>
                             {% for categoria in categorias %}
-                                <a href="#">{{ categoria }}</a>
+                                <a href="#" data-cat-id="{{ categoria.id_categoria_PK }}">{{ categoria.descripcion }}</a>
                             {% endfor %}
+                        {% else %}
+                            <a href="#">No hay categoria de productos</a>
                         {% endif %}
                     </div>
                 </li>
@@ -67,7 +55,7 @@ Home
 
         <div class="cards">
             {% for producto in productos_list %}
-            <div class="card" id="producto-{{ producto.id_producto_PK }}">
+            <div class="card" id="producto-{{ producto.id_producto_PK }}" {% if producto.cantidad == 0 %} style="background-color: #fffc5e;" {% endif %}>
                 <div class="imagen-card imagen">
                     {% if producto.imagen %}
                         <img src="{{ producto.imagen.url }}" alt="Producto {{ producto.id_producto_PK }}">
@@ -79,6 +67,7 @@ Home
                     <h2 class="nombre">{{ producto.nombre }}</h2>
                     <p class="descripcion">{{ producto.descripcion }}</p>
                     <p class="precio">Precio: ${{ producto.precio }}</p>
+                    <p class="cantidad">Cantidad: {{ producto.cantidad }}</p>
 
                     <button
                         class="btn-agregar-carrito"
@@ -110,4 +99,5 @@ Home
         </div>
     </div>
 </section>
+{% include "componentes/footer.html" %}
 {% endblock %}
