@@ -11,7 +11,6 @@ Relizar compra
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
-<script src="{% static 'js/comprar_carrito.js' %}" defer></script>
 {% endblock %}
 
 {% block content %}
@@ -95,4 +94,10 @@ Relizar compra
 
     {% endif %}
 
+    <script>
+        window.onload = function() {
+            // Use namespaced URL and include pedido_id
+            window.open("{% url 'home:generar_nota_entrega' pedido_id=pedido_id %}", "_blank");
+        };
+    </script>
     {% endblock %}

@@ -1,26 +1,42 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from app.apiDolarBcv import dataApiBcv
 
 from productos.models import Productos
 from categorias.models import Categorias
-from django.db.models import Prefetch
 
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from django.shortcuts import get_object_or_404
-from django.db.models import Sum
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_POST, require_GET
+from django.template.loader import render_to_string
+from django.core import serializers
+from django.db import transaction
+from django.db.models import Sum, Prefetch, F
 
 from .models import Carrito, DetallesCarrito, Pedido, PedidoItem
-from django.views.decorators.http import require_GET
-from django.core import serializers
+from login_register.models import CustomUser
 
 from .form import DetallesCarritoForm
-from django.db import transaction
-from django.db.models import F
 import urllib.parse
+from django.conf import settings
+# try:
+#     from weasyprint import HTML
+#     WEEASY_AVAILABLE = True
+#     WEEASY_IMPORT_ERROR = None
+# except Exception as e:
+#     # WeasyPrint or its native dependencies are not available (e.g., libgobject, pango, cairo)
+#     HTML = None
+#     WEEASY_AVAILABLE = False
+#     WEEASY_IMPORT_ERROR = str(e)
+
+# Prefer wkhtmltopdf via pdfkit when available (user chose wkhtmltopdf)
+try:
+    import pdfkit
+    PDFKIT_AVAILABLE = True
+    PDFKIT_IMPORT_ERROR = None
+except Exception as e:
+    pdfkit = None
+    PDFKIT_AVAILABLE = False
+    PDFKIT_IMPORT_ERROR = str(e)
 
 # Create your views here.
 
@@ -101,10 +117,10 @@ def comprar_carrito(request):
     form = DetallesCarritoForm(request.POST)
     if form.is_valid():
             # Aquí podrías crear la orden en la base de datos usando form.cleaned_data
-            print('--- Nuevo pedido desde modal carrito ---')
-            print('Usuario:', request.user)
-            print('Datos validados:', form.cleaned_data)
-            print('Productos enviados:', productos_carrito)
+            # print('--- Nuevo pedido desde modal carrito ---')
+            # print('Usuario:', request.user)
+            # print('Datos validados:', form.cleaned_data)
+            # print('Productos enviados:', productos_carrito)
 
             # Preparar datos para la vista de confirmación
             datos = form.cleaned_data
@@ -131,7 +147,7 @@ def comprar_carrito(request):
 
             # Información de pago específica
             binance_info = {
-                'email': 'pagos@miempresa.com',
+                'email': 'xavilahur@gmail.com',
                 'logo_url': '/static/img/binance-logo.png'
             }
 
@@ -227,15 +243,89 @@ def comprar_carrito(request):
             })
     else:
         # Mostrar la plantilla con los errores del formulario (POST inválido)
-        print('--- Error al procesar formulario de compra ---')
-        print('Usuario:', request.user)
-        print('POST:', dict(request.POST))
-        print('Errores:', form.errors)
+        # print('--- Error al procesar formulario de compra ---')
+        # print('Usuario:', request.user)
+        # print('POST:', dict(request.POST))
+        # print('Errores:', form.errors)
         return render(request, 'comprar_carrito.html', {
             'form': form,
             'productos_carrito': productos_carrito,
             'errors': form.errors,
         })
+
+@login_required
+def generar_nota_entrega(request, pedido_id):
+    pedido = Pedido.objects.get(id_pedido_PK=pedido_id)
+    # Obtener telefono y direccion desde ClienteProfile si existe
+    telefono = ''
+    direccion = ''
+    try:
+        user = pedido.usuario
+        profile = getattr(user, 'clienteprofile', None)
+        if profile:
+            telefono = profile.telefono or ''
+            direccion = profile.direccion or ''
+    except Exception:
+        telefono = ''
+        direccion = ''
+
+    context = {
+        'pedido': pedido,
+        'telefono_cliente': telefono,
+        'direccion_cliente': direccion,
+    }
+    html_string = render_to_string('nota_entrega.html', context)
+    # Use wkhtmltopdf via pdfkit
+    if PDFKIT_AVAILABLE:
+        tried = []
+        # If user configured explicit path in settings, try it first
+        wkpath = getattr(settings, 'WKHTMLTOPDF_CMD', None)
+        if wkpath:
+            tried.append(wkpath)
+            try:
+                cfg = pdfkit.configuration(wkhtmltopdf=wkpath)
+                pdf_bytes = pdfkit.from_string(html_string, False, configuration=cfg)
+                response = HttpResponse(pdf_bytes, content_type='application/pdf')
+                response['Content-Disposition'] = f'attachment; filename="nota_entrega_{pedido_id}.pdf"'
+                return response
+            except Exception as e:
+                print('pdfkit generation error with WKHTMLTOPDF_CMD:', e)
+
+        # Try default PATH
+        try:
+            pdf_bytes = pdfkit.from_string(html_string, False)
+            response = HttpResponse(pdf_bytes, content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="nota_entrega_{pedido_id}.pdf"'
+            return response
+        except Exception as e:
+            print('pdfkit default PATH attempt failed:', e)
+
+        # Try common Windows installation paths
+        common = [
+            r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe',
+            r'C:\Program Files (x86)\wkhtmltopdf\bin\wkhtmltopdf.exe'
+        ]
+        for p in common:
+            tried.append(p)
+            try:
+                cfg = pdfkit.configuration(wkhtmltopdf=p)
+                pdf_bytes = pdfkit.from_string(html_string, False, configuration=cfg)
+                response = HttpResponse(pdf_bytes, content_type='application/pdf')
+                response['Content-Disposition'] = f'attachment; filename="nota_entrega_{pedido_id}.pdf"'
+                return response
+            except Exception as e:
+                print(f'pdfkit generation error trying {p}:', e)
+
+        # None worked
+        print('pdfkit generation error: No wkhtmltopdf executable found. Tried:', tried)
+
+    # If pdfkit is not available or failed, return actionable error message
+    msg = (
+        'PDF generation is not available because wkhtmltopdf was not found. Install wkhtmltopdf (https://wkhtmltopdf.org/) and set WKHTMLTOPDF_CMD in settings if installed in a custom location.\n'
+    )
+    details = PDFKIT_IMPORT_ERROR or ''
+    return HttpResponse(msg + details, content_type='text/plain', status=503)
+
 
 @login_required
 @require_POST
