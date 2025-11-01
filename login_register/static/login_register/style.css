@@ -257,3 +257,18 @@ input {
     margin: 0; 
 }
 
+
+
+/* Estilo para el enlace de "Olvidaste tu contraseña?" */
+.Contraseña {
+  color: #1c3d8f;
+  font-size: 12px;
+  font-weight: 100;
+  text-decoration: none;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.Contraseña:hover {
+  color: #374f7a;
+}

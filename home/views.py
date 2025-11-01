@@ -201,6 +201,11 @@ def comprar_carrito(request):
 
                         # Decrementar stock de forma segura
                         Productos.objects.filter(pk=producto_locked.pk).update(cantidad=F('cantidad') - cantidad_det)
+                        # Actualizar status si cantidad queda en 0
+                        producto_updated = Productos.objects.get(pk=producto_locked.pk)
+                        if producto_updated.cantidad <= 0:
+                            producto_updated.status = False
+                            producto_updated.save()
             except ValueError as ve:
                 # Mostrar error amigable si algún producto no tiene stock suficiente
                 return render(request, 'comprar_carrito.html', {
@@ -512,7 +517,4 @@ def search_products(request):
     return JsonResponse({'ok': True, 'results': data})
 
 
-#señorsa y señores buenas tardes buenas noches buenas tardes buenas noches señoritas y señores hoy estar aqui es mi pasion que alegreia pues la musica es mi vida y la vida es la musica y la musica es alegria y la alegria es la vida y la vida es alegria y la alegria es musica y la musica es mi lengua y le mundo mi familia
-#angel me pide leche y el viejo tienes canas en el culo xddd me dijo caren xddd 
-#mi gente me dice que soy un crack xddd
-#y yo les digo que soy un crack xddd
+#madre mia xavier y sus cosas

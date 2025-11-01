@@ -24,6 +24,17 @@ def es_empleado(user):
 @login_required #validacionn requerida para ingresar a proveedores
 @user_passes_test(es_empleado)
 def productos(request):
+    # Actualizar estado de productos según cantidad
+    productos_todos = Productos.objects.all()
+    for p in productos_todos:
+        if p.cantidad == 0 and p.status:
+            p.status = False
+            p.save()
+        elif p.cantidad > 0 and not p.status:
+            # Opcional: Reactivar productos con cantidad > 0 lo unico es que no se pueden desactivar si tiene productos activos
+            # p.status = True
+            # p.save()
+            pass
     filtro = request.GET.get('filtro', 'activos')
 
     if filtro == 'eliminados':
@@ -50,9 +61,18 @@ def productos(request):
         if 'activar_id' in request.POST:
             try:
                 producto = Productos.objects.get(id_producto_PK=request.POST.get('activar_id'))
+                cantidad_nueva = request.POST.get('cantidad_nueva')
+                if cantidad_nueva is not None:
+                    try:
+                        cantidad_nueva = int(cantidad_nueva)
+                        producto.cantidad = cantidad_nueva
+                    except ValueError:
+                        messages.error(request, "Cantidad inválida.")
+                        return redirect(f"{request.path}?filtro={filtro}")
+
                 producto.status = True
                 producto.save()
-                messages.success(request, "Producto reactivado correctamente.")
+                messages.success(request, "Producto reactivado y cantidad actualizada correctamente.")
             except Exception as e:
                 messages.error(request, "Error al reactivar: " + str(e))
             return redirect(f"{request.path}?filtro={filtro}")
