@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'empleados',
     'categorias',
     'clientes',
+    'Rec_cuenta',
 ]
 
 MIDDLEWARE = [
@@ -159,3 +160,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+EMAIL_BACKEND = 'Rec_cuenta.email_backend.CustomEmailBackend'  # Ajusta la ruta si cambias la ubicación del archivo
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'angeltrabajo185@gmail.com'  # Reemplaza por tu correo real Gmail
+EMAIL_HOST_PASSWORD = 'vrmb iwnt ocai hymr'  # Contraseña de app, no tu contraseña normal
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
