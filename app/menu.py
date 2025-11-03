@@ -6,6 +6,7 @@ def menu_items(request):
         if user.is_superuser or getattr(user, 'rol', '') == 'admin':
             menu_items = [
                 {'url': 'home:home', 'label': 'Home'},
+                {'url': 'pedidos:pedidos', 'label': 'Pedidos'},
                 {'url': 'proveedores:proveedores', 'label': 'Proveedores'},
                 {'url': 'empleados:gestion_empleados', 'label': 'Empleados'},
                 {'url': 'productos:productos', 'label': 'Productos'},
@@ -15,6 +16,7 @@ def menu_items(request):
         elif getattr(user, 'rol', '') == 'empleado' or getattr(user, 'rol', '') == 'vendedor' or getattr(user, 'rol', '') == 'distribuidor':
             menu_items = [
                 {'url': 'home:home', 'label': 'Home'},
+                {'url': 'pedidos:pedidos', 'label': 'Pedidos'},
                 {'url': 'proveedores:proveedores', 'label': 'Proveedores'},
                 {'url': 'productos:productos', 'label': 'Productos'},
                 {'url': 'categorias:categorias', 'label': 'Categorías'},
@@ -22,7 +24,8 @@ def menu_items(request):
             ]
         elif getattr(user, 'rol', '') == 'cliente':
             menu_items = [{'url': 'home:home', 'label': 'Home'},
-                          {'url': 'clientes:editar_perfil_cliente', 'label': 'Perfil'}]
+                          {'url': 'clientes:editar_perfil_cliente', 'label': 'Perfil'},
+                          {'url': 'pedidos:consultar_mis_pedidos', 'label': 'Mis Pedidos'}]
     else:
         menu_items = [
             {'url': 'home:home', 'label': 'Home'},

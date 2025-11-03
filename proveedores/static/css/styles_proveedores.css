@@ -260,6 +260,35 @@ form input:not(:placeholder-shown) + label{
     opacity: 1;
 }
 
+/* Allow clicks through the hidden background overlay; only block when active */
+.background{ pointer-events: none; }
+.background.activate{ pointer-events: auto; }
+
+/* Pagination styles */
+.pagination{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    align-items:center;
+    padding: 12px;
+    color: var(--texto_principal, #fff);
+}
+.pagination a{
+    color: var(--texto_principal);
+    background: rgba(255,255,255,0.06);
+    padding:6px 10px;
+    border-radius:6px;
+    text-decoration:none;
+}
+.pagination a:hover{ background: rgba(255,255,255,0.12); }
+.pagination .current{
+    padding:6px 10px;
+    border-radius:6px;
+    background: var(--detalles_hover, #2980b9);
+    color:#fff;
+    font-weight:bold;
+}
+
 @media (max-width: 700px) {
   .logo img{
     width: 70px; /* tamaño más pequeño */

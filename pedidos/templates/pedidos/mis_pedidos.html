@@ -1,0 +1,78 @@
+{% extends "template_base.html" %}
+{% load static %}
+{% load query_transform %}
+
+{% block title %}Mis pedidos{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/pedidos.css' %}">
+<link rel="stylesheet" href="{% static 'css/styles_proveedores.css' %}">
+<link rel="stylesheet" href="{% static 'css/styles_buttons.css' %}">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/pedidos.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<section class="proveedores">
+    <center>
+        <h1 class="titulo">Mis pedidos</h1>
+    </center>
+
+    <div class="tabla sin-acciones">
+        <div class="thead">
+            <b>ID</b>
+            <b>Fecha</b>
+            <b>Total</b>
+            <b>Estado</b>
+        </div>
+        <div class="tbody">
+            {% if page_obj.object_list %}
+                {% for pedido in page_obj.object_list %}
+                <div class="fila-proveedor">
+                    <p class="id">{{ pedido.id_pedido_PK }}</p>
+                    <p class="nombre">{{ pedido.fecha }}</p>
+                    <p class="direccion">{{ pedido.total }}</p>
+                    <div class="acciones">
+                        <p style="padding:6px 8px">{{ pedido.estado }}</p>
+                    </div>
+                    <div style="width:100%; padding:8px 16px;">
+                        <small>Items:</small>
+                        <ul>
+                            {% for item in pedido.items.all %}
+                              <li>{{ item.producto }} x {{ item.cantidad }} — {{ item.subtotal }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="fila-proveedor">
+                    <p>No tienes pedidos aún.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?{% query_transform page=page_obj.previous_page_number %}">« prev</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+                <span class="current">{{ num }}</span>
+            {% else %}
+                <a href="?{% query_transform page=num %}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?{% query_transform page=page_obj.next_page_number %}">next »</a>
+        {% endif %}
+    </div>
+
+    <div class="background" id="background_form"></div>
+</section>
+{% endblock %}

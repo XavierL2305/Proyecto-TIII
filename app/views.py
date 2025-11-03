@@ -16,7 +16,6 @@ def get_menu_items(user):
         menu_items = [
             {'url': 'proveedores:proveedores', 'label': 'Proveedores'},
             {'url': 'productos:productos', 'label': 'Productos'},
-            {'url': 'pedidos:pedidos', 'label':'Pedidos'},
             {'url': 'categorias:categorias', 'label': 'Categorías'},
         ]
     elif user.groups.filter(name='Cliente').exists():

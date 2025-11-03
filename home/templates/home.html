@@ -11,15 +11,30 @@ Home
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 <script src="{% static 'js/cards.js' %}" defer></script>
+<script src="{% static 'js/carousel.js' %}" defer></script>
 {% endblock %}
 
 {% block content %}
 <section class="home">
     {% include "componentes/nav.html" %}
     <div class="main-content" >
-        <div class="welcome" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url({% static 'img/fondos/fondo.jpg' %}), no-repeat, center; background-size: cover;">
-            <div>
-                <h1><i>TU LUGAR DE <b>CONFIANZA</b></i></h1>
+        <div class="welcome">
+            <h2>Tu lugar de <i>CONTACTOS</i></h2>
+            <div class="carousel fixed-height" id="heroCarousel">
+                <div class="carousel-track">
+                    <div class="carousel-slide">
+                        <img src="{% static 'img/img/banner_herramientas_1.jpeg' %}" alt="Banner 1">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="{% static 'img/img/banner_herramientas_2.jpeg' %}" alt="Banner 2">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="{% static 'img/img/banner_herramientas_3.jpeg' %}" alt="Banner 3">
+                    </div>
+                </div>
+
+                <button class="carousel-button prev" aria-label="Anterior">&#10094;</button>
+                <button class="carousel-button next" aria-label="Siguiente">&#10095;</button>
             </div>
         </div>
         
