@@ -111,14 +111,25 @@
           {% if es_admin %}
             <div class="acciones">
               {% if filtro == 'eliminados' %}
-                <form method="post" style="display:inline-block; margin:0;">
+                <button 
+                  class="button edit-btn" 
+                  data-id="{{ producto.id_producto_PK }}"
+                  data-nombre="{{ producto.nombre|escapejs }}"
+                  data-descripcion="{{ producto.descripcion|escapejs }}"
+                  data-precio="{{ producto.precio }}"
+                  data-cantidad="{{ producto.cantidad }}"
+                  data-imagen="{% if producto.imagen %}{{ producto.imagen.url }}{% endif %}">
+                  Editar
+                </button>
+                <form method="post" style="display:inline-block; margin:0 0 0 8px;">
                   {% csrf_token %}
                   <input type="hidden" name="activar_id" value="{{ producto.id_producto_PK }}">
                   <button type="submit" class="button" title="Reactivar producto">Reactivar</button>
                 </form>
               {% else %}
+                <!-- El bloque que ya tienes para productos activos -->
                 <button 
-                  class="button edit-btn" 
+                  class="button edit-btn"  
                   data-id="{{ producto.id_producto_PK }}"
                   data-nombre="{{ producto.nombre|escapejs }}"
                   data-descripcion="{{ producto.descripcion|escapejs }}"
