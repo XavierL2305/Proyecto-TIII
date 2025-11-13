@@ -1,3 +1,26 @@
+.btn-nav {
+    background: linear-gradient(90deg, var(--elementos_primarios) 60%, var(--detalles_hover) 100%);
+    color: var(--texto_principal);
+    font-weight: 600;
+    padding: 8px 22px;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0 2px 8px 0 rgba(44,62,80,0.10);
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+}
+.btn-nav:hover, .btn-nav:focus {
+    background: linear-gradient(90deg, var(--detalles_hover) 60%, var(--elementos_primarios) 100%);
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 16px 0 rgba(44,62,80,0.18);
+}
 :root {
     --fondos: #1c2833;
     --secciones: #273746;

@@ -1,0 +1,84 @@
+{% extends "template_base.html" %}
+{% load static %}
+
+{% block title %}Pedido #{{ pedido.id_pedido_PK }}{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/styles_proveedores.css' %}">
+<link rel="stylesheet" href="{% static 'css/pedidos.css' %}">
+<link rel="stylesheet" href="{% static 'css/styles_buttons.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="proveedores">
+  <div class="container">
+    <h1 class="titulo">Pedido #{{ pedido.id_pedido_PK }}</h1>
+  </div>
+
+  <div class="tabla-responsive">
+    <div class="tabla sin-acciones tabla-detalle-pedido">
+      <div class="thead">
+        <b>Para</b>
+        <b>Usuario</b>
+        <b>Metodo pago</b>
+        <b>Tipo entrega</b>
+        <b>Total</b>
+      </div>
+      <div class="tbody">
+        <div class="fila-proveedor">
+          <p class="direccion">{{ pedido.quien }}</p>
+          <p class="nombre">{{ pedido.usuario }}</p>
+          <p class="telefono">{{ pedido.metodo_pago }}</p>
+          <p class="correo">{{ pedido.tipo_entrega }}</p>
+          <p class="id">{{ pedido.total }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container tabla-items-container">
+    <!-- <h3 style="text-align:center;">Items</h3> -->
+    <div class="tabla-responsive">
+      <div class="tabla sin-acciones tabla-items">
+        <div class="thead">
+          <b>Producto</b>
+          <b>Cantidad</b>
+          <b>Precio unitario</b>
+          <b>Subtotal</b>
+        </div>
+        <div class="tbody">
+          {% for item in pedido.items.all %}
+          <div class="fila-proveedor">
+            <p class="nombre">{{ item.producto }}</p>
+            <p class="direccion">{{ item.cantidad }}</p>
+            <p class="telefono">{{ item.precio_unitario }}</p>
+            <p class="correo">{{ item.subtotal }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin: 1.5rem 0; text-align:center;">
+    <form method="post" style="display:inline-block; min-width:220px;">
+      {% csrf_token %}
+      <!-- <label for="estado" style="font-weight:600; margin-right:8px;">Estado:</label> -->
+      <select name="estado" id="estado" style="padding:6px 12px; border-radius:6px; border:1px solid #bfc9d1;">
+        <option value="pendiente" {% if pedido.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+        <option value="procesando" {% if pedido.estado == 'procesando' %}selected{% endif %}>Procesando</option>
+        <option value="finalizado" {% if pedido.estado == 'finalizado' %}selected{% endif %}>Finalizado</option>
+      </select>
+      <button type="submit" class="btn-nav" style="margin-left:10px;">Actualizar</button>
+    </form>
+    <div style="margin-top:0.5rem; color:#aaa; font-size:0.95em;">Estado actual: <b>{{ pedido.estado|capfirst }}</b></div>
+  </div>
+
+  <div style="margin:1rem 2rem;">
+    <a href="{% url 'pedidos:pedidos' %}" class="btn-nav" style="text-decoration: none;">
+      ← Volver a Pedidos
+    </a>
+  </div>
+
+</section>
+{% endblock %}

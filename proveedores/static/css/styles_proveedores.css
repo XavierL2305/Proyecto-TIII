@@ -93,20 +93,27 @@ h1,h2{
     overflow: hidden;
     overflow-x: auto;
 }
-/* 6 columnas para admin (Acciones visible) */
+/* columnas para admin (Acciones visible) - ajustado a 7 columnas incluyendo 'Ver' */
 .tabla.con-acciones .thead,
 .tabla.con-acciones .fila-proveedor {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    align-items: center;
+}
+
+/* columnas para no admin (sin acciones) - ajustado a 6 columnas incluyendo 'Ver' */
+.tabla.sin-acciones .thead,
+.tabla.sin-acciones .fila-proveedor {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     align-items: center;
 }
 
-/* 5 columnas para no admin (sin acciones) */
-.tabla.sin-acciones .thead,
-.tabla.sin-acciones .fila-proveedor {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    align-items: center;
+/* prevent wrapping inside table cells so icons/links stay on same row */
+.fila-proveedor p, .thead b {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 

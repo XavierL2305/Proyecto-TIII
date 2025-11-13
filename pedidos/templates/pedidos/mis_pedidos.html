@@ -26,6 +26,7 @@
             <b>Fecha</b>
             <b>Total</b>
             <b>Estado</b>
+            <b>Ver</b>
         </div>
         <div class="tbody">
             {% if page_obj.object_list %}
@@ -37,6 +38,14 @@
                     <div class="acciones">
                         <p style="padding:6px 8px">{{ pedido.estado }}</p>
                     </div>
+                    <p>
+                        <a href="{% url 'pedidos:detalle' pedido.id_pedido_PK %}" title="Ver pedido {{ pedido.id_pedido_PK }}" class="btn-view" style="color:inherit; text-decoration:none;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                              <path d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </p>
                     <div style="width:100%; padding:8px 16px;">
                         <small>Items:</small>
                         <ul>

@@ -1,3 +1,154 @@
+/* Responsive tabla wrapper */
+.tabla-responsive {
+    /* width: 100%; */
+    max-width: 1100px;
+    min-width: 350px;
+    margin: 2.5rem auto 1.5rem auto;
+    overflow-x: auto;
+    box-sizing: border-box;
+    padding: 0;
+    background: none;
+}
+.tabla-responsive .tabla {
+    min-width: 600px;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+}
+.tabla-items-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1.5rem 0 2rem 0 !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+/* Tablas de detalle de pedido */
+.tabla-detalle-pedido {
+    margin: 2.5rem auto 1.5rem auto !important;
+    padding: 1.5rem 2rem !important;
+    max-width: 1100px;
+    min-width: 350px;
+    width: 90vw;
+    box-sizing: border-box;
+    display: block;
+}
+
+.tabla-items-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1.5rem 0 2rem 0 !important;
+}
+.tabla-items {
+    width: 100%;
+    max-width: 800px;
+    min-width: 350px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    display: block;
+}
+.tabla-items .thead, .tabla-detalle-pedido .thead {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #bfc9d1;
+    padding: 8px 0 8px 0;
+}
+.tabla-items .thead b, .tabla-detalle-pedido .thead b {
+    flex: 1 1 0;
+    text-align: left;
+    padding: 0 6px;
+}
+.tabla-items .fila-proveedor, .tabla-detalle-pedido .fila-proveedor {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    box-sizing: border-box;
+}
+.tabla-items .fila-proveedor p, .tabla-detalle-pedido .fila-proveedor p {
+    flex: 1 1 0;
+    padding: 8px 6px;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
 .con-acciones{
     margin-top: 60px;
+}
+
+.fila-proveedor {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 40px;
+    border-bottom: 1px solid #e0e0e0;
+    box-sizing: border-box;
+}
+
+
+.fila-proveedor > .celda {
+    flex: 1 1 0;
+    padding: 8px 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.fila-proveedor > .celda.correo.expandir-fecha {
+    white-space: normal;
+    word-break: break-word;
+    background: #1c2833;
+    z-index: 2;
+    position: relative;
+    box-shadow: 0 2px 8px 0 rgba(44,62,80,0.10);
+}
+
+
+.fila-proveedor > .acciones {
+    flex: 0 0 90px;
+    text-align: center;
+}
+
+
+.fila-proveedor > .ver {
+    flex: 0 0 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Mejorar contraste y bordes */
+.con-acciones {
+    background: #232f3e;
+    color: #f5f6fa;
+    border-radius: 8px;
+    border: 2px solid #bfc9d1;
+    padding: 8px;
+}
+.thead {
+    display: flex;
+    font-weight: bold;
+    border-bottom: 2px solid #bfc9d1;
+    padding: 8px 0 8px 0;
+}
+.thead b {
+    flex: 1 1 0;
+    text-align: left;
+    padding: 0 6px;
+}
+.thead b:last-child {
+    flex: 0 0 50px;
+    text-align: center;
+}
+.fila-proveedor {
+    transition: background 0.2s;
+}
+.fila-proveedor:hover {
+    background: #2d3b4d;
 }
