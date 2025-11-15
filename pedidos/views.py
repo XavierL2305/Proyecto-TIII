@@ -35,6 +35,7 @@ def pedidos_list(request):
 
 
 @login_required
+
 def mis_pedidos(request):
     """List pedidos for the logged-in customer."""
     pedidos = Pedido.objects.filter(usuario=request.user).order_by('-fecha')
@@ -42,6 +43,12 @@ def mis_pedidos(request):
     page = request.GET.get('page')
     page_obj = paginator.get_page(page)
     return render(request, 'pedidos/mis_pedidos.html', {'page_obj': page_obj})
+
+
+@login_required
+def mi_pedido_detail(request, pk):
+    pedido = get_object_or_404(Pedido, id_pedido_PK=pk, usuario=request.user)
+    return render(request, 'pedidos/mis_pedido_detail.html', {'pedido': pedido})
 
 
 def pedido_detail(request, pk):

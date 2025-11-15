@@ -29,7 +29,7 @@
 
     
     <div class="tabla con-acciones">
-        <div class="thead">
+        <div class="thead" style="grid-template-columns: repeat(7, 1fr);">
             <b>ID</b>
             <b>Usuario</b>
             <b>Para</b>
@@ -41,7 +41,7 @@
         <div class="tbody">
             {% if page_obj.object_list %}
                 {% for pedido in page_obj.object_list %}
-                <div class="fila-proveedor" onclick="expandirFecha(this)">
+                <div class="fila-proveedor" onclick="expandirFecha(this)" style="grid-template-columns: repeat(7, 1fr);">
                     <div class="celda id">{{ pedido.id_pedido_PK }}</div>
                     <div class="celda nombre">{{ pedido.usuario }}</div>
                     <div class="celda direccion">{{ pedido.quien }}</div>

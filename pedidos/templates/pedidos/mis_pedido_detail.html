@@ -37,7 +37,6 @@
   </div>
 
   <div class="container tabla-items-container">
-    <!-- <h3 style="text-align:center;">Items</h3> -->
     <div class="tabla-responsive">
       <div class="tabla sin-acciones tabla-items">
         <div class="thead" style="grid-template-columns: repeat(4, 1fr);">
@@ -60,23 +59,9 @@
     </div>
   </div>
 
-  <div style="margin: 1.5rem 0; text-align:center;">
-    <form method="post" style="display:inline-block; min-width:220px;">
-      {% csrf_token %}
-      <!-- <label for="estado" style="font-weight:600; margin-right:8px;">Estado:</label> -->
-      <select name="estado" id="estado" style="padding:6px 12px; border-radius:6px; border:1px solid #bfc9d1;">
-        <option value="pendiente" {% if pedido.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
-        <option value="procesando" {% if pedido.estado == 'procesando' %}selected{% endif %}>Procesando</option>
-        <option value="finalizado" {% if pedido.estado == 'finalizado' %}selected{% endif %}>Finalizado</option>
-      </select>
-      <button type="submit" class="btn-nav" style="margin-left:10px;">Actualizar</button>
-    </form>
-    <div style="margin-top:0.5rem; color:#aaa; font-size:0.95em;">Estado actual: <b>{{ pedido.estado|capfirst }}</b></div>
-  </div>
-
-  <div style="margin:1rem 2rem;">
-    <a href="{% url 'pedidos:pedidos' %}" class="btn-nav" style="text-decoration: none;">
-      ← Volver a Pedidos
+  <div style="margin:1rem 2rem; text-align:center;">
+    <a href="{% url 'pedidos:consultar_mis_pedidos' %}" class="btn-nav" style="text-decoration: none;">
+      ← Volver a Mis Pedidos
     </a>
   </div>
 
