@@ -157,7 +157,14 @@ document.addEventListener("DOMContentLoaded", function(){
     const contenidoCarrito = document.getElementById('contenido_carrito');
     // Reusar el nodo #sin_productos si ya existe en la plantilla, sino crearlo
     let emptyNode = document.getElementById('sin_productos');
-    if (!emptyNode) {
+    // Si dentro de contenido_carrito existe el bloque de inicio de sesión, NO crear ni mostrar el nodo "sin_productos"
+    const hasIniciaSesion = contenidoCarrito ? !!contenidoCarrito.querySelector('.inicia_sesion') : false;
+    if (hasIniciaSesion) {
+        // eliminar cualquier nodo .sin_productos que pudiera quedar
+        const existingEmpty = contenidoCarrito ? contenidoCarrito.querySelectorAll('.sin_productos') : document.querySelectorAll('.sin_productos');
+        if (existingEmpty && existingEmpty.length) existingEmpty.forEach(n => n.remove());
+        emptyNode = null;
+    } else if (!emptyNode) {
         emptyNode = document.createElement('div');
         emptyNode.id = 'sin_productos';
         emptyNode.className = 'sin_productos';
@@ -184,6 +191,18 @@ document.addEventListener("DOMContentLoaded", function(){
         const scroll = contenidoCarrito ? contenidoCarrito.querySelector('.scroll_carrito') : null;
         const info = contenidoCarrito ? contenidoCarrito.querySelector('.info_carrito') : null;
         const acciones = contenidoCarrito ? contenidoCarrito.querySelector('.acciones_carrito') : null;
+        // Si el modal contiene el bloque de inicio de sesión (usuario anónimo), ocultar todo lo relacionado con carrito/empty
+        if (contenidoCarrito && contenidoCarrito.querySelector('.inicia_sesion')) {
+            if (scroll) scroll.style.display = 'none';
+            if (info) info.style.display = 'none';
+            if (acciones) acciones.style.display = 'none';
+            const allEmptyNodes = contenidoCarrito ? contenidoCarrito.querySelectorAll('.sin_productos') : document.querySelectorAll('.sin_productos');
+            if (allEmptyNodes && allEmptyNodes.length) allEmptyNodes.forEach(node => node.style.display = 'none');
+            // asegurar contador visual si existe
+            const contador = document.getElementById('contador_carrito');
+            if (contador) contador.textContent = '0';
+            return;
+        }
         const allEmptyNodes = contenidoCarrito ? contenidoCarrito.querySelectorAll('.sin_productos') : document.querySelectorAll('.sin_productos');
         console.debug('updateEmptyState -> productCount:', productCount, 'productosContainer?', !!productosContainer, 'emptyNodes?', allEmptyNodes.length);
 

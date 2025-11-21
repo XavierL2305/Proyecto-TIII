@@ -6,30 +6,19 @@
     <div class="modal-carrito">
         <img src="{% static 'img/home/exit.svg' %}" alt="Salir" id="cerrar_carrito" style="z-index: 1;">
         <div class="contenido_carrito" id="contenido_carrito">
-            {# Nodo para estado vacío (presente siempre, oculto por defecto). JS toggleará su visibilidad. #}
-            <div class="sin_productos" id="sin_productos" style="display: none;">
-                <img src="{% static 'img/carritoBlanco.png' %}" alt="">
-                <span>Tu carro está vacío</span>
-            </div>
-            
-            {% if user.is_anonymous  %}
-
-            <div class="inicia_sesion">
-                <h2>Inicia sesión para ver tu carrito</h2>
-
-                <a href="{% url 'login_register:login_register' %}" class="btn-iniciar-sesion">Iniciar sesión</a>
-            </div>
-
-            {% elif not productos_carrito %}
-
-                <div class="sin_productos">
-                    <img src="{% static 'img/carritoBlanco.png' %}" alt="">
-                    <span>Tu carro está vacío</span>
+            {% if user.is_anonymous %}
+                <div class="inicia_sesion">
+                    <h2>Inicia sesión para ver tu carrito</h2>
+                    <a href="{% url 'login_register:login_register' %}" class="btn-iniciar-sesion">Iniciar sesión</a>
                 </div>
-
             {% else %}
-
-            <div class="scroll_carrito">
+                {% if not productos_carrito %}
+                    <div class="sin_productos">
+                        <img src="{% static 'img/carritoBlanco.png' %}" alt="">
+                        <span>Tu carro está vacío</span>
+                    </div>
+                {% else %}
+                <div class="scroll_carrito">
                 <div class="productos_carrito">
                     <h2>Tu orden</h2>
                     {% for producto in productos_carrito %}
@@ -123,7 +112,8 @@
                         </div>
                     </form>
                 </div>
-            </div>
+                </div>
+                {% endif %}
             {% endif %}
         </div>
     </div>
